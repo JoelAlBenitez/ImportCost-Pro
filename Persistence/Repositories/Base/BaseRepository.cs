@@ -1,7 +1,7 @@
 ﻿
 namespace Persistence.Repositories.Base
 {
-    public interface BaseRepository<TEntity, Tkey>
+    public interface BaseRepository<TEntity, Tkey> where TEntity : class
     {
        Task<bool> CreateAsync(TEntity entity);
        Task<bool> EditAsync (TEntity entity);
