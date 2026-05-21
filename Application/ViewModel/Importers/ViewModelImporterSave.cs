@@ -10,23 +10,22 @@ namespace Application.ViewModel.Importers
         public required string Name { get; set; }
 
         [StringLength(20, MinimumLength = 3)]
-
         [Required(ErrorMessage = "Invalid identification or too long, please enter a valid identification no longer than 20 characters")]
         public required string Identifcation { get; set; }
 
         //[Required(ErrorMessage = "Country invalid, please select a country  valid")]
-        //public required Countrys country {get; set;}
+        //public required int countryId {get; set;}
 
         [StringLength(20, MinimumLength = 0)]
         public string? PhoneNumber {  get; set; }
 
         [StringLength(100, MinimumLength = 0)]
-        //add validations for enter a valid email
+        [EmailAddress]
         public string? Email { get; set; }
 
         [StringLength(250, MinimumLength = 0)]
         public string? Address { get; set; }
 
-        public required bool State { get; set; }
+        public required bool State { get; set; } = true;
     }
 }

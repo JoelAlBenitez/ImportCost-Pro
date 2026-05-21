@@ -4,7 +4,7 @@ using Persistence.Repositories.OperationalCommercial;
 
 namespace Application.Services.Importers
 {
-    public class ImportersServices : ServicesBase<ImporterDto, int>
+    public class ImportersServices : IServicesBase<ImporterDto, int>
     {
         private readonly ImportersRepository _importersRepository;
         public ImportersServices (ImportersRepository repository)
@@ -12,10 +12,25 @@ namespace Application.Services.Importers
             _importersRepository = repository;
         }
 
+        public async Task<bool> ExistRnc(ImporterDto dto)
+        {
+            try
+            {
+                return await _importersRepository.ExistImportersByRnc(dto.Identification);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> CreateAsync(ImporterDto dto)
         {
             try
             {
+                var exits = await ExistRnc(dto);
+                if(exits) return false; 
+
                 Persistence.Entities.OperationalCommercial.Importers importers = new()
                 {
                     Name = dto.Name,
@@ -28,7 +43,7 @@ namespace Application.Services.Importers
                 };
                 return await _importersRepository.CreateAsync(importers);
                 
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return false;
             }
@@ -40,7 +55,7 @@ namespace Application.Services.Importers
             {
                 return await _importersRepository.DeleteAsync(key);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -52,6 +67,7 @@ namespace Application.Services.Importers
             {
                 Persistence.Entities.OperationalCommercial.Importers importers = new()
                 {
+                    Key = dto.Key,
                     Name = dto.Name,
                     State = dto.State,
                     Identification = dto.Identification,
@@ -63,7 +79,7 @@ namespace Application.Services.Importers
                 return await _importersRepository.EditAsync(importers);
 
             }
-            catch (Exception ex) {
+            catch (Exception) {
 
                 return false;
             }
@@ -97,10 +113,8 @@ namespace Application.Services.Importers
                     return imp;
 
                 }return null!;
-
-
             }
-            catch(Exception ex)
+            catch(Exception )
             {
                 return null!;
             }
@@ -130,7 +144,7 @@ namespace Application.Services.Importers
 
                 }return null!;
 
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return null!;
             }
