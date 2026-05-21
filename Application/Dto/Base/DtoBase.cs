@@ -1,0 +1,8 @@
+﻿namespace Application.Dto.Base
+{
+    public abstract class DtoBase
+    {
+        public int Key { get; set; }
+        public required string Name { get; set; }
+    }
+}

@@ -22,8 +22,9 @@ namespace Persistence.Repositories.OperationalCommercial
             return result > 0;
         }
 
-        public async Task<bool> DeleteAsync(Suppliers entity)
+        public async Task<bool> DeleteAsync(int tkey)
         {
+            var entity = await _context.suppliers.FindAsync(tkey);
             if (entity != null)
             {
                 _context.suppliers.Remove(entity);

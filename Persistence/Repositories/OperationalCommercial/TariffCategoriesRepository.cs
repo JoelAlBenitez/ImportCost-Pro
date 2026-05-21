@@ -22,8 +22,9 @@ namespace Persistence.Repositories.OperationalCommercial
             return result > 0;
         }
 
-        public async Task<bool> DeleteAsync(TariffCategories entity)
+        public async Task<bool> DeleteAsync(int tkey)
         {
+            var entity = await _context.tariffCategories.FindAsync(tkey);
             if(entity != null)
             {
                _context.tariffCategories.Remove(entity);

@@ -22,11 +22,13 @@ namespace Persistence.Repositories.OperationalCommercial
             return result > 0;
         }
 
-        public async Task<bool> DeleteAsync(Importers entity)
+        public async Task<bool> DeleteAsync(int tkey)
         {
-            if(entity != null) {
+            var import = await _context.importers.FindAsync(tkey);
 
-                 _context.importers.Remove(entity);
+            if(import != null)
+            {
+                 _context.importers.Remove(import);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
             }

@@ -5,7 +5,7 @@ namespace Persistence.Repositories.Base
     {
        Task<bool> CreateAsync(TEntity entity);
        Task<bool> EditAsync (TEntity entity);
-       Task<bool> DeleteAsync (TEntity entity);
+       Task<bool> DeleteAsync (Tkey tkey);
        Task<TEntity> GetEntityById(Tkey key);
        Task<IReadOnlyCollection<TEntity>> GetAllAsync();
     }
