@@ -10,6 +10,8 @@ namespace Persistence.Entities.OperationalCommercial
 
         public string? Email { get; set; }
         public string? Phone { get; set; }
-        public required int MainCurrency { get; set;  }
+
+        //public MainCurrencys MainCurrency {get; set;}
+        public int? MainCurrencyId { get; set;  }
     }
 }

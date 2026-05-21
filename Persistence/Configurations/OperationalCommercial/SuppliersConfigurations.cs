@@ -18,14 +18,20 @@ namespace Persistence.Configurations.OperationalCommercial
             builder.Property(s => s.Email).HasMaxLength(100);
             builder.Property(s => s.Phone).HasMaxLength(20);
             builder.Property(s => s.State).IsRequired().HasDefaultValue(true);
-            builder.Property(s => s.MainCurrency).IsRequired();
-          
+            builder.Property(s => s.MainCurrencyId).IsRequired();
+
             /*
              builder.HasOne(c => c.Countrys)
             .WithMany(s => s.Supliers)
             .HasForeignKey(s => s.countryId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(c => c.MainCurrencys)
+            .WithMany(s => s.Suppliers)
+            .HasForeignKey(s => s.MainCurrencyId)
+            OnDelete(DeleteBehavior.Cascade);
              */
+
         }
     }
 }
