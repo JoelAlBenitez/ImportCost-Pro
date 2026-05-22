@@ -21,5 +21,11 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         public required string DistributionMethod { get; set; }
 
         public required DateTime ImportationExpenseDate { get; set; }
+
+        //navigation properties
+
+        public required ImportationOrder ImportationOrder { get; set; }
+
+        //public required Currencies Currencies { get; set; }
     }
 }

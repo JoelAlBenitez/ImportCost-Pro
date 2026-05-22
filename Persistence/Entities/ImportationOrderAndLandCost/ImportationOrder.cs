@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Persistence.Entities.OperationalCommercial;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,5 +24,23 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         public required string TransportMode { get; set; }
 
         public required string OrderState { get; set; }
+
+        //navigation properties
+
+        public required Importers Importer { get; set; }
+
+        public required Suppliers Supplier { get; set; }
+
+        //public required Countries Countries { get; set; }
+
+        //public required Currencies Currencies { get; set; }
+
+        public required ICollection<ImportationOrderDetail> ImportationOrderDetails { get; set; }
+
+        public required LandedCostSummary LandedCostSummary { get; set; }
+
+        public required ICollection<ImportationExpense> ImportationExpenses { get; set; }
+
+
     }
 }

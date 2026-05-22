@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Persistence.Entities.OperationalCommercial;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {
-    internal class LandedCostDetail
+    public class LandedCostDetail
     {
         public required string LandedCostDetailId { get; set; }
         public required string LandedCostSummaryId { get; set; }
@@ -42,6 +43,12 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         public required decimal DesiredMargin { get; set; }
 
         public required decimal SuggestedSalePrice { get; set; }
+
+        //navigation properties
+
+        public required LandedCostSummary LandedCostSummary { get; set; }
+
+        public required Products Product { get; set; }
 
 
     }

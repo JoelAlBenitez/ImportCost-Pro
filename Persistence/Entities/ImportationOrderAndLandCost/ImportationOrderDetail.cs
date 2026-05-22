@@ -19,5 +19,9 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         public required decimal FOBUnitPrice { get; set; }
 
         public required decimal ExpectedProfitMargin { get; set; }
+
+        //navigation properties
+
+        public required ImportationOrder ImportationOrder { get; set; }
     }
 }

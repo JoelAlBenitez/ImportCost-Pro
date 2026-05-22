@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {
-    internal class LandedCostSummary
+    public class LandedCostSummary
     {
         public required string LandedCostSummaryId { get; set; }
 
-        public required string ImportationOrderId { get; set; }
+        public required string OrderId { get; set; }
 
         public required string LocalCurrencyUsed { get; set; }
 
@@ -38,6 +38,12 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         public required decimal TotalImportationCost { get; set; }
 
         public required decimal TotalImportedQuantity { get; set; }
+
+        //navigation properties
+
+        public required ImportationOrder ImportationOrder { get; set; }
+
+        public required ICollection<LandedCostDetail> LandedCostDetails { get; set; }
 
     }
 }
