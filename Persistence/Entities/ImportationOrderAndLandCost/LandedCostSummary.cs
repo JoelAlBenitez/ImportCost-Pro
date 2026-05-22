@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Persistence.Entities.ImportationOrderAndLandCost
+{
+    internal class LandedCostSummary
+    {
+        public required string LandedCostSummaryId { get; set; }
+
+        public required string ImportationOrderId { get; set; }
+
+        public required string LocalCurrencyUsed { get; set; }
+
+        public required decimal ExchangeRate { get; set; }
+
+        public required decimal OriginalTotalFob { get; set; }
+        public required decimal LocalTotalFob { get; set; }
+
+        public required decimal TotalFreight { get; set; }
+
+        public required decimal TotalInsurance { get; set; }
+
+        public required decimal TotalCif { get; set; }
+
+        public required decimal TotalTariff { get; set; }
+
+        public required decimal TotalSelectiveTax { get; set; }
+
+        public required decimal TotalCustomsServiceFee { get; set; }
+
+        public required decimal TotalItbis { get; set; }
+
+        public required decimal TotalLocalExpenses { get; set; }
+
+        public required decimal TotalImportationCost { get; set; }
+
+        public required decimal TotalImportedQuantity { get; set; }
+
+    }
+}
