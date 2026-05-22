@@ -13,3 +13,4 @@ namespace Persistence.Entities.OperationalCommercial
         //public Countrys? country {get; set;} 
     }
 }
+
