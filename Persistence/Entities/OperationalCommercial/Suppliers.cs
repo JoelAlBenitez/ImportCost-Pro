@@ -12,7 +12,7 @@ namespace Persistence.Entities.OperationalCommercial
         public string? Email { get; set; }
         public string? Phone { get; set; }
 
-        public virtual Currency MainCurrency {get; set;}
+        public Currency? MainCurrency {get; set;}
         public int? MainCurrencyId { get; set;  }
     }
 }

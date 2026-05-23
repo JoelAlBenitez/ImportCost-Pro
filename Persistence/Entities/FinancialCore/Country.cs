@@ -9,9 +9,9 @@ namespace Persistence.Entities.FinancialCore
 
         /* 
         // Relaciones de navegación
-        public virtual ICollection<Suppliers>? Suppliers { get; set; }
-        public virtual ICollection<Importers>? Importers { get; set; }
-        public virtual ICollection<Products>? Products { get; set; }
+        public ICollection<Suppliers>? Suppliers { get; set; }
+        public ICollection<Importers>? Importers { get; set; }
+        public ICollection<Products>? Products { get; set; }
         */
 
 

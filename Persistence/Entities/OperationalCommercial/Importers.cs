@@ -9,7 +9,7 @@ namespace Persistence.Entities.OperationalCommercial
         public string? Email { get; set; }
         public string? Address { get; set; }
 
-        //public required Counstrys countryId {get; set;}
+        //public required Countries countryId {get; set;}
         //public Countrys? country {get; set;} 
     }
 }

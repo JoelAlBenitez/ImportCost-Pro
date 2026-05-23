@@ -1,5 +1,5 @@
 ﻿using Persistence.Entities.Base;
-using Application.Enum;
+using Persistence.Enum;
 namespace Persistence.Entities.OperationalCommercial
 {
     public class Products : BaseEntity<int, string>

@@ -1,4 +1,4 @@
-﻿namespace Application.Enum
+﻿namespace Persistence.Enum
 {
     public enum UnitMeasurement
     {
