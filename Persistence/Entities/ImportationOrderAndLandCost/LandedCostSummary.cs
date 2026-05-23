@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {
@@ -41,7 +37,8 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         //navigation properties
 
-        public required ImportationOrder ImportationOrder { get; set; }
+        //antes: public required ImportationOrder ImportationOrder { get; set; }
+        public virtual ImportationOrder ImportationOrder { get; set; } = null!;
 
         public required ICollection<LandedCostDetail> LandedCostDetails { get; set; }
 

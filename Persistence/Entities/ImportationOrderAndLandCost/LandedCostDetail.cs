@@ -1,9 +1,5 @@
 ﻿using Persistence.Entities.OperationalCommercial;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {
@@ -12,7 +8,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         public required string LandedCostDetailId { get; set; }
         public required string LandedCostSummaryId { get; set; }
 
-        public required string ProductId { get; set; }
+        public required int ProductId { get; set; }
 
         public required decimal Quantity { get; set; }
 
@@ -46,9 +42,9 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         //navigation properties
 
-        public required LandedCostSummary LandedCostSummary { get; set; }
+        public virtual LandedCostSummary LandedCostSummary { get; set; } = null!;
 
-        public required Products Product { get; set; }
+        public virtual Products Product { get; set; } = null!;
 
 
     }

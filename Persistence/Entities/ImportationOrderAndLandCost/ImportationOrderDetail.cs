@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+
+using Persistence.Entities.OperationalCommercial;
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {
@@ -12,7 +10,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         public required string OrderId { get; set; }
 
-        public required string ProductId { get; set; }
+        public required int ProductId { get; set; }
 
         public required decimal Quantity { get; set; }
 
@@ -21,7 +19,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         public required decimal ExpectedProfitMargin { get; set; }
 
         //navigation properties
-
-        public required ImportationOrder ImportationOrder { get; set; }
+        public virtual Products Product { get; set; } = null!;
+        public virtual ImportationOrder ImportationOrder { get; set; } = null!;
     }
 }

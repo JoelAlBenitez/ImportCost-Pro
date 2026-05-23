@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+
+using Persistence.Entities.Enums;
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {
@@ -12,7 +10,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         public required string OrderId { get; set; }
 
-        public required string ExpenseType { get; set; }
+        public required ExpenseType ExpenseType { get; set; }
 
         public required decimal ExpenseAmount { get; set; }
 
@@ -24,7 +22,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         //navigation properties
 
-        public required ImportationOrder ImportationOrder { get; set; }
+        public virtual ImportationOrder ImportationOrder { get; set; } = null!;
 
         //public required Currencies Currencies { get; set; }
     }

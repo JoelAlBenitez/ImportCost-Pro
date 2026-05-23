@@ -1,9 +1,5 @@
-﻿using Persistence.Entities.OperationalCommercial;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Persistence.Entities.Enums;
+using Persistence.Entities.OperationalCommercial;
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {
@@ -21,15 +17,14 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         public required DateTime OrderDate { get; set; }
 
-        public required string TransportMode { get; set; }
-
-        public required string OrderState { get; set; }
+        public required TransportMode TransportMode { get; set; }
+        public required OrderState OrderState { get; set; }
 
         //navigation properties
 
-        public required Importers Importer { get; set; }
+        public virtual Importers Importer { get; set; } = null!;
 
-        public required Suppliers Supplier { get; set; }
+        public virtual Suppliers Supplier { get; set; } = null!;
 
         //public required Countries Countries { get; set; }
 
@@ -37,7 +32,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         public required ICollection<ImportationOrderDetail> ImportationOrderDetails { get; set; }
 
-        public required LandedCostSummary LandedCostSummary { get; set; }
+        public virtual LandedCostSummary LandedCostSummary { get; set; } = null!;
 
         public required ICollection<ImportationExpense> ImportationExpenses { get; set; }
 

@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Persistence.Entities.ImportationOrderAndLandCost;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Persistence.Configurations.ImportationOrderAndLandCost
 {
@@ -22,7 +17,7 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
             });
 
             builder.HasOne(x => x.LandedCostSummary).WithMany(y=> y.LandedCostDetails).HasForeignKey(x => x.LandedCostSummaryId).OnDelete(DeleteBehavior.Restrict);
-            builder.Property(x => x.ProductId).IsRequired();
+            builder.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Restrict);
             builder.Property(x => x.Quantity).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.OriginalFOB).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.LocalFob).IsRequired().HasColumnType("decimal(18,2)");
