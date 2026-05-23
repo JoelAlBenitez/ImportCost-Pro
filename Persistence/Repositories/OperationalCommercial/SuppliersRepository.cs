@@ -47,12 +47,16 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Suppliers>> GetAllAsync()
         {
-            return await _context.suppliers.Where(s => s.State == true).ToListAsync();
+            return await _context.suppliers.Where(s => s.State == true)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Suppliers> GetEntityById(int key)
         {
-            return await _context.suppliers.FirstAsync(s => s.Key == key); 
+            return await _context.suppliers
+                .AsNoTracking()
+                .FirstAsync(s => s.Key == key); 
         }
 
 

@@ -39,7 +39,6 @@ namespace Application.Services.Importers
                     Phone = dto.Phone,
                     Email = dto.Email,
                     Address = dto.Address
-
                 };
                 return await _importersRepository.CreateAsync(importers);
                 

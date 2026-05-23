@@ -1,6 +1,7 @@
 ﻿using Application.Dto.Products;
 using Application.Services.BaseServices;
 using Persistence.Context;
+using Persistence.Entities.Enums;
 using Persistence.Entities.OperationalCommercial;
 using Persistence.Repositories.OperationalCommercial;
 using System.Security.AccessControl;
@@ -35,7 +36,7 @@ namespace Application.Services.ProductsServices
             {
                 var exits = await ExistProduct(dto);
                 if (exits) return false;
-               
+
                 Products products = new()
                 {
                     Name = dto.Name,
@@ -45,6 +46,7 @@ namespace Application.Services.ProductsServices
                     Large = dto.Large,
                     Broad = dto.Broad,
                     High = dto.High,
+                    Unit = dto.unitMesaurement,
                     Description = dto.Description,
                     tarrifCategoriesId = dto.TarriffCategoriesId
                 };
@@ -79,6 +81,7 @@ namespace Application.Services.ProductsServices
                     Key = dto.Key,
                     Name = dto.Name,
                     State = dto.State,
+                    Unit = dto.unitMesaurement,
                     CodeRefence = dto.CodeReference,
                     UnitWeight = dto.UnitWeight,
                     Large = dto.Large,
@@ -113,6 +116,7 @@ namespace Application.Services.ProductsServices
                         {
                             Key = item.Key,
                             Name = item.Name,
+                            unitMesaurement = item.Unit,
                             State = item.State,
                             CodeReference = item.CodeRefence,
                             UnitWeight = item.UnitWeight,
@@ -146,6 +150,7 @@ namespace Application.Services.ProductsServices
                 {
                     ProductsDto p = new() { 
                         Key = product.Key,
+                        unitMesaurement = product.Unit,
                         Name = product.Name,
                         State = product.State,
                         CodeReference = product.CodeRefence,

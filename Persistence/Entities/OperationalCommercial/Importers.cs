@@ -8,8 +8,9 @@ namespace Persistence.Entities.OperationalCommercial
         public string? Phone {  get; set; }
         public string? Email { get; set; }
         public string? Address { get; set; }
+        
+        //public required int countryId {get; set;}
 
-        //public required Counstrys countryId {get; set;}
-        //public Countrys? country {get; set;} 
+        //public Country? country {get; set;} 
     }
 }

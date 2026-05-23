@@ -47,17 +47,23 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<TariffCategories>> GetAllAsync()
         {
-            return await _context.tariffCategories.Where(t => t.State == true).ToListAsync();
+            return await _context.tariffCategories.Where(t => t.State == true)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<TariffCategories> GetEntityById(int key)
         {
-           return await _context.tariffCategories.FirstAsync(t =>  t.Key == key);
+           return await _context.tariffCategories
+                .AsNoTracking()
+                .FirstAsync(t =>  t.Key == key);
         }
 
         public async Task<bool> ExistTariffCode(string code)
         {
-            return await _context.tariffCategories.FirstAsync(t => t.TariffCode == code) != null;
+            return await _context.tariffCategories
+                .AsNoTracking()
+                .FirstAsync(t => t.TariffCode == code) != null;
         }
     }
 }

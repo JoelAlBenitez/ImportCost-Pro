@@ -1,4 +1,5 @@
 ﻿using Application.Dto.Base;
+using Persistence.Entities.Enums;
 namespace Application.Dto.Products
 {
     public  class ProductsDto : DtoBase
@@ -12,7 +13,7 @@ namespace Application.Dto.Products
         public decimal? High { get; set; }
         public string? Description { get; set; }
 
-        //public Unit unit {get; set;}
+        public required UnitMesaurement unitMesaurement { get; set; }
         //public required int CountrysId {get; set;}
     }
 }

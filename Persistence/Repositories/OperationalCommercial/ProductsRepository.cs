@@ -49,12 +49,16 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Products>> GetAllAsync()
         {
-            return await _context.products.Where(p => p.State == true).ToListAsync();
+            return await _context.products.Where(p => p.State == true)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Products> GetEntityById(int key)
         {
-            return await  _context.products.FirstAsync(p => p.Key == key);
+            return await  _context.products
+                .AsNoTracking()
+                .FirstAsync(p => p.Key == key);
         }
 
         public async Task<bool> ExistProductsByCodeReference(string codeReference)

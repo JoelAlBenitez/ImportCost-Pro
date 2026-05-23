@@ -17,6 +17,7 @@ namespace Application.ViewModel.Importers
         //public required int countryId {get; set;}
 
         [StringLength(20, MinimumLength = 0)]
+        [Phone]
         public string? PhoneNumber {  get; set; }
 
         [StringLength(100, MinimumLength = 0)]
@@ -26,6 +27,7 @@ namespace Application.ViewModel.Importers
         [StringLength(250, MinimumLength = 0)]
         public string? Address { get; set; }
 
-        public required bool State { get; set; } = true;
+        [Required (ErrorMessage = "You must select a valid state for the importer you are trying to create.")]
+        public required bool State { get; set; }
     }
 }
