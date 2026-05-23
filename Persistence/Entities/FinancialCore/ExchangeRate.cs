@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Persistence.Entities.FinancialCore
-{v
+{
     public class ExchangeRate
     {
         public int SourceCurrencyId { get; set; }
