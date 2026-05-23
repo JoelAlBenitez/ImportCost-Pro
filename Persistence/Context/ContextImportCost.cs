@@ -16,6 +16,7 @@ namespace Persistence.Context
         public DbSet<TariffCategories> tariffCategories { get; set; }
 
         public DbSet<Currency> currencies { get; set; }
+        public DbSet<ExchangeRate> exchangeRates { get; set; }
 
 
 
