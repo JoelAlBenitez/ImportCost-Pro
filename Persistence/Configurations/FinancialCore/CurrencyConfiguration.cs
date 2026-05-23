@@ -24,10 +24,10 @@ namespace Persistence.Configurations.FinancialCore
             builder.Property(c => c.Name).HasMaxLength(100);
             builder.Property(c => c.Symbol).HasMaxLength(10);
             builder.Property(c => c.State).HasDefaultValue(true);
-            builder.HasMany(c => c.Suppliers);
-                   //.WithOne(c => c.MainCurrencys)
-                   //.HasForeignKey(s => s.MainCurrencyId)
-                   //.OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(c => c.Suppliers)
+                   .WithOne(s => s.MainCurrency)
+                   .HasForeignKey(s => s.MainCurrencyId)
+                   .OnDelete(DeleteBehavior.Restrict);
                 
 
         }
