@@ -1,37 +1,54 @@
-﻿using Persistence.Repositories.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Context;
 using Persistence.Entities.FinancialCore;
+using Persistence.Repositories.Base;
+
 namespace Persistence.Repositories.FinancialCore
 {
     public class CountryRepository : BaseRepository<Country, int>
     {
-        public Task<bool> CreateAsync(Country entity)
+        private readonly ContextImportCost _context;
+
+        public CountryRepository(ContextImportCost context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<bool> DeleteAsync(Country entity)
+        public async Task<bool> CreateAsync(Country entity)
         {
-            throw new NotImplementedException();
+            await _context.countries.AddAsync(entity);
+            return await _context.SaveChangesAsync() > 0;
         }
 
-        public Task<bool> EditAsync(Country entity)
+        public async Task<bool> EditAsync(Country entity)
         {
-            throw new NotImplementedException();
+            _context.countries.Update(entity);
+            return await _context.SaveChangesAsync() > 0;
         }
 
-        public Task<IReadOnlyCollection<Country>> GetAllAsync()
+        public async Task<bool> DeleteAsync(Country entity)
         {
-            throw new NotImplementedException();
+            _context.countries.Remove(entity);
+            return await _context.SaveChangesAsync() > 0;
         }
 
-        public Task<Country> GetEntityById(int key)
+        public async Task<Country?> GetEntityById(int key)
         {
-            throw new NotImplementedException();
+            return await _context.countries.FirstOrDefaultAsync(c => c.Key == key);
+        }
+
+        public async Task<IReadOnlyCollection<Country>> GetAllAsync()
+        {
+            // El documento exige mostrar TODOS los registros (incluyendo inactivos) en el listado inicial.
+            return await _context.countries.ToListAsync();
+        }
+
+        public async Task<Country?> GetByIsoCodeAsync(string isoCode)
+        {
+            // El documento dice: "El código ISO no puede repetirse" (Pág. 6)
+            // Usamos FirstOrDefaultAsync para buscar una coincidencia exacta, ignorando mayúsculas/minúsculas.
+            return await _context.countries
+                .FirstOrDefaultAsync(c => c.IsoCode.ToLower() == isoCode.ToLower());
         }
     }
 }
