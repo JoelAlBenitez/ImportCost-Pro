@@ -1,5 +1,6 @@
 ﻿using Persistence.Entities.Base;
 using Persistence.Entities.Enums;
+using Persistence.Entities.FinancialCore;
 namespace Persistence.Entities.OperationalCommercial
 {
     public class Products : BaseEntity<int, string>
@@ -13,8 +14,7 @@ namespace Persistence.Entities.OperationalCommercial
         public required UnitMesaurement Unit { get; set; }
         public int? tarrifCategoriesId { get; set; }
         public TariffCategories? tariffCategories {get; set;}
-
-        //public Country? country {get; set;}
-        //public required int? countryId {get; set;}
+        public Country? country {get; set;}
+        public required int countryId {get; set;}
     }
 }
