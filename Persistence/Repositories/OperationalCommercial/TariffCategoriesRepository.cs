@@ -21,8 +21,7 @@ namespace Persistence.Repositories.OperationalCommercial
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
-
-      
+     
         public async Task<bool> DeleteAsync(string tkey)
         {
             var entity = await _context.tariffCategories.FindAsync(tkey);
@@ -35,7 +34,6 @@ namespace Persistence.Repositories.OperationalCommercial
             }
             return false;
         }
-
         public async Task<bool> EditAsync(TariffCategories entity)
         {
             if(entity != null)
@@ -47,13 +45,20 @@ namespace Persistence.Repositories.OperationalCommercial
             }return false;
         }
 
+        public async Task<bool> AssociatedProductsC(string code)
+        {
+            bool associatedPC = await _context.tariffCategories
+                .AnyAsync(c => c.Key == code && c.Products!.Any());
+            return associatedPC;
+        }
+
         public async Task<IReadOnlyCollection<TariffCategories>> GetAllAsync()
         {
             return await _context.tariffCategories.Where(t => t.State == true)
                 .AsNoTracking()
                 .ToListAsync();
         }
-        
+    
         public async Task<TariffCategories> GetEntityById(string key)
         {
            return await _context.tariffCategories

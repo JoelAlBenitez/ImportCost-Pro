@@ -14,12 +14,24 @@ namespace Application.Services.TarriffCategories
             _tarriffCategoriesRepository = tarriffCategoriesRepository;
         }
 
+        public async Task<bool> AssociateProductsByCategorie(string code)
+        {
+            try
+            {
+                return await _tarriffCategoriesRepository.AssociatedProductsC(code);
+            }
+            catch (Exception) {
+
+                return false;
+            }
+        }
+ 
         public async Task<bool> CreateAsync(TariffCategoriesDto dto)
         {
             try
             {
                 TariffCategories tariffCategories = new (){
-                    Key = dto.Key,
+                    Key = dto.Key.Trim(),
                     Name = dto.Name,
                     State = dto.State,
                     PorcentageTariff = dto.PorcentageTariff,
@@ -50,18 +62,15 @@ namespace Application.Services.TarriffCategories
             try
             {
                 TariffCategories tariff = new() {
-                    Key = dto.Key,
+                    Key = dto.Key.Trim(),
                     Name = dto.Name,
                     State = dto.State,
                     PorcentageTariff = dto.PorcentageTariff,
                     ITBIS = dto.ITBIS,
                     SelectiveTaxApplies = dto.SelectiveTaxApplies,
-                    PorcentageTaxSelective = dto.PorcentageTaxSelective
-
-                    
+                    PorcentageTaxSelective = dto.PorcentageTaxSelective  
                 };
                 return await _tarriffCategoriesRepository.EditAsync(tariff);
-
             }
             catch (Exception)
             {

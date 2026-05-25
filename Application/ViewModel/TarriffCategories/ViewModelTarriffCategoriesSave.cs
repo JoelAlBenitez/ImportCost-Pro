@@ -6,7 +6,7 @@ namespace Application.ViewModel.TarriffCategories
     {
         
         [Required(ErrorMessage = "You must enter a valid tariff code no longer than 20 characters.")]
-        [StringLength(20) ]
+        [StringLength(20) ]        
         public required string TarriffCode { get; set; }
 
         [Required(ErrorMessage = "You must enter a valid tariff name or description no longer than 150 characters.")]

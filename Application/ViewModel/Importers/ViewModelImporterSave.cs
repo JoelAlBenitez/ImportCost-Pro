@@ -13,8 +13,8 @@ namespace Application.ViewModel.Importers
         [Required(ErrorMessage = "Invalid identification or too long, please enter a valid identification no longer than 20 characters")]
         public required string Identifcation { get; set; }
 
-        //[Required(ErrorMessage = "Country invalid, please select a country  valid")]
-        //public required int countryId {get; set;}
+        [Required(ErrorMessage = "Country invalid, please select a country  valid")]
+        public required int countryId {get; set;}
 
         [StringLength(20, MinimumLength = 0)]
         [Phone]
