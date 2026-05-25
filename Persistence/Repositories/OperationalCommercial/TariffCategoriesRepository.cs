@@ -6,7 +6,7 @@ using Persistence.Repositories.Base;
 
 namespace Persistence.Repositories.OperationalCommercial
 {
-    public class TariffCategoriesRepository : BaseRepository<TariffCategories, int>
+    public class TariffCategoriesRepository : BaseRepository<TariffCategories, string>
     {
         private readonly ContextImportCost _context;
 
@@ -22,16 +22,18 @@ namespace Persistence.Repositories.OperationalCommercial
             return result > 0;
         }
 
-        public async Task<bool> DeleteAsync(int tkey)
+      
+        public async Task<bool> DeleteAsync(string tkey)
         {
             var entity = await _context.tariffCategories.FindAsync(tkey);
-            if(entity != null)
+            if (entity != null)
             {
-               _context.tariffCategories.Remove(entity);
-               var result= await _context.SaveChangesAsync();
-               return result > 0;
+                _context.tariffCategories.Remove(entity);
+                var result = await _context.SaveChangesAsync();
+                return result > 0;
 
-            }return false;
+            }
+            return false;
         }
 
         public async Task<bool> EditAsync(TariffCategories entity)
@@ -51,19 +53,13 @@ namespace Persistence.Repositories.OperationalCommercial
                 .AsNoTracking()
                 .ToListAsync();
         }
-
-        public async Task<TariffCategories> GetEntityById(int key)
+        
+        public async Task<TariffCategories> GetEntityById(string key)
         {
            return await _context.tariffCategories
                 .AsNoTracking()
-                .FirstAsync(t =>  t.Key == key);
+                .FirstAsync(t => t.Key == key);
         }
 
-        public async Task<bool> ExistTariffCode(string code)
-        {
-            return await _context.tariffCategories
-                .AsNoTracking()
-                .FirstAsync(t => t.TariffCode == code) != null;
-        }
     }
 }

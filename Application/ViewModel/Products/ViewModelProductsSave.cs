@@ -17,22 +17,18 @@ namespace Application.ViewModel.Products
         [Range (0.01, double.MaxValue, ErrorMessage = "Enter a unit price greater than 0.")]
         public required decimal UnitWeight { get; set; }
 
-
         [Required (ErrorMessage = "Select a valid tariff category.")]
         public required int TarriffCategoriesId { get; set; }
-
         public decimal? Large { get; set; }
         public decimal? Broad { get; set; }
         public decimal? High {  get; set; }
 
         [Required (ErrorMessage = "Select a valid unit of measurement for the product.")]
         public required UnitMesaurement unit {get; set;}
-
-         /* 
-         * [Required (ErrorMessage = "Please select a valid country of origin for the product you are trying to create.")]
-         * public required int countryId {get; set;}
-         */
-
+          
+        [Required (ErrorMessage = "Please select a valid country of origin for the product you are trying to create.")]
+        public required int countryId {get; set;}
+         
         public string? Description { get; set; }
 
         [Required (ErrorMessage = "Select a valid state for the product you are trying to create.")]

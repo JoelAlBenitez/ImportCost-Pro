@@ -1,4 +1,5 @@
 ﻿using Persistence.Entities.Base;
+using Persistence.Entities.FinancialCore;
 
 namespace Persistence.Entities.OperationalCommercial
 {
@@ -8,10 +9,8 @@ namespace Persistence.Entities.OperationalCommercial
         public string? Phone {  get; set; }
         public string? Email { get; set; }
         public string? Address { get; set; }
-        
-        //public required int countryId {get; set;}
-
-        //public Country? country {get; set;} 
+        public required int countryId {get; set;}
+        public Country? country {get; set;} 
     }
 }
 

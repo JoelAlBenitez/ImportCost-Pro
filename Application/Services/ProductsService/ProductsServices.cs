@@ -41,6 +41,7 @@ namespace Application.Services.ProductsServices
                 {
                     Name = dto.Name,
                     State = dto.State,
+                    countryId = dto.CountrysId,
                     CodeRefence = dto.CodeReference,
                     UnitWeight = dto.UnitWeight,
                     Large = dto.Large,
@@ -80,6 +81,7 @@ namespace Application.Services.ProductsServices
 
                     Key = dto.Key,
                     Name = dto.Name,
+                    countryId = dto.CountrysId,
                     State = dto.State,
                     Unit = dto.unitMesaurement,
                     CodeRefence = dto.CodeReference,
@@ -116,6 +118,7 @@ namespace Application.Services.ProductsServices
                         {
                             Key = item.Key,
                             Name = item.Name,
+                            CountrysId  = item.countryId,
                             unitMesaurement = item.Unit,
                             State = item.State,
                             CodeReference = item.CodeRefence,
@@ -152,6 +155,7 @@ namespace Application.Services.ProductsServices
                         Key = product.Key,
                         unitMesaurement = product.Unit,
                         Name = product.Name,
+                        CountrysId = product.countryId,
                         State = product.State,
                         CodeReference = product.CodeRefence,
                         UnitWeight = product.UnitWeight,
