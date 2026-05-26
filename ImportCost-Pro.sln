@@ -15,6 +15,36 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImportCost", "ImportCost", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportCost", "ImportCost\ImportCost.csproj", "{68AF2439-DC6A-469A-9793-87B04D4D7C2B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DTOs", "DTOs", "{2977F9E8-32C8-451B-9244-6FFDE09F0978}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImportationOrderAndLandCost", "ImportationOrderAndLandCost", "{7EAC9030-4829-43BC-8D8D-C3F7BDD3A5EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orders", "Orders", "{0D242D6F-018E-413F-B4D3-47C06A683DF6}"
+	ProjectSection(SolutionItems) = preProject
+		ImportationOrderCreateDTO.cs = ImportationOrderCreateDTO.cs
+		ImportationOrderResponseDTO.cs = ImportationOrderResponseDTO.cs
+		ImportationOrderUpdateDTO.cs = ImportationOrderUpdateDTO.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderDetails", "OrderDetails", "{E0F16B91-64AA-495A-A5B1-3213E43FEF55}"
+	ProjectSection(SolutionItems) = preProject
+		OrderDetailCreateDTO.cs = OrderDetailCreateDTO.cs
+		OrderDetailResponseDTO.cs = OrderDetailResponseDTO.cs
+		OrderDetailUpdateDTO.cs = OrderDetailUpdateDTO.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Expenses", "Expenses", "{493E57E6-7801-4A43-92AC-AE92C27AD980}"
+	ProjectSection(SolutionItems) = preProject
+		ImportationExpenseCreateDTO.cs = ImportationExpenseCreateDTO.cs
+		ImportationExpenseResponseDTO.cs = ImportationExpenseResponseDTO.cs
+		ImportationExpenseUpdateDTO.cs = ImportationExpenseUpdateDTO.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LandedCost", "LandedCost", "{DE780C23-8532-467A-8590-DE316F91094B}"
+	ProjectSection(SolutionItems) = preProject
+		LandedCostCalculationResultDTO.cs = LandedCostCalculationResultDTO.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +71,12 @@ Global
 		{68BF13E2-6D37-42AA-B270-61238D9B9B53} = {8822745A-19F1-43DB-AD32-E0700E5775DD}
 		{F852AE77-2801-4C56-83A1-80E09A5B9E23} = {EFABCFB1-00DA-4641-8100-4C6E1C0CBC0E}
 		{68AF2439-DC6A-469A-9793-87B04D4D7C2B} = {190AE4A8-0A78-4E6F-B605-0AA99BF2E545}
+		{2977F9E8-32C8-451B-9244-6FFDE09F0978} = {8822745A-19F1-43DB-AD32-E0700E5775DD}
+		{7EAC9030-4829-43BC-8D8D-C3F7BDD3A5EE} = {2977F9E8-32C8-451B-9244-6FFDE09F0978}
+		{0D242D6F-018E-413F-B4D3-47C06A683DF6} = {7EAC9030-4829-43BC-8D8D-C3F7BDD3A5EE}
+		{E0F16B91-64AA-495A-A5B1-3213E43FEF55} = {7EAC9030-4829-43BC-8D8D-C3F7BDD3A5EE}
+		{493E57E6-7801-4A43-92AC-AE92C27AD980} = {7EAC9030-4829-43BC-8D8D-C3F7BDD3A5EE}
+		{DE780C23-8532-467A-8590-DE316F91094B} = {7EAC9030-4829-43BC-8D8D-C3F7BDD3A5EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {24490907-2D9D-4C0D-ACF4-01594A246B95}
