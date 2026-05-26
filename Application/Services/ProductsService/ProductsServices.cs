@@ -15,11 +15,11 @@ namespace Application.Services.ProductsServices
             _productsRepository = productsRepository;
         }
 
-        public async Task<bool> ExistProduct(ProductsDto dto)
+        public async Task<bool> ExistProduct(string codeReference)
         {
             try
             {
-                return await _productsRepository.ExistProductsByCodeReference(dto.CodeReference);
+                return await _productsRepository.ExistProductsByCodeReference(codeReference);
             }
             catch (Exception)
             {
@@ -31,9 +31,8 @@ namespace Application.Services.ProductsServices
         {
             try
             {
-                var exits = await ExistProduct(dto);
-                if (exits) return false;
-
+               
+      
                 Products products = new()
                 {
                     Name = dto.Name,
@@ -75,7 +74,6 @@ namespace Application.Services.ProductsServices
             {
                 Products products = new()
                 {
-
                     Key = dto.Key,
                     Name = dto.Name,
                     countryId = dto.CountrysId,

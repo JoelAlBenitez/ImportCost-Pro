@@ -6,7 +6,7 @@ namespace Application.ViewModel.Products
     public class ViewModelProducts : BaseViewModel <int, string>
     {
         public required string CodeReference { get; set; }
-        public required int TariffCategoriesId { get; set; }
+        public required string TariffCategoriesId { get; set; }
         public required string TarffCategoriesName { get; set; }
         public required decimal UnitWeight { get; set; }
         public  decimal? Large {  get; set; }

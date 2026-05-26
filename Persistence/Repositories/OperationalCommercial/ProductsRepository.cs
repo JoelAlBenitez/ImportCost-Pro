@@ -39,9 +39,8 @@ namespace Persistence.Repositories.OperationalCommercial
             if(entity != null)
             {
                  _context.products.Update(entity);
-                var result = await _context.SaveChangesAsync();
-                return result > 0;
-                
+                return await _context.SaveChangesAsync() > 0;
+     
             }
             return false;
 
@@ -49,7 +48,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Products>> GetAllAsync()
         {
-            return await _context.products.Where(p => p.State == true)
+            return await _context.products
                 .AsNoTracking()
                 .ToListAsync();
         }

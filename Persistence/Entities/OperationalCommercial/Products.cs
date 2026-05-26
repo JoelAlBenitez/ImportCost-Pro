@@ -12,7 +12,7 @@ namespace Persistence.Entities.OperationalCommercial
         public decimal? High { get; set; }
         public string? Description { get; set; }
         public required UnitMesaurement Unit { get; set; }
-        public required int tarrifCategoriesId { get; set; }
+        public required string tarrifCategoriesId { get; set; }
         public TariffCategories? tariffCategories { get; set; }
         public Country? country { get; set; }
         public required int countryId { get; set; }
