@@ -6,7 +6,7 @@ namespace Application.Dto.Products
     {
         public required string CodeReference { get; set; }
         public required int TarriffCategoriesId {  get; set; }
-        //public required TarriffCategoriesDto TarriffCategories {get; set;}
+        public required string TariffCategoriesName { get; set; }
         public required decimal UnitWeight { get; set; }
         public decimal? Large {  get; set; }
         public decimal? Broad { get; set; }
@@ -14,5 +14,7 @@ namespace Application.Dto.Products
         public string? Description { get; set; }
         public required UnitMesaurement unitMesaurement { get; set; }
         public required int CountrysId {get; set;}
+        public required string CountryName { get; set; }
+
     }
 }

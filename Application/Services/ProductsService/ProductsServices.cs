@@ -1,10 +1,7 @@
 ﻿using Application.Dto.Products;
 using Application.Services.BaseServices;
-using Persistence.Context;
-using Persistence.Entities.Enums;
 using Persistence.Entities.OperationalCommercial;
 using Persistence.Repositories.OperationalCommercial;
-using System.Security.AccessControl;
 
 namespace Application.Services.ProductsServices
 {
@@ -119,7 +116,9 @@ namespace Application.Services.ProductsServices
                             Key = item.Key,
                             Name = item.Name,
                             CountrysId  = item.countryId,
+                            CountryName = item.country!.Name,
                             unitMesaurement = item.Unit,
+                            TariffCategoriesName = item.tariffCategories!.Name,
                             State = item.State,
                             CodeReference = item.CodeRefence,
                             UnitWeight = item.UnitWeight,
@@ -127,7 +126,8 @@ namespace Application.Services.ProductsServices
                             Broad = item.Broad,
                             High = item.High,
                             Description = item.Description,
-                            TarriffCategoriesId = item.tarrifCategoriesId ?? 0
+                            TarriffCategoriesId = item.tarrifCategoriesId 
+                            
 
                         };
                         productsList.Add(productsDto);
@@ -156,19 +156,20 @@ namespace Application.Services.ProductsServices
                         unitMesaurement = product.Unit,
                         Name = product.Name,
                         CountrysId = product.countryId,
+                        CountryName = product.country!.Name,
                         State = product.State,
                         CodeReference = product.CodeRefence,
                         UnitWeight = product.UnitWeight,
                         Large = product.Large,
                         Broad = product.Broad,
                         High = product.High,
-                        TarriffCategoriesId = product.tarrifCategoriesId ?? 0,
+                        TarriffCategoriesId = product.tarrifCategoriesId,
+                        TariffCategoriesName = product.tariffCategories!.Name,
                         Description = product.Description
                 
                     };
                     return p;
                 }
-
                 return null!;
             }
             catch (Exception)

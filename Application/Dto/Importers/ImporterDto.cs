@@ -8,6 +8,6 @@ namespace Application.Dto.Importers
         public string? Address { get; set; }
         public string? Email { get; set; }
 
-        //public required Countrys country {get; set;}
+        //public Countrys country {get; set;}
     }
 }
