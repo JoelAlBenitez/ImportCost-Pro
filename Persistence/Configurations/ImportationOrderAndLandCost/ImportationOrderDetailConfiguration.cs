@@ -10,11 +10,14 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
         public void Configure(EntityTypeBuilder<ImportationOrderDetail> builder)
         {
             builder.HasKey(x => x.OrderDetailId);
+            builder.Property(x => x.OrderDetailId).HasMaxLength(50);
+            builder.Property(x => x.OrderId).HasMaxLength(30);
+
             builder.ToTable("ImportationOrderDetails", t =>
             {
                 t.HasCheckConstraint("CK_ImportationOrderDetails_Quantity", "Quantity > 0");
                 t.HasCheckConstraint("CK_ImportationOrderDetails_FOBUnitPrice", "FOBUnitPrice > 0");
-                t.HasCheckConstraint("CK_ImportationOrderDetails_ExpectedProfitMargin", "ExpectedProfitMargin > 0 and ExpectedProfitMargin < 100");
+                t.HasCheckConstraint("CK_ImportationOrderDetails_ExpectedProfitMargin", "ExpectedProfitMargin >= 0 and ExpectedProfitMargin < 100");
             });
 
             #region Property Configurations

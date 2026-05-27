@@ -10,6 +10,9 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
         public void Configure(EntityTypeBuilder<LandedCostSummary> builder)
         {
             builder.HasKey(x => x.LandedCostSummaryId);
+            builder.Property(x => x.LandedCostSummaryId).HasMaxLength(50);
+            builder.Property(x => x.OrderId).HasMaxLength(30);
+
             builder.ToTable("LandedCostSummaries", t =>
             {
                 t.HasCheckConstraint("CK_LandedCostSummaries_TotalImportationCost", "TotalImportationCost > 0");

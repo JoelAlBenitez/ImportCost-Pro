@@ -16,7 +16,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         public required string CurrencyId { get; set; }
 
-        public required string DistributionMethod { get; set; }
+        public required DistributionMethod DistributionMethod { get; set; }
 
         public required DateTime ImportationExpenseDate { get; set; }
 

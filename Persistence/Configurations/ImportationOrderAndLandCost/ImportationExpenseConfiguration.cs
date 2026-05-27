@@ -10,11 +10,13 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
         public void Configure(EntityTypeBuilder<ImportationExpense> builder)
         {
             builder.HasKey(x => x.ImportationExpenseId);
+            builder.Property(x => x.ImportationExpenseId).HasMaxLength(50);
+            builder.Property(x => x.OrderId).HasMaxLength(30);
 
 
             builder.ToTable("ImportationExpenses", t =>
             {
-                t.HasCheckConstraint("ImportationExpenseId_ExpenseAmount", "ExpenseAmount > 0");
+                t.HasCheckConstraint("CK_ImportationExpenses_ExpenseAmount", "ExpenseAmount > 0");
             });
 
             #region Property Configurations
@@ -23,7 +25,7 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
             builder.Property(x => x.ExpenseType).IsRequired().HasConversion<string>();
             builder.Property(x => x.ExpenseAmount).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.CurrencyId).IsRequired().HasMaxLength(3);
-            builder.Property(x => x.DistributionMethod).IsRequired().HasMaxLength(50);
+            builder.Property(x => x.DistributionMethod).IsRequired().HasConversion<string>().HasMaxLength(50);
             builder.Property(x => x.ImportationExpenseDate).IsRequired();
 
 

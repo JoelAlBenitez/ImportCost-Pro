@@ -9,10 +9,10 @@ namespace Persistence.Context
     {
         public ContextImportCost(DbContextOptions<ContextImportCost> op) : base (op) { }
 
-        public DbSet<Importers> importers { get; set; }
-        public DbSet<Products> products { get; set; }
-        public DbSet<Suppliers> suppliers { get; set; }
-        public DbSet<TariffCategories> tariffCategories { get; set; }
+        public DbSet<Importers> Importers { get; set; }
+        public DbSet<Products> Products { get; set; }
+        public DbSet<Suppliers> Suppliers { get; set; }
+        public DbSet<TariffCategories> TariffCategories { get; set; }
 
 
         //Importation Order and Landed Cost sets

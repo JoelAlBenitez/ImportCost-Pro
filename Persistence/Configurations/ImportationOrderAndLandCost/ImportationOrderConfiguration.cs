@@ -10,6 +10,7 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
         public void Configure(EntityTypeBuilder<ImportationOrder> builder)
         {
             builder.HasKey(orID => orID.OrderId);
+            builder.Property(x => x.OrderId).HasMaxLength(30);
             builder.ToTable("ImportationOrders");
 
             #region Property Configurations

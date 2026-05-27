@@ -10,9 +10,12 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
         public void Configure(EntityTypeBuilder<LandedCostDetail> builder)
         {
             builder.HasKey(x => x.LandedCostDetailId);
+            builder.Property(x => x.LandedCostDetailId).HasMaxLength(50);
+            builder.Property(x => x.LandedCostSummaryId).HasMaxLength(50);
+
             builder.ToTable("LandedCostDetails", t =>
             {
-                t.HasCheckConstraint("CK_LandedCostDetails_FinalUnitCost", "UnitImportedCost > 0");
+                t.HasCheckConstraint("CK_LandedCostDetails_UnitImportedCost", "UnitImportedCost > 0");
                 t.HasCheckConstraint("CK_LandedCostDetails_Quantity", "Quantity > 0");
             });
 

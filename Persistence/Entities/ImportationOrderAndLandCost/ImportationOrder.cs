@@ -30,11 +30,11 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         //public required Currencies Currencies { get; set; }
 
-        public required ICollection<ImportationOrderDetail> ImportationOrderDetails { get; set; }
+        public virtual ICollection<ImportationOrderDetail> ImportationOrderDetails { get; set; } = new List<ImportationOrderDetail>();
 
         public virtual LandedCostSummary LandedCostSummary { get; set; } = null!;
 
-        public required ICollection<ImportationExpense> ImportationExpenses { get; set; }
+        public virtual ICollection<ImportationExpense> ImportationExpenses { get; set; } = new List<ImportationExpense>();
 
 
     }

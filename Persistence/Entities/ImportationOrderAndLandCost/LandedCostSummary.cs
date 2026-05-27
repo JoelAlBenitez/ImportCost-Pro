@@ -40,7 +40,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         //antes: public required ImportationOrder ImportationOrder { get; set; }
         public virtual ImportationOrder ImportationOrder { get; set; } = null!;
 
-        public required ICollection<LandedCostDetail> LandedCostDetails { get; set; }
+        public virtual ICollection<LandedCostDetail> LandedCostDetails { get; set; } = new List<LandedCostDetail>();
 
     }
 }
