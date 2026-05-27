@@ -18,15 +18,17 @@ namespace Persistence.Repositories.OperationalCommercial
         public async Task<bool> CreateAsync(Importers entity)
         {
             await _context.importers.AddAsync(entity);
-           var result = await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync();
             return result > 0;
         }
 
-        public async Task<bool> DeleteAsync(Importers entity)
+        public async Task<bool> DeleteAsync(int tkey)
         {
-            if(entity != null) {
+            var import = await _context.importers.FindAsync(tkey);
 
-                 _context.importers.Remove(entity);
+            if(import != null)
+            {
+                 _context.importers.Remove(import);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
             }
@@ -46,12 +48,16 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Importers>> GetAllAsync()
         {
-            return await _context.importers.Where(i => i.State == true).ToListAsync();
+            return await _context.importers.Where(i => i.State == true)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Importers> GetEntityById(int key)
         {
-            return await _context.importers.FirstAsync(i => i.Key == key); ;
+            return await _context.importers
+                .AsNoTracking()
+                .FirstAsync(i => i.Key == key); 
         }
 
         public async Task<bool> ExistImportersByRnc(string rnc)
