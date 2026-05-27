@@ -15,7 +15,10 @@
     </PackageReference>
   </ItemGroup>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1cfcb51d11d781fe8ec6a382ebf683574409ec91
   <ItemGroup>
     <Folder Include="Migrations\" />
   </ItemGroup>
