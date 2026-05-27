@@ -24,7 +24,7 @@ namespace Application.Services.FinancialCore
                 Name = entity.Name,
                 IsoCode = entity.IsoCode,
                 State = entity.State
-            }).ToList(); ;
+            }).ToList(); 
             return dtosList;
         }
 
@@ -62,10 +62,10 @@ namespace Application.Services.FinancialCore
                 State = dto.State
             };
 
-            await _repository.CreateAsync(entity);
+           return await _repository.CreateAsync(entity);
             
 
-            return true;
+            
         }
         //--------------------------------------------
 
