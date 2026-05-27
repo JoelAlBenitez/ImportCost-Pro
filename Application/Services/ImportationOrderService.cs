@@ -43,13 +43,13 @@ namespace Application.Services
                 (order.ImportationExpenses != null ? order.ImportationExpenses.Sum(e => e.ExpenseAmount) : 0)
             }).ToList();
 
-            // 3. Return lista final
+            // Return lista final
             return dtos;
         }
 
         public async Task<ImportationOrderResponseDTO> CreateAsync(ImportationOrderCreateDTO orderCreateDTO)
         {
-            // 1. Mapear de DTO a Entidad
+            // Mapear de DTO a Entidad
             var newOrder = new ImportationOrder
             {
                 OrderId = Guid.NewGuid().ToString(),
@@ -125,10 +125,10 @@ namespace Application.Services
         }
         public async Task<bool> DeleteAsync(string id)
         {
-            // 1. Buscar la entidad pura en la base de datos usando el ID
+            
             var order = await _orderRepository.GetEntityById(id);
 
-            // 2. Validar que la orden exista y no esté calculada
+            //Validar que la orden exista y no esté calculada
             if (order == null) return false;
 
             if (order.OrderState == OrderState.Calculada)
@@ -136,42 +136,37 @@ namespace Application.Services
                 throw new InvalidOperationException("No se puede eliminar esta orden porque ya tiene un cálculo oficial de landed cost.");
             }
 
-            // 3. Enviar la entidad completa al repositorio para que la elimine de SQL
+            //Enviar la entidad completa al repositorio para que la elimine de SQL
             var result = await _orderRepository.DeleteAsync(order);
             return result;
         }
 
         public async Task<ImportationOrderResponseDTO> EditAsync(string id, ImportationOrderUpdateDTO orderUpdateDTO)
         {
-            // 1. Buscar la orden existente en la base de datos
+            
             var existingOrder = await _orderRepository.GetEntityById(id);
 
-            // 2. Validar que exista y que su estado permita edición
+            // Validar que exista y que su estado permita edición
             if (existingOrder == null) return null;
 
             if (existingOrder.OrderState == OrderState.Cerrada || existingOrder.OrderState == OrderState.Cancelada)
             {
-                // Lanza una excepción o devuelve nulo (dependiendo de cómo manejes errores en tu controlador)
+                // Lanza una excepción o devuelve nulo
                 throw new InvalidOperationException("No se puede editar esta orden porque está cerrada o cancelada.");
             }
 
-            // (Opcional, agregar la regla de si está "Calculada" y evitar cambiar el SupplierId, etc.)
 
-            // 3. Sobreescribir los datos viejos con los datos nuevos del DTO
-            // Actualizamos solo lo que tiene sentido cambiar en una orden.
+            // Sobreescribir los datos viejos con los datos nuevos del DTO
             existingOrder.ImporterId = orderUpdateDTO.ImporterId;
             existingOrder.SupplierId = orderUpdateDTO.SupplierId;
             existingOrder.OriginCountryId = orderUpdateDTO.OriginCountryId;
             existingOrder.CurrencyId = orderUpdateDTO.CurrencyId;
             existingOrder.TransportMode = orderUpdateDTO.TransportMode;
 
-            // Opcional: Dependiendo de tu lógica, podrías o no permitir cambiar el estado desde este método
-            // existingOrder.OrderState = orderUpdateDTO.OrderState; 
-
-            // 4. Guardar los cambios en la base de datos
+            // Guardar los cambios en la base de datos
             await _orderRepository.EditAsync(existingOrder);
 
-            // 5. Preparar la respuesta mapeando la entidad ya actualizada
+            // Preparar la respuesta mapeando la entidad ya actualizada
             var response = new ImportationOrderResponseDTO
             {
                 OrderId = existingOrder.OrderId,
@@ -179,11 +174,11 @@ namespace Application.Services
                 SupplierId = existingOrder.SupplierId,
                 OriginCountryId = existingOrder.OriginCountryId,
                 CurrencyId = existingOrder.CurrencyId,
-                OrderDate = existingOrder.OrderDate, // Mantenemos la fecha original
+                OrderDate = existingOrder.OrderDate,
                 TransportMode = existingOrder.TransportMode,
                 OrderState = existingOrder.OrderState,
 
-                // Y por supuesto, mantenemos nuestros cálculos matemáticos intactos
+
                 TotalFOB = existingOrder.ImportationOrderDetails != null
                     ? existingOrder.ImportationOrderDetails.Sum(d => d.Quantity * d.FOBUnitPrice)
                     : 0,
