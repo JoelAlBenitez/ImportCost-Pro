@@ -39,14 +39,13 @@ namespace Persistence.Repositories.FinancialCore
 
         public async Task<IReadOnlyCollection<Country>> GetAllAsync()
         {
-            // El documento exige mostrar TODOS los registros (incluyendo inactivos) en el listado inicial.
+         
             return await _context.countries.ToListAsync();
         }
 
         public async Task<Country?> GetByIsoCodeAsync(string isoCode)
         {
-            // El documento dice: "El código ISO no puede repetirse" (Pág. 6)
-            // Usamos FirstOrDefaultAsync para buscar una coincidencia exacta, ignorando mayúsculas/minúsculas.
+           
             return await _context.countries
                 .FirstOrDefaultAsync(c => c.IsoCode.ToLower() == isoCode.ToLower());
         }
