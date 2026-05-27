@@ -8,12 +8,10 @@ namespace Persistence.Entities.Enums
 {     
         public enum OrderState
         {
-            Borrador,
-            Emitida,
-            EnTransito,
-            EnAduana,
-            Recibida,
-            Cancelada
-        }
+        Abierta = 1,
+        Calculada = 2,
+        Cerrada = 3,
+        Cancelada = 4
+    }
     
 }

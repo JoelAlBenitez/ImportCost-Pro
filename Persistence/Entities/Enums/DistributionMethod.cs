@@ -8,9 +8,8 @@ namespace Persistence.Entities.Enums
 {
     public enum DistributionMethod
     {
-        PorPorValorFOB,
-        PorPeso,
-        PorVolumen,
-        PorCantidad
+        Maritimo,
+        Aereo,
+        Terrestre
     }
 }

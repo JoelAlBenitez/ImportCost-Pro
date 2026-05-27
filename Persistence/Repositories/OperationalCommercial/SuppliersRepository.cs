@@ -17,7 +17,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> CreateAsync(Suppliers entity)
         {
-             await  _context.suppliers.AddAsync(entity);
+             await  _context.Suppliers.AddAsync(entity);
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
@@ -26,7 +26,7 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             if (entity != null)
             {
-                _context.suppliers.Remove(entity);
+                _context.Suppliers.Remove(entity);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
 
@@ -37,7 +37,7 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             if (entity != null) {
 
-                _context.suppliers.Update(entity);
+                _context.Suppliers.Update(entity);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
             
@@ -46,12 +46,12 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Suppliers>> GetAllAsync()
         {
-            return await _context.suppliers.Where(s => s.State == true).ToListAsync();
+            return await _context.Suppliers.Where(s => s.State == true).ToListAsync();
         }
 
         public async Task<Suppliers> GetEntityById(int key)
         {
-            return await _context.suppliers.FirstAsync(s => s.Key == key); 
+            return await _context.Suppliers.FirstAsync(s => s.Key == key); 
         }
 
 

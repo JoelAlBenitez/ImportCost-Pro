@@ -17,7 +17,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> CreateAsync(TariffCategories entity)
         {
-            await _context.tariffCategories.AddAsync(entity);
+            await _context.TariffCategories.AddAsync(entity);
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
@@ -26,7 +26,7 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             if(entity != null)
             {
-               _context.tariffCategories.Remove(entity);
+               _context.TariffCategories.Remove(entity);
                var result= await _context.SaveChangesAsync();
                return result > 0;
 
@@ -37,7 +37,7 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             if(entity != null)
             {
-                _context.tariffCategories.Update(entity);
+                _context.TariffCategories.Update(entity);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
 
@@ -46,17 +46,17 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<TariffCategories>> GetAllAsync()
         {
-            return await _context.tariffCategories.Where(t => t.State == true).ToListAsync();
+            return await _context.TariffCategories.Where(t => t.State == true).ToListAsync();
         }
 
         public async Task<TariffCategories> GetEntityById(int key)
         {
-           return await _context.tariffCategories.FirstAsync(t =>  t.Key == key);
+           return await _context.TariffCategories.FirstAsync(t =>  t.Key == key);
         }
 
         public async Task<bool> ExistTariffCode(string code)
         {
-            return await _context.tariffCategories.FirstAsync(t => t.TariffCode == code) != null;
+            return await _context.TariffCategories.FirstAsync(t => t.TariffCode == code) != null;
         }
     }
 }

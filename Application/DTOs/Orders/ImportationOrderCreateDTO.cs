@@ -1,6 +1,10 @@
-﻿using System;
+﻿namespace Application.DTOs.Orders;
 
-public class ImportationOrderUpdateDTO
+using System;
+using System.ComponentModel.DataAnnotations;
+using Persistence.Entities.Enums;
+
+public class ImportationOrderCreateDTO
 {
         [Required(ErrorMessage = "El número de orden es requerido.")]
         [MaxLength(30, ErrorMessage = "El número de orden no puede superar los 30 caracteres.")]
@@ -24,5 +28,4 @@ public class ImportationOrderUpdateDTO
 
         [Required(ErrorMessage = "La modalidad de transporte es requerida.")]
         public TransportMode TransportMode { get; set; }
-
 }

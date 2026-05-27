@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace Persistence.Entities.Enums
 {
-    public enum TransportMode
+    public enum ExpenseType
     {
-        Maritimo,
-        Aereo,
-        Terrestre
+        FleteInternacional = 1,
+        SeguroInternacional = 2,
+        GastosPortuarios = 3,
+        TransporteLocal = 4,
+        HonorariosAduanales = 5,
+        Almacenaje = 6,
+        ManejoDeCarga = 7,
+        OtrosGastos = 8
     }
 }

@@ -17,7 +17,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> CreateAsync(Importers entity)
         {
-            await _context.importers.AddAsync(entity);
+            await _context.Importers.AddAsync(entity);
            var result = await _context.SaveChangesAsync();
             return result > 0;
         }
@@ -26,7 +26,7 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             if(entity != null) {
 
-                 _context.importers.Remove(entity);
+                 _context.Importers.Remove(entity);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
             }
@@ -37,7 +37,7 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             if (entity != null) {
 
-                _context.importers.Update(entity);
+                _context.Importers.Update(entity);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
 
@@ -46,17 +46,17 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Importers>> GetAllAsync()
         {
-            return await _context.importers.Where(i => i.State == true).ToListAsync();
+            return await _context.Importers.Where(i => i.State == true).ToListAsync();
         }
 
         public async Task<Importers> GetEntityById(int key)
         {
-            return await _context.importers.FirstAsync(i => i.Key == key); ;
+            return await _context.Importers.FirstAsync(i => i.Key == key); ;
         }
 
         public async Task<bool> ExistImportersByRnc(string rnc)
         {
-            return await _context.importers.FirstAsync(i => i.Identification == rnc) != null; 
+            return await _context.Importers.FirstAsync(i => i.Identification == rnc) != null; 
         }
     }
 }

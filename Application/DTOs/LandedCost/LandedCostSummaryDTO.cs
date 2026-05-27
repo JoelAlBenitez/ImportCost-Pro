@@ -1,25 +1,8 @@
-﻿using System;
+﻿namespace Application.DTOs.LandedCost;
 
-public class LandedCostDetailDTO
-{
-    public int ProductId { get; set; }
-    public decimal Quantity { get; set; }
-    public decimal OriginalTotalFob { get; set; }
-    public decimal LocalTotalFob { get; set; }
-    public decimal TotalFreight { get; set; }
-    public decimal TotalInsurance { get; set; }
-    public decimal TotalCif { get; set; }
-    public decimal TotalTariff { get; set; }
-    public decimal TotalSelectiveTax { get; set; }
-    public decimal TotalCustomsServiceFee { get; set; }
-    public decimal TotalItbis { get; set; }
-    public decimal TotalLocalExpenses { get; set; }
-    public decimal TotalImportationCost { get; set; }
-    public decimal TotalImportedQuantity { get; set; }
-    public decimal DesiredMargin { get; set; }
-    public decimal SuggestedSalePrice { get; set; }
-
-}
+using System;
+using System.ComponentModel.DataAnnotations;
+using Persistence.Entities.Enums;
 
 public class LandedCostSummaryDTO
 {

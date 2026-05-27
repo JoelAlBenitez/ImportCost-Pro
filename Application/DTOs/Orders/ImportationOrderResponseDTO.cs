@@ -1,5 +1,8 @@
-﻿using System;
+﻿namespace Application.DTOs.Orders;
 
+using System;
+using System.ComponentModel.DataAnnotations;
+using Persistence.Entities.Enums;
 public class ImportationOrderResponseDTO
 {
     public string OrderId { get; set; } = null!; // El PDF dice Max 30 caracteres

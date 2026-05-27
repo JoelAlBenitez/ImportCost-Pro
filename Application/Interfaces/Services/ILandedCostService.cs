@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Persistence.Entities.Enums
+namespace Application.Interfaces.Services
 {
-    public enum TransportMode
+    public interface ILandedCostService
     {
-        Maritimo = 1,
-        Aereo = 2,
-        Terrestre = 3
     }
 }

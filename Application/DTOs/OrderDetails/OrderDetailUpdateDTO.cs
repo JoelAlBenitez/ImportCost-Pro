@@ -1,6 +1,9 @@
-﻿using System;
+﻿namespace Application.DTOs.OrderDetails;
 
-public class OrderDetailCreateDTO
+using System;
+using System.ComponentModel.DataAnnotations;
+using Persistence.Entities.Enums;
+public class OrderDetailUpdateDTO
 {
         [Required(ErrorMessage = "El número de orden es requerido.")]
         [MaxLength(30, ErrorMessage = "El número de orden no puede superar los 30 caracteres.")]
