@@ -158,13 +158,13 @@ namespace Application.Services.FinancialCore
                 return false;
             }
 
-            // 4. Preparación para el módulo de Sebastián (Tubería lista)
+         
             /*
             var hasOrders = await _importOrdersRepository.HasOrdersByCountryId(id);
             if (hasOrders) return false;
             */
 
-            // 5. Si pasamos el candado, eliminamos
+            
             return await _repository.DeleteAsync(existing.Key);
         }
     }
