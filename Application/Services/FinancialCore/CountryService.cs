@@ -72,7 +72,7 @@ namespace Application.Services.FinancialCore
             var existingCountry = await _repository.GetByIsoCodeAsync(dto.IsoCode);
             if (existingCountry != null)
             {
-                return false;
+                throw new Exception("Ya existe un país registrado con este código ISO.");
             }
 
             var entity = new Country
@@ -116,7 +116,7 @@ namespace Application.Services.FinancialCore
             {
                 if (CountryWithThatIso .Key != dto.Key)
                 {
-                    return false;
+                    throw new Exception("Ya existe un país registrado con este código ISO.");
                 }
 
             }
@@ -136,35 +136,20 @@ namespace Application.Services.FinancialCore
 
         public async Task<bool> DeleteAsync(int id)
         {
-            // 1. Buscamos el pa�s
             var existing = await _repository.GetEntityById(id);
             if (existing == null) return false;
 
             var hasImporters = await _importersRepository.HasImportersByCountryId(id);
-           
-
-
             var hasSuppliers = await _suppliersRepository.HasSuppliersByCountryId(id);
-            
-
-
             var hasProducts = await _productsRepository.HasProductsByCountryId(id);
-           
-           
+            // var hasOrders = await _importOrdersRepository.HasOrdersByCountryId(id);
 
-          
-            if (hasImporters || hasSuppliers || hasProducts)
+            // Regla de negocio de la Pág 8:
+            if (hasImporters || hasSuppliers || hasProducts /* || hasOrders */)
             {
-                return false;
+                throw new Exception("No se puede eliminar este país porque está asociado a otros registros del sistema.");
             }
 
-         
-            /*
-            var hasOrders = await _importOrdersRepository.HasOrdersByCountryId(id);
-            if (hasOrders) return false;
-            */
-
-            
             return await _repository.DeleteAsync(existing.Key);
         }
     }

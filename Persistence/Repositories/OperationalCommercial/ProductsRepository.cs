@@ -62,9 +62,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> ExistProductsByCodeReference(string codeReference)
         {
-            return await _context.products.FirstAsync(p => p.CodeRefence == codeReference) != null;
-
-        }
+            return await _context.products.FirstAsync(p => p.CodeRefence == codeReference) != null;        }
 
         public async Task<bool> HasProductsByCountryId(int countryId)
         {

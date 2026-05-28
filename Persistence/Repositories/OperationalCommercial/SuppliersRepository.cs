@@ -59,14 +59,12 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             return await _context.suppliers
                 .AsNoTracking()
-                .FirstAsync(s => s.Key == key);
+                .FirstAsync(s => s.Key == key); 
         }
-
 
         public async Task<bool> HasSuppliersByCountryId(int countryId)
         {
             return await _context.suppliers.AnyAsync(s => s.countryId == countryId);
         }
-
     }
 }
