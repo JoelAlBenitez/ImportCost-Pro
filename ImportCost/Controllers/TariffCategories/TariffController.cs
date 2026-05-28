@@ -9,6 +9,7 @@ namespace ImportCost.Controllers.TariffCategories
     {
         private readonly TarriffCategoriesServices _tarriffCategories;
 
+        // agregar validacion en el service qe dtermine si el tax selective esta activo para que se agregue un porcentaje selectivo valido
         public TariffController (TarriffCategoriesServices tarriffCategories)
         {
             _tarriffCategories = tarriffCategories;
@@ -92,8 +93,8 @@ namespace ImportCost.Controllers.TariffCategories
             if (!result.Success) return RedirectToRoute(new { controller = "Tariff", action = "Edit" });
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            return View("Edit", vt);
-           
+            return RedirectToRoute(new { controller = "Tariff", action = "Index" });
+
         }
 
         [HttpPost]
@@ -105,7 +106,7 @@ namespace ImportCost.Controllers.TariffCategories
             if (!tariff.Success) return RedirectToRoute(new { controller = "Tariff", action = "Delete" });
             TempData["Message"] = tariff.Message;
             TempData["TypeAlert"] = tariff.TypeAlert;
-            return View("Delete", vt);
+            return RedirectToRoute(new {controller = "Tariff", action = "Index"});
 
         }
 
@@ -125,10 +126,10 @@ namespace ImportCost.Controllers.TariffCategories
             };
 
             var result = await _tarriffCategories.CreateAsync(tariffCategoriesDto);
-            if (!result.Success) return RedirectToRoute(new {controller ="Tariff", action = "Index"});
+            if (!result.Success) return RedirectToRoute(new {controller ="Tariff", action = "Save"});
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            return View("Save", vt);
+            return RedirectToRoute(new { controller = "Tariff", action = "Index" });
         }
     }
 

@@ -25,15 +25,6 @@ namespace Application.ViewModel.TarriffCategories
         public required bool SelectiveTaxApplies { get; set; }
         public decimal? PorcentageTaxSelective { get; set; }
 
-        public string ValidateAppliesSelectiveTax()
-        {
-            if ((SelectiveTaxApplies && PorcentageTaxSelective.HasValue) && (PorcentageTaxSelective <= 0 || PorcentageTaxSelective > 100))
-            {
-                return "La aplicación de impueto selectivo esta marcada como veridica por lo tanto el valor del porcentaje de impuesto selectivo debe ser mayor que 0 y menor o igual a 100";
-            }
-            return null!;
-        }
-
         [Required(ErrorMessage = "La categoría de arancel debe tener un estado válido.")]
         public required bool State { get; set; }
 

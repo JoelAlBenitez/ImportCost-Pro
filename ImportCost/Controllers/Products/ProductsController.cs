@@ -10,6 +10,7 @@ namespace ImportCost.Controllers.Products
     public class ProductsController : Controller
     {
 
+        //agregar validaciones en el servicio que validen que si se agregar un largo... deben tener valores los tres
         private readonly ProductsServices _productsServices;
         private readonly TarriffCategoriesServices _tarriffCategoriesServices;
 
@@ -48,7 +49,6 @@ namespace ImportCost.Controllers.Products
             return View(listViewProducts);
         }
        
-        [HttpGet]
         private  async Task<List<ViewModelSelectCategories>> GetCategories()
         {
             var categories = await _tarriffCategoriesServices.GetAllAsync();
@@ -65,20 +65,11 @@ namespace ImportCost.Controllers.Products
             }
             return list;
         }
-
-        //add controller consulta de paises y llenado de lista
-
-
-        [HttpGet]
-        private async Task<List<ViewModelSelectCountries>> GetCountries()
-        {
-            return null!;
-        }
-
+       
         [HttpPost]
         public async Task<IActionResult> Edit(ViewModelProductsSave vp)
         {
-            if (!ModelState.IsValid) return View("Save", vp);
+            if (!ModelState.IsValid) return View("Edit", vp);
 
             ProductsDto productsDto = new() {
                  Key = vp.Key,
@@ -95,150 +86,77 @@ namespace ImportCost.Controllers.Products
                  CountrysId = vp.CountryId
             };
 
-            //obtener listado de productos y validar que no existan mas productos con el codigo que se esta agregando
-
-            var list = await _productsServices.GetAllAsync();
-            int count = list.Count(x  => x.CodeReference == productsDto.CodeReference);
-            if (count > 1) {
-                TempData["Message"] = "No pueden existir multiples productos con el mismo codigo de referencia";
-                TempData["TypeAlert"] = "danger";
-                return RedirectToRoute(new { controller = "Products", action = "Index" });
-            }
-
-            var editP = await _productsServices.EditAsync(productsDto);
-            if (editP)
-            {
-                TempData["Message"] = "Producto editado exitosamente";
-                TempData["TypeAlert"] = "success";
-                return RedirectToRoute(new {controller = "Products", action ="Index"} );
-            }
-
-            TempData["Message"] = "Ha ocurrido un error al editar el producto seleccionado, favor intente de nuevo";
-            TempData["TypeAlert"] = "danger";
-            return View("Save", vp);
+            var result = await _productsServices.EditAsync(productsDto);
+            if (!result.Success) return RedirectToRoute(new { controller = "Products", action = "Index" });
+            TempData["Message"] = result.Message;
+            TempData["TypeAlert"] = result.TypeAlert;
+            return View("Edit", vp);
+           
         }
-        [HttpPost]
-        public async Task<IActionResult> Create(ViewModelProductsSave vp)
-        {
-            if (!ModelState.IsValid) return View("Save", vp);
 
-            ProductsDto products = new() { 
-                Key =  0,
-                Name = vp.Name,
-                State = vp.State,
-                CodeReference = vp.CodeReference,
-                TarriffCategoriesId = vp.CategoriesId,
-                UnitWeight = vp.UnitWeight,
-                Large = vp.Large,
-                Broad = vp.Broad,
-                High = vp.High,
-                Description = vp.Description,
-                unitMesaurement = vp.unit,
-                CountrysId = vp.CountryId
-            };
-            //var extis = await _productsServices.ExistProduct(products.CodeReference);
-            //if(extis)
-            //{
-            //    TempData["Message"] = "El codigo de referencia de este producto ya se encuentra registrado en el sistema";
-            //    TempData["TypeAlert"] = "danger";
-            //    return RedirectToRoute(new { controller = "Products", action = "Index" });
-            //}
-
-            //var appLargeHightBroad = vp.ValidateUnitMessaurent();
-            //if (appLargeHightBroad == null)
-            //{
-            //    TempData["Message"] = appLargeHightBroad;
-            //    TempData["TypeAlert"] = "danger";
-            //    return RedirectToRoute(new { controller = "Products", action = "Index" }); 
-            //}
-
-            var create = await _productsServices.CreateAsync(products);
-            if(create)
-            {
-                TempData["Message"] = "Producto registrado con exito";
-                TempData["TypeAlert"] = "success";
-                return RedirectToRoute(new {controller="Products", action = "Index"});
-            }
-
-            TempData["Message"] = "Ha ocurrido un error al intentar crear este nuevo producto, por favor intente de nuevo ";
-            TempData["TypeAlert"] = "danger";
-            return View("Sve", vp);
-        }
         [HttpPost]
         public async Task<IActionResult> Delete(ViewModelProductsDelete vp)
         {
             if (!ModelState.IsValid) return View("Delete", vp);
-            var delete = await _productsServices.DeleteAsync(vp.Key);
-
-            //agregar logica para verificar si el producto esta asociado a ordenes de exportaciones antes de eliminarlo
-            if (delete)
-            {
-                TempData["Message"] = "Producto eliminado con exito";
-                TempData["TypeAlert"] = "success";
-                return RedirectToRoute(new { controller = "Products", action = "Index" });
-            }
-
-            TempData["Message"] = "Ha ocurrido un error al eliminar el producto seleccionado, favor intente de nuevo";
-            TempData["TypeAlert"] = "danger";
-            return View("Delete", vp);
+            var result = await _productsServices.DeleteAsync(vp.Key);
+            if (!result.Success) return RedirectToRoute(new {controller = "Products", action = "Delete"});
+            TempData["Message"] = result.Message;
+            TempData["TypeAlert"] = result.TypeAlert;
+            return new RedirectToRouteResult(new { controller = "Products", action = "Index" });
         }
-        public async Task<IActionResult> Create()
-        {
-            return View("Save", new ViewModelProductsSave()
-            {
-                Name = "",
-                State = true,
-                CodeReference = "",
-                UnitWeight = 0,
-                Categories = await GetCategories(),
-                Large = 0,
-                Broad = 0,
-                High = 0,
-                unit = Persistence.Entities.Enums.UnitMesaurement.Unit, //mejorar enfoque para no usar directamente el enum de persistencia a pesar de 
-                //herencia de referencia por la capa de application
-                Description = "",
-                CategoriesId = null!,
-                CountryId = 0
-            });
-
-        }
-        public async Task<IActionResult> Edit(int id)
-        {
-            var p = await _productsServices.GetKeyAsync(id);
-            if (p == null) return RedirectToRoute(new { controller = "Products", action = "Index" });
-
-            var categories = GetCategories();
-            if (categories != null) return RedirectToRoute(new { controller = "Products", action = "Index" });
-
-            /*ViewModelProductsSave viewModel = new() { //descomentar cuando se agreguen los elementos de paises
-                Name = p.Name,
-                CodeReference = p.CodeReference,
-                UnitWeight = p.UnitWeight,
-                Categories = list,
-                Large = p.Large ?? 0,
-                Broad = p.Broad ?? 0,
-                High = p.High ?? 0,
-                unit = p.unitMesaurement,
-                countries = listCountries,
-                Description = p.Description,
-                State = p.state
-
-            };*/
-
-            return RedirectToRoute(new { controller = "Products", action = "Index" });
-        }
+      
         public async Task<IActionResult> Delete(int id)
         {
-            var pro = await _productsServices.GetKeyAsync(id);
-            if(pro == null)
-            {
-                TempData["Message"] = "Ha ocurrido un error al encontrar el producto seleccionado, favor intente de nuevo";
-                TempData["TypeAlert"] = "danger";
-                return RedirectToRoute(new {controller="Products", action ="Index"});
-            }
-            ViewModelProductsDelete vp = new() { Key = pro.Key, Name = pro.Name };
-            return View(vp);
+           var product = await _productsServices.GetKeyAsync(id);
+            if(product  == null) return RedirectToRoute(new { controller = "Products", action ="Index" });
+            return View("Delete", new ViewModelProductsDelete { Key = product.Key , Name = product.Name});
         }
-       
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var product = await _productsServices.GetKeyAsync(id);
+            if (product == null) return RedirectToRoute(new { controller = "Products", action = "Index" });
+            var listCategories = await GetCategories();
+            ViewModelProductsSave vp = new()
+            {
+                Key = product.Key,
+                Name = product.Name,
+                State = product.State,
+                CodeReference = product.CodeReference,
+                CategoriesId = product.TarriffCategoriesId,
+                unit = product.unitMesaurement,
+                UnitWeight = product.UnitWeight,
+                Categories = listCategories,
+                Large = product.Large,
+                Broad = product.Broad,
+                High = product.High,
+                Description = product.Description,
+                CountryId = product.CountrysId
+                //agregar el elemento de paises cuando se descomente
+            };
+            return View("Edit", vp);
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            var list = await GetCategories();
+            //agregar categorias de paises cuando se bajen los cambios y unidad cambiar por listado.
+
+            return View("Save", new ViewModelProductsSave { 
+                    Key = 0,
+                    Name = "",
+                    State = true,
+                    CodeReference = "",
+                    UnitWeight = 0,
+                    Categories = list,
+                    Large = 0,
+                    High = 0,
+                    Broad = 0,
+                    unit = Persistence.Entities.Enums.UnitMesaurement.Unit,
+                    Description = "",
+                    CategoriesId = "",
+                    CountryId = 0,
+            });
+        }
     }
 }
