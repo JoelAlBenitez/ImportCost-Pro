@@ -16,7 +16,6 @@ namespace Persistence.Configurations.OperationalCommercial
             builder.Property(t => t.PorcentageTariff).IsRequired().HasMaxLength(100);
             builder.Property(t => t.ITBIS).IsRequired();
             builder.Property(t => t.State).IsRequired().HasDefaultValue(true); 
-
         }
     }
 }

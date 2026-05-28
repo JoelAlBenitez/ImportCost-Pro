@@ -1,12 +1,14 @@
-﻿namespace Application.Services.BaseServices
+﻿using Application.Services.Result;
+
+namespace Application.Services.BaseServices
 {
     public interface IServicesBase<TDto, TKey>
     {
-        Task<bool> CreateAsync(TDto dto);
-        Task<bool> EditAsync(TDto dto);
+        Task<ServiceResult> CreateAsync(TDto dto);
+        Task<ServiceResult> EditAsync(TDto dto);
         Task<TDto> GetKeyAsync(TKey key);
         Task<IReadOnlyCollection<TDto>> GetAllAsync();
-        Task<bool> DeleteAsync(TKey key);
-
+        Task<ServiceResult> DeleteAsync(TKey key);
+  
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Dto.Products;
 using Application.Services.BaseServices;
+using Application.Services.Result;
 using Persistence.Entities.OperationalCommercial;
 using Persistence.Repositories.OperationalCommercial;
 
@@ -27,12 +28,11 @@ namespace Application.Services.ProductsServices
             }
         }
 
-        public async Task<bool> CreateAsync(ProductsDto dto)
+        public async Task<ServiceResult> CreateAsync(ProductsDto dto)
         {
             try
             {
-               
-      
+            
                 Products products = new()
                 {
                     Name = dto.Name,
@@ -47,28 +47,37 @@ namespace Application.Services.ProductsServices
                     Description = dto.Description,
                     tarrifCategoriesId = dto.TarriffCategoriesId
                 };
+                bool exit = await ExistProduct(dto.CodeReference);
 
-                return await _productsRepository.CreateAsync(products);
+                if (exit) return new ServiceResult { Success = false, Message = "Ya existe un producto con este codigo de referencia", TypeAlert = "danger" };
+                bool create = await _productsRepository.CreateAsync(products);
+                //agregar validacion de pais activo o no activo
+                //agregar validacion de largo, ancho y algo por si uno de los tres tiene valores y los otros no
+                if (create) return new ServiceResult { Success = false, Message = "Producto creado exitosamente", TypeAlert = "success" };
+                return new ServiceResult { Success = false, Message = "Ha ocurrido un error al crear el producto", TypeAlert = "danger" };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion con el servicio {ex.Message}", TypeAlert = "danger" };
             }
         }
 
-        public async Task<bool> DeleteAsync(int key)
+        public async Task<ServiceResult> DeleteAsync(int key)
         {
             try
             {
-                return await _productsRepository.DeleteAsync(key);
+                //agregar validacion de no eliminacion si el producto esta asociado a ordenes de importacion
+                bool delete =  await _productsRepository.DeleteAsync(key);
+                if (delete) return new ServiceResult { Success = true, Message = "Producto eliminado con exito", TypeAlert = "success" };
+                return new ServiceResult { Success = false, Message = "Ha ocurrido un error al intentar eliminar el producto", TypeAlert = "danger" };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion del servicio {ex.Message}", TypeAlert = "danger"};
             }
         }
 
-        public async Task<bool> EditAsync(ProductsDto dto)
+        public async Task<ServiceResult> EditAsync(ProductsDto dto)
         {
             try
             {
@@ -88,12 +97,20 @@ namespace Application.Services.ProductsServices
                     tarrifCategoriesId = dto.TarriffCategoriesId
                     
                 };
-                return await _productsRepository.EditAsync(products);
+
+                bool exitsMoreProductsWithSameCode = (await _productsRepository.GetAllAsync())
+                        .Any(t => t.CodeRefence == products.CodeRefence && t.CodeRefence != products.CodeRefence);
+                if (exitsMoreProductsWithSameCode) return new ServiceResult {Success = false, Message = "Ya existe otro producto asociado a este codigo de referencia" , TypeAlert = "danger"};
+                    
+                bool edit = await _productsRepository.EditAsync(products);
+
+                if (edit) return new ServiceResult { Success = true, Message = "Producto editado exitosamente", TypeAlert = "success" };
+                return new ServiceResult { Success = false, Message = "Ha ocurrido un error en al edicion del producto", TypeAlert = "danger" };
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en al comunicacion del servicio {ex.Message}", TypeAlert = "danger"};
             }
         }
 

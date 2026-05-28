@@ -1,5 +1,6 @@
 ﻿using Application.Dto.Importers;
 using Application.Services.BaseServices;
+using Application.Services.Result;
 using Persistence.Repositories.OperationalCommercial;
 
 namespace Application.Services.Importers
@@ -12,11 +13,11 @@ namespace Application.Services.Importers
             _importersRepository = repository;
         }
 
-        public async Task<bool> ExistRnc(ImporterDto dto)
+        public async Task<bool> ExistRnc(string Identification)
         {
             try
             {
-                return await _importersRepository.ExistImportersByRnc(dto.Identification);
+                return await _importersRepository.ExistImportersByRnc(Identification);
             }
             catch (Exception)
             {
@@ -24,13 +25,10 @@ namespace Application.Services.Importers
             }
         }
 
-        public async Task<bool> CreateAsync(ImporterDto dto)
+        public async Task<ServiceResult> CreateAsync(ImporterDto dto)
         {
             try
             {
-                var exits = await ExistRnc(dto);
-                if(exits) return false; 
-
                 Persistence.Entities.OperationalCommercial.Importers importers = new()
                 {
                     Name = dto.Name,
@@ -38,29 +36,40 @@ namespace Application.Services.Importers
                     Identification = dto.Identification,
                     Phone = dto.Phone,
                     Email = dto.Email,
-                    Address = dto.Address
+                    Address = dto.Address,
+                    countryId = dto.CountryId
                 };
-                return await _importersRepository.CreateAsync(importers);
+                var exits = await ExistRnc(importers.Identification);
+                if (exits) return new ServiceResult {Success = false, Message ="Ya existe un importador con esta identificacion", TypeAlert = "danger"};
+
+                bool create = await _importersRepository.CreateAsync(importers);
+                if (create) return new ServiceResult { Success = true, Message = "Importador registrado con exito", TypeAlert = "success" };
+
+                return new ServiceResult { Success = false, Message = "Ha ocurrido un error en la creacion del importador", TypeAlert = "danger"};
                 
-            }catch(Exception)
+            }catch(Exception ex)
             {
-                return false;
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion con el servicio {ex.Message}", TypeAlert = "danger" };
             }
         }
 
-        public async Task<bool> DeleteAsync(int key)
+        public async Task<ServiceResult> DeleteAsync(int key)
         {
             try
             {
-                return await _importersRepository.DeleteAsync(key);
+                //agregar validacion de verificacion en caso del importador estar asociado con ordenes de importacion 
+
+                bool delete =  await _importersRepository.DeleteAsync(key);
+                if (delete) return new ServiceResult { Success = true, Message = "Importador eliminado con extio", TypeAlert = "success" };
+                return new ServiceResult {Success = false, Message = "Ha ocurrido un error al eliminar el importador", TypeAlert = "danger" };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion del servicio {ex.Message}", TypeAlert = "danger"};
             }
         }
 
-        public async Task<bool> EditAsync(ImporterDto dto)
+        public async Task<ServiceResult> EditAsync(ImporterDto dto)
         {
             try
             {
@@ -72,15 +81,19 @@ namespace Application.Services.Importers
                     Identification = dto.Identification,
                     Phone = dto.Phone,
                     Email = dto.Email,
-                    Address = dto.Address
+                    Address = dto.Address,
+                    countryId = dto.CountryId
                 };
-
-                return await _importersRepository.EditAsync(importers);
-
+                bool existOtherImporters = (await _importersRepository.GetAllAsync())
+                    .Any(i => i.Identification == importers.Identification && i.Identification != importers.Identification);
+                if (existOtherImporters) return new ServiceResult { Success = false, Message = "Ya existe otro importador con esta identificacion", TypeAlert = "danger"};
+                bool editar =  await _importersRepository.EditAsync(importers);
+                if (editar) return new ServiceResult { Success = true,Message = "Importador editado con exito", TypeAlert = "success"};
+                return new ServiceResult {Success = false, Message = "Ha ocurrido un error al editar el importador", TypeAlert = "danger"};
             }
-            catch (Exception) {
+            catch (Exception ex) {
 
-                return false;
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion del servicio {ex.Message}", TypeAlert = "danger" };
             }
         }
 
@@ -103,7 +116,9 @@ namespace Application.Services.Importers
                             Identification = item.Identification,
                             Phone = item.Phone,
                             Address = item.Address,
-                            Email = item.Email
+                            Email = item.Email,
+                            CountryId = item.countryId,
+                            CountryName = item.country!.Name
 
                         };
                         imp.Add(importerDto);
@@ -135,7 +150,9 @@ namespace Application.Services.Importers
                         Identification = imp.Identification,
                         Phone = imp.Phone,
                         Address = imp.Address,
-                        Email = imp.Email
+                        Email = imp.Email,
+                        CountryId = imp.countryId,
+                        CountryName = imp.country!.Name
 
                     };
 

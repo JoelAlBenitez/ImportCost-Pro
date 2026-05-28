@@ -8,30 +8,28 @@ namespace Persistence.Configurations.OperationalCommercial
     {
         public void Configure(EntityTypeBuilder<Suppliers> builder)
         {
-            builder.ToTable("Supliers");
+            builder.ToTable("Suppliers");
             builder.HasKey(s => s.Key);
 
             builder.Property(s => s.Name).IsRequired().HasMaxLength(150);
-
-            //builder.Property(c => c.countryId).IsRequired();
+            builder.Property(c => c.countryId).IsRequired();
 
             builder.Property(s => s.Email).HasMaxLength(100);
             builder.Property(s => s.Phone).HasMaxLength(20);
             builder.Property(s => s.State).IsRequired().HasDefaultValue(true);
             builder.Property(s => s.MainCurrencyId).IsRequired();
 
-            /*
-             builder.HasOne(c => c.Countrys)
-            .WithMany(s => s.Supliers)
+            
+             builder.HasOne(c => c.Country)
+            .WithMany(s => s.Suppliers)
             .HasForeignKey(s => s.countryId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(c => c.MainCurrencys)
+            builder.HasOne(c => c.MainCurrency)
             .WithMany(s => s.Suppliers)
-            .HasForeignKey(s => s.MainCurrencyId)
+            .HasForeignKey(s => s.MainCurrencyId).
             OnDelete(DeleteBehavior.Cascade);
-             */
-
+            
         }
     }
 }
