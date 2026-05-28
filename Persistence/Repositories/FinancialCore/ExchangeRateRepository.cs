@@ -26,18 +26,23 @@ namespace Persistence.Repositories.FinancialCore
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> DeleteAsync(ExchangeRate entity)
+        public async Task<bool> DeleteAsync(int key)
         {
-            _context.exchangeRates.Remove(entity);
-            return await _context.SaveChangesAsync() > 0;
+            var entity = await _context.exchangeRates.FindAsync(key);
+            if (entity != null)
+            {
+                _context.exchangeRates.Remove(entity);
+                return await _context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
 
-        public async Task<ExchangeRate?> GetEntityById(int key)
+        public async Task<ExchangeRate> GetEntityById(int key)
         {
             return await _context.exchangeRates
                 .Include(e => e.SourceCurrency)
                 .Include(e => e.DestinationCurrency)
-                .FirstOrDefaultAsync(e => e.Key == key);
+                .FirstAsync(e => e.Key == key);
         }
 
         public async Task<IReadOnlyCollection<ExchangeRate>> GetAllAsync()

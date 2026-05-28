@@ -26,15 +26,20 @@ namespace Persistence.Repositories.FinancialCore
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> DeleteAsync(TaxConfiguration entity)
+        public async Task<bool> DeleteAsync(int key)
         {
-            _context.taxConfigurations.Remove(entity);
-            return await _context.SaveChangesAsync() > 0;
+            var entity = await _context.taxConfigurations.FindAsync(key);
+            if (entity != null)
+            {
+                _context.taxConfigurations.Remove(entity);
+                return await _context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
 
-        public async Task<TaxConfiguration?> GetEntityById(int key)
+        public async Task<TaxConfiguration> GetEntityById(int key)
         {
-            return await _context.taxConfigurations.FirstOrDefaultAsync(t => t.Key == key);
+            return await _context.taxConfigurations.FirstAsync(t => t.Key == key);
         }
 
         public async Task<IReadOnlyCollection<TaxConfiguration>> GetAllAsync()
