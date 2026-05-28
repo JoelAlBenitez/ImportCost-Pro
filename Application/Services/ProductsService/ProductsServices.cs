@@ -1,6 +1,8 @@
-﻿using Application.Dto.Products;
+﻿using Application.DTOs.Products;
 using Application.Services.BaseServices;
 using Application.Services.Result;
+
+using Persistence.Entities.FinancialCore;
 using Persistence.Entities.OperationalCommercial;
 using Persistence.Repositories.OperationalCommercial;
 
@@ -131,9 +133,9 @@ namespace Application.Services.ProductsServices
                             Key = item.Key,
                             Name = item.Name,
                             CountrysId  = item.countryId,
-                            CountryName = item.country!.Name,
+                            CountryName = item.country?.Name,
                             unitMesaurement = item.Unit,
-                            TariffCategoriesName = item.tariffCategories!.Name,
+                            TariffCategoriesName = item.tariffCategories?.Name,
                             State = item.State,
                             CodeReference = item.CodeRefence,
                             UnitWeight = item.UnitWeight,
@@ -171,7 +173,7 @@ namespace Application.Services.ProductsServices
                         unitMesaurement = product.Unit,
                         Name = product.Name,
                         CountrysId = product.countryId,
-                        CountryName = product.country!.Name,
+                        CountryName = product.country?.Name,
                         State = product.State,
                         CodeReference = product.CodeRefence,
                         UnitWeight = product.UnitWeight,
@@ -179,7 +181,7 @@ namespace Application.Services.ProductsServices
                         Broad = product.Broad,
                         High = product.High,
                         TarriffCategoriesId = product.tarrifCategoriesId,
-                        TariffCategoriesName = product.tariffCategories!.Name,
+                        TariffCategoriesName = product.tariffCategories?.Name,
                         Description = product.Description
                 
                     };

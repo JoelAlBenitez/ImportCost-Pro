@@ -17,17 +17,17 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> CreateAsync(Suppliers entity)
         {
-             await  _context.suppliers.AddAsync(entity);
+             await  _context.Suppliers.AddAsync(entity);
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
 
         public async Task<bool> DeleteAsync(int tkey)
         {
-            var entity = await _context.suppliers.FindAsync(tkey);
+            var entity = await _context.Suppliers.FindAsync(tkey);
             if (entity != null)
             {
-                _context.suppliers.Remove(entity);
+                _context.Suppliers.Remove(entity);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
 
@@ -38,7 +38,7 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             if (entity != null) {
 
-                _context.suppliers.Update(entity);
+                _context.Suppliers.Update(entity);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
             
@@ -47,21 +47,21 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Suppliers>> GetAllAsync()
         {
-            return await _context.suppliers
+            return await _context.Suppliers
                 .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task<Suppliers> GetEntityById(int key)
         {
-            return await _context.suppliers
+            return await _context.Suppliers
                 .AsNoTracking()
                 .FirstAsync(s => s.Key == key); 
         }
 
         public async Task<bool> ExistName(string name)
         {
-             var s = await _context.suppliers
+             var s = await _context.Suppliers
                 .AsNoTracking()
                 .FirstAsync(s => s.Name.Trim() == name.Trim());
             return s != null;
