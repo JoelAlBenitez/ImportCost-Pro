@@ -67,5 +67,10 @@ namespace Persistence.Repositories.OperationalCommercial
             return s != null;
         }
 
+        public async Task<bool> AssociateImportationOrderBySupplier(int id)
+        {
+            return await _context.ImportationOrders.AnyAsync(i => i.SupplierId == id);
+        }
+
     }
 }

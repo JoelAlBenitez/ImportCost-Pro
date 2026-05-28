@@ -48,9 +48,7 @@ namespace Persistence.Repositories.OperationalCommercial
         public async Task<bool> AssociatedProductsC(string code)
         {
  
-            bool associatedPC = await _context.TariffCategories
-                .AnyAsync(c => c.Key == code && c.Products!.Any());
-            return associatedPC;
+            return await _context.Products.AnyAsync(p => p.tarrifCategoriesId == code);
         }
 
         public async Task<IReadOnlyCollection<TariffCategories>> GetAllAsync()

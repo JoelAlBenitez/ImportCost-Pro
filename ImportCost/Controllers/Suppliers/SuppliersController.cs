@@ -26,10 +26,10 @@ namespace ImportCost.Controllers.Suppliers
                         key = item.Key,
                         Name = item.Name,
                         CountryId = item.CountryId,
-                        NameCountry = item.NameContry,
+                        NameCountry = item.NameContry!,
                         Email  =item.Email ?? "NA",
                         PhoneNumber =item.PhoneNumber ?? "-",
-                        MainCurrency = item.CurrencyName,
+                        MainCurrency = item.CurrencyName!,
                         MainCurrencyId = item.CurrencyId,
                         State = item.State
                 };
@@ -49,7 +49,7 @@ namespace ImportCost.Controllers.Suppliers
                 Phone = "",
                 Countries = null!, //cambiar por el get country
                 State = true,
-                CountryId = 0, //cambiar por el id seleccionado
+                CountryId = 0, 
                 Currencies = null!, //cambiar por el get currencies
                 CurrencyId = 0 //cambiar por el id seleccioando
             });

@@ -64,5 +64,9 @@ namespace Persistence.Repositories.OperationalCommercial
             return await _context.Products.FirstAsync(p => p.CodeRefence == codeReference) != null;
           
         }
+        public async Task<bool> AssociateImportationOrderDetailsByProducts(int id)
+        {
+            return await _context.ImportationOrderDetails.AnyAsync(i => i.ProductId == id);
+        }
     }
 }
