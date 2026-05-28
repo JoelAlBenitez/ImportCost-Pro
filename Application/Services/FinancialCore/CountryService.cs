@@ -141,15 +141,15 @@ namespace Application.Services.FinancialCore
             if (existing == null) return false;
 
             var hasImporters = await _importersRepository.HasImportersByCountryId(id);
-               if (hasImporters) return false;
+           
 
 
             var hasSuppliers = await _suppliersRepository.HasSuppliersByCountryId(id);
-              if (hasSuppliers) return false;
+            
 
 
             var hasProducts = await _productsRepository.HasProductsByCountryId(id);
-             if (hasProducts) return false;
+           
            
 
           
