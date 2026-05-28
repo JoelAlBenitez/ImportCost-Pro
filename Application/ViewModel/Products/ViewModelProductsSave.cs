@@ -8,26 +8,21 @@ namespace Application.ViewModel.Products
 
         public int Key { get; set; }
 
-        //valid name 
         [Required(ErrorMessage = "Ingrese un nombre de producto válido que no supere los 150 caracteres.")]
         [StringLength(150)]
         public required string Name { get; set; }
 
-        //code reference
         [Required(ErrorMessage = "Ingrese un código de referencia válido que no supere los 50 caracteres.")]
         [StringLength(50)]
         public required string CodeReference { get; set; }
 
-        //unit 
         [Required(ErrorMessage = "Ingrese un precio unitario válido, mayor que 0.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Ingrese un precio unitario mayor que 0.")]
         public required decimal UnitWeight { get; set; }
 
-        //List categories 
         [Required(ErrorMessage = "Seleccione una categoría arancelaria válida.")]
         public required List<ViewModelSelectCategories> Categories { get; set; }
 
-        //possible values null
         public decimal? Large { get; set; } = 0;
         public decimal? Broad { get; set; } = 0;
         public decimal? High { get; set; } = 0;
@@ -43,20 +38,17 @@ namespace Application.ViewModel.Products
             return null!;
         }
 
-        //unit mesauremnt 
+        
         [Required(ErrorMessage = "Seleccione una unidad de medida válida para el producto.")]
         public required UnitMesaurement unit { get; set; }
 
-        //list countries 
         [Required(ErrorMessage = "Por favor, seleccione un país de origen válido para el producto que intenta crear.")]
         //public required List<ViewModelSelectCountries> countries { get; set;} //descomentar cuando se creen los servicios de paises
 
-        //possible value null
         [StringLength(250)]
         public string? Description { get; set; }
 
 
-        // state  product -> default true values
         [Required(ErrorMessage = "Seleccione un estado válido para el producto que intenta crear.")]
         public required bool State { get; set; }
 

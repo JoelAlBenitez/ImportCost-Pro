@@ -5,7 +5,7 @@ using Application.Services.TarriffCategories;
 using Application.ViewModel.Select;
 using Application.Dto.Products;
 
-namespace ImportCost.Views.Products
+namespace ImportCost.Controllers.Products
 {
     public class ProductsController : Controller
     {
@@ -109,7 +109,7 @@ namespace ImportCost.Views.Products
             if (editP)
             {
                 TempData["Message"] = "Producto editado exitosamente";
-                TempData["TypeAlert"] = "Success";
+                TempData["TypeAlert"] = "success";
                 return RedirectToRoute(new {controller = "Products", action ="Index"} );
             }
 
@@ -136,29 +136,30 @@ namespace ImportCost.Views.Products
                 unitMesaurement = vp.unit,
                 CountrysId = vp.CountryId
             };
-            var extis = await _productsServices.ExistProduct(products.CodeReference);
-            if(extis)
-            {
-                TempData["Message"] = "El codigo de referencia de este producto ya se encuentra registrado en el sistema";
-                TempData["TypeAlert"] = "danger";
-                return RedirectToRoute(new { controller = "Products", action = "Index" });
-            }
+            //var extis = await _productsServices.ExistProduct(products.CodeReference);
+            //if(extis)
+            //{
+            //    TempData["Message"] = "El codigo de referencia de este producto ya se encuentra registrado en el sistema";
+            //    TempData["TypeAlert"] = "danger";
+            //    return RedirectToRoute(new { controller = "Products", action = "Index" });
+            //}
 
-            var appLargeHightBroad = vp.ValidateUnitMessaurent();
-            if (appLargeHightBroad == null)
-            {
-                TempData["Message"] = appLargeHightBroad;
-                TempData["TypeAlert"] = "danger";
-                return RedirectToRoute(new { controller = "Products", action = "Index" }); 
-            }
+            //var appLargeHightBroad = vp.ValidateUnitMessaurent();
+            //if (appLargeHightBroad == null)
+            //{
+            //    TempData["Message"] = appLargeHightBroad;
+            //    TempData["TypeAlert"] = "danger";
+            //    return RedirectToRoute(new { controller = "Products", action = "Index" }); 
+            //}
 
             var create = await _productsServices.CreateAsync(products);
             if(create)
             {
                 TempData["Message"] = "Producto registrado con exito";
-                TempData["TypeAlert"] = "Success";
+                TempData["TypeAlert"] = "success";
                 return RedirectToRoute(new {controller="Products", action = "Index"});
             }
+
             TempData["Message"] = "Ha ocurrido un error al intentar crear este nuevo producto, por favor intente de nuevo ";
             TempData["TypeAlert"] = "danger";
             return View("Sve", vp);
@@ -173,7 +174,7 @@ namespace ImportCost.Views.Products
             if (delete)
             {
                 TempData["Message"] = "Producto eliminado con exito";
-                TempData["TypeAlert"] = "Success";
+                TempData["TypeAlert"] = "success";
                 return RedirectToRoute(new { controller = "Products", action = "Index" });
             }
 
