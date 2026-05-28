@@ -47,7 +47,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Suppliers>> GetAllAsync()
         {
-            return await _context.suppliers.Where(s => s.State == true)
+            return await _context.suppliers
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -59,6 +59,13 @@ namespace Persistence.Repositories.OperationalCommercial
                 .FirstAsync(s => s.Key == key); 
         }
 
+        public async Task<bool> ExistName(string name)
+        {
+             var s = await _context.suppliers
+                .AsNoTracking()
+                .FirstAsync(s => s.Name.Trim() == name.Trim());
+            return s != null;
+        }
 
     }
 }

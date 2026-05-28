@@ -7,10 +7,9 @@ namespace Persistence.Entities.OperationalCommercial
     {
         public  Country? Country {get;set;}
         public required int countryId {get; set;}
-      
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public Currency? MainCurrency {get; set;}
-        public int? MainCurrencyId { get; set;  }
+        public required int MainCurrencyId { get; set;  }
     }
 }
