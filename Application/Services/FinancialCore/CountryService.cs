@@ -1,17 +1,24 @@
 using Application.DTOs.FinancialCore;
 using Application.Interfaces.FinancialCore;
-using Persistence.Repositories.FinancialCore;
 using Persistence.Entities.FinancialCore;
+using Persistence.Repositories.FinancialCore;
+using Persistence.Repositories.OperationalCommercial;
 
 namespace Application.Services.FinancialCore
 {
     public class CountryService : ICountryService
     {
         private readonly CountryRepository _repository;
+        private readonly ImportersRepository _importersRepository;
+        private readonly SuppliersRepository _suppliersRepository;
+        private readonly ProductsRepository _productsRepository;   
 
-        public CountryService(CountryRepository repository)
+        public CountryService(CountryRepository repository, ImportersRepository importersRepository, SuppliersRepository suppliersRepository, ProductsRepository productsRepository)
         {
             _repository = repository;
+            _importersRepository = importersRepository;
+            _suppliersRepository = suppliersRepository;
+            _productsRepository = productsRepository;
         }
 
         public async Task<IReadOnlyCollection<CountryDto>> GetAllAsync()
@@ -47,7 +54,21 @@ namespace Application.Services.FinancialCore
         //--------------------------------------------
         public async Task<bool> CreateAsync(CountryDto dto)
         {
-             dto.IsoCode = dto.IsoCode.Trim().ToUpper();
+
+            if (string.IsNullOrWhiteSpace(dto.Name) || string.IsNullOrWhiteSpace(dto.IsoCode))
+            {
+                return false;
+            }
+
+            if (dto.IsoCode.Trim().Length < 2)
+            {
+                return false;
+            } 
+
+
+
+
+            dto.IsoCode = dto.IsoCode.Trim().ToUpper();
             var existingCountry = await _repository.GetByIsoCodeAsync(dto.IsoCode);
             if (existingCountry != null)
             {
@@ -106,9 +127,38 @@ namespace Application.Services.FinancialCore
         }
         //--------------------------------------------
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            // 1. Buscamos el país
+            var existing = await _repository.GetEntityById(id);
+            if (existing == null) return false;
+
+            var hasImporters = await _importersRepository.HasImportersByCountryId(id);
+               if (hasImporters) return false;
+
+
+            var hasSuppliers = await _suppliersRepository.HasSuppliersByCountryId(id);
+              if (hasSuppliers) return false;
+
+
+            var hasProducts = await _productsRepository.HasProductsByCountryId(id);
+             if (hasProducts) return false;
+           
+
+          
+            if (hasImporters || hasSuppliers || hasProducts)
+            {
+                return false;
+            }
+
+            // 4. Preparación para el módulo de Sebastián (Tubería lista)
+            /*
+            var hasOrders = await _importOrdersRepository.HasOrdersByCountryId(id);
+            if (hasOrders) return false;
+            */
+
+            // 5. Si pasamos el candado, eliminamos
+            return await _repository.DeleteAsync(existing.Key);
         }
     }
 }
