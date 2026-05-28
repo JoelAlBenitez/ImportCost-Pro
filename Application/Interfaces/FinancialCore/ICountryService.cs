@@ -1,4 +1,5 @@
 using Application.DTOs.FinancialCore;
+using Application.Services.Result;
 
 namespace Application.Interfaces.FinancialCore
 {
@@ -6,8 +7,8 @@ namespace Application.Interfaces.FinancialCore
     {
         Task<IReadOnlyCollection<CountryDto>> GetAllAsync();
         Task<CountryDto?> GetByIdAsync(int id);
-        Task<bool> CreateAsync(CountryDto dto);
-        Task<bool> UpdateAsync(CountryDto dto);
-        Task<bool> DeleteAsync(int id);
+        Task<ServiceResult> CreateAsync(CountryDto dto);
+        Task<ServiceResult> UpdateAsync(CountryDto dto);
+        Task<ServiceResult> DeleteAsync(int id);
     }
 }
