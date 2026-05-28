@@ -31,8 +31,9 @@ namespace Application.Services.TarriffCategories
         {
             try
             {
-                var t = await GetKeyAsync(dto.Key);
-                if (t != null) return new ServiceResult() {Success = false, Message =" Ya existe una categoria arancelaria con este codigo", TypeAlert = "danger"};
+                bool t = await _tarriffCategoriesRepository.ExistTariffCode(dto.Key);
+                if (t) return new ServiceResult() {Success = false, Message =" Ya existe una categoria arancelaria con este codigo", TypeAlert = "danger"};
+                
                 TariffCategories tariffCategories = new (){
                     Key = dto.Key.Trim(),
                     Name = dto.Name,
@@ -43,10 +44,12 @@ namespace Application.Services.TarriffCategories
                     PorcentageTaxSelective = dto.PorcentageTaxSelective
                 };
 
+                bool InvalidTax = tariffCategories.SelectiveTaxApplies && tariffCategories.PorcentageTaxSelective <= 0;
+                if (InvalidTax) return new ServiceResult {Success =false,Message="Si el impuesto selectivo esta marcado como valido el procentaje deber ser mayor a 0", TypeAlert="danger"};
+
                 bool create =  await _tarriffCategoriesRepository.CreateAsync(tariffCategories);
                 if (create) return new ServiceResult { Success = true, Message = "Categoria creada con exito", TypeAlert = "success" };
-                 
-               return new ServiceResult { Success = false, Message = "Ha ocurrido un error en la creacion de la categoria", TypeAlert = "danger" };
+                return new ServiceResult { Success = false, Message = "Ha ocurrido un error en la creacion de la categoria", TypeAlert = "danger" };
             }
             catch (Exception ex) {
                 return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion del servicio {ex.Message}", TypeAlert = "danger"};
@@ -104,8 +107,8 @@ namespace Application.Services.TarriffCategories
                         ) return new ServiceResult
                         {
                             Success = false,
-                            Message = "The category has associated products, so the ITBIS, Category Reference Code, " +
-                            "Tariff Percentage, whether selective tax applies, or the selective tax percentage cannot be modified.",
+                            Message = "La categoría tiene productos asociados, por lo que el ITBIS, Código de Referencia de Categoría, " +
+                            "Porcentaje Arancelario, si se aplica el impuesto selectivo, o si el porcentaje del impuesto selectivo no se puede modificar.",
                             TypeAlert = "danger"
 
                         };

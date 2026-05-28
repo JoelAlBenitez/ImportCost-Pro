@@ -1,9 +1,8 @@
 ﻿using Application.ViewModel.Select;
-using Persistence.Entities.Enums;
 using System.ComponentModel.DataAnnotations;
 namespace Application.ViewModel.Products
 {
-    public class ViewModelProductsSave
+    public class ViewModelProductsSave  : IValidatableObject
     {
 
         public int Key { get; set; }
@@ -23,14 +22,10 @@ namespace Application.ViewModel.Products
         [Required(ErrorMessage = "Debe seleccionar una categoria valida del listado de categorias")]
         public required List<ViewModelSelectCategories> Categories { get; set; }
 
-        public decimal? Large { get; set; } = 0;
-        public decimal? Broad { get; set; } = 0;
-        public decimal? High { get; set; } = 0;
-
         [Required(ErrorMessage = "Seleccione una unidad de medida válida para el producto.")]
-        public required UnitMesaurement unit { get; set; }
-        //public List<ViewModelSelectUnit> UnitUnits { get; set; }
+        public required List<ViewModelSelectUnit> Units { get; set; }
 
+        [Required(ErrorMessage = "El país seleccionado no corresponde a un país válido.")]
         //public required List<ViewModelSelectCountries> countries { get; set;} //descomentar cuando se creen los servicios de paises
 
         [StringLength(250)]
@@ -40,9 +35,33 @@ namespace Application.ViewModel.Products
         public required bool State { get; set; }
         
         public required string CategoriesId { get; set; }
-
-        [Required(ErrorMessage = "El país seleccionado no corresponde a un país válido.")]
+        public required int unit { get; set; }
         public required int CountryId { get; set; }
+        public decimal? Large { get; set; }
+        public decimal? Broad { get; set; }
+        public decimal? High { get; set; }
 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            int field = 0;
+            if (Large.HasValue && Large > 0) field++;
+            if(High.HasValue && High > 0) field++;
+            if(Broad.HasValue && Broad > 0) field++;
+            if(field > 1 && field != 3)
+            {
+                yield return new ValidationResult(
+                    "Si se ingresa un valor para el largo, alto o ancho los tres deben tener valores mayores que 0",
+                    new[] {nameof(Large), nameof(High), nameof(Broad)}
+                    );
+            }
+            if(Large < 0 || High <0 && Broad < 0)
+            {
+                yield return new ValidationResult(
+                    "Ninguno de los valores de largo, alto o ancho puede tener un elemento menor a 0",
+                    new[] { nameof(Large), nameof(High), nameof(Broad) }
+                    );
+            }
+           
+        }
     }
 }

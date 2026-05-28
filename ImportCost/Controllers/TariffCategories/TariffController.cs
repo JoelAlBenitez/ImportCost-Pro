@@ -9,7 +9,6 @@ namespace ImportCost.Controllers.TariffCategories
     {
         private readonly TarriffCategoriesServices _tarriffCategories;
 
-        // agregar validacion en el service qe dtermine si el tax selective esta activo para que se agregue un porcentaje selectivo valido
         public TariffController (TarriffCategoriesServices tarriffCategories)
         {
             _tarriffCategories = tarriffCategories;

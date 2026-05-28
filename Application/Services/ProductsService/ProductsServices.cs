@@ -1,5 +1,6 @@
-﻿using Application.Dto.Products;
+﻿using Application.DTOs.Products;
 using Application.Services.BaseServices;
+using Application.Services.Result;
 using Persistence.Entities.OperationalCommercial;
 using Persistence.Repositories.OperationalCommercial;
 
@@ -48,10 +49,21 @@ namespace Application.Services.ProductsServices
                 };
                 bool exit = await ExistProduct(dto.CodeReference);
 
+                int field = 0;
+                if (products.Large.HasValue && products.Large > 0) field++;
+                if (products.High.HasValue && products.High > 0) field++;
+                if (products.Broad.HasValue && products.Broad > 0) field++;
+                if (field > 1 && field != 3) return new ServiceResult { 
+                    Success = false, 
+                    Message = "Ha ocurrido un error en el procesamiento de los datos, se ha intentando colocar " +
+                    "valores no validos en largo, ancho y alto", TypeAlert="danger" };
+
+
                 if (exit) return new ServiceResult { Success = false, Message = "Ya existe un producto con este codigo de referencia", TypeAlert = "danger" };
                 bool create = await _productsRepository.CreateAsync(products);
+
                 //agregar validacion de pais activo o no activo
-                //agregar validacion de largo, ancho y algo por si uno de los tres tiene valores y los otros no
+
                 if (create) return new ServiceResult { Success = false, Message = "Producto creado exitosamente", TypeAlert = "success" };
                 return new ServiceResult { Success = false, Message = "Ha ocurrido un error al crear el producto", TypeAlert = "danger" };
             }
@@ -191,5 +203,7 @@ namespace Application.Services.ProductsServices
                 return null!;
             }
         }
+
+        
     }
 }
