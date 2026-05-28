@@ -144,7 +144,7 @@ namespace Application.Services.FinancialCore
             var hasProducts = await _productsRepository.HasProductsByCountryId(id);
             // var hasOrders = await _importOrdersRepository.HasOrdersByCountryId(id);
 
-            // Regla de negocio de la Pág 8:
+            // Regla de negocio de la Pg 8: ignore estas excepciones, las hare con el patron result en ves de lanzarlas diretamente
             if (hasImporters || hasSuppliers || hasProducts /* || hasOrders */)
             {
                 throw new Exception("No se puede eliminar este país porque está asociado a otros registros del sistema.");
