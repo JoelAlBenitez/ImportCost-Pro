@@ -55,13 +55,16 @@ namespace ImportCost.Controllers.Products
             var list = new List<ViewModelSelectCategories>();
             foreach (var item in categories!)
             {
-                ViewModelSelectCategories selectCategories = new()
+                if (item.State)
                 {
-                    CodeCategories = item.Key,
-                    NameCategory = item.Name
+                    ViewModelSelectCategories selectCategories = new()
+                    {
+                        CodeCategories = item.Key,
+                        NameCategory = item.Name
 
-                };
-                list.Add(selectCategories);
+                    };
+                    list.Add(selectCategories);
+                }
             }
             return list;
         }

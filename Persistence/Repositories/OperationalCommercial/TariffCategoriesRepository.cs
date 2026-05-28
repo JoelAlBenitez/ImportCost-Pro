@@ -53,7 +53,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<TariffCategories>> GetAllAsync()
         {
-            return await _context.tariffCategories.Where(t => t.State == true)
+            return await _context.tariffCategories
                 .AsNoTracking()
                 .ToListAsync();
         }
