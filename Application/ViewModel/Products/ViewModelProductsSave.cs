@@ -20,13 +20,13 @@ namespace Application.ViewModel.Products
         [Range(0.01, double.MaxValue, ErrorMessage = "Ingrese un precio unitario mayor que 0.")]
         public required decimal UnitWeight { get; set; }
 
+        [Required(ErrorMessage = "Debe seleccionar una categoria valida del listado de categorias")]
         public required List<ViewModelSelectCategories> Categories { get; set; }
 
         public decimal? Large { get; set; } = 0;
         public decimal? Broad { get; set; } = 0;
         public decimal? High { get; set; } = 0;
 
-        
         [Required(ErrorMessage = "Seleccione una unidad de medida válida para el producto.")]
         public required UnitMesaurement unit { get; set; }
         //public List<ViewModelSelectUnit> UnitUnits { get; set; }
@@ -39,7 +39,6 @@ namespace Application.ViewModel.Products
         [Required(ErrorMessage = "Seleccione un estado válido para el producto que intenta crear.")]
         public required bool State { get; set; }
         
-        [Required(ErrorMessage = "La categoría seleccionada no corresponde a una categoría válida.")]
         public required string CategoriesId { get; set; }
 
         [Required(ErrorMessage = "El país seleccionado no corresponde a un país válido.")]

@@ -21,11 +21,11 @@ namespace Persistence.Configurations.OperationalCommercial
                 .HasForeignKey(t => t.tarrifCategoriesId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            /*builder.HasOne(c => c.Countrys)
+            builder.HasOne(c => c.country)
              .WithMany(p => p.Products)
-             .HasForeignLKey(c => c.countryId)
+              .HasForeignKey(c => c.countryId)
              .OnDelete(DeleteBehavior.Cascade);  
-             */
+             
         }
     }
 }
