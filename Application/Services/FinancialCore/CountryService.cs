@@ -95,6 +95,13 @@ namespace Application.Services.FinancialCore
         //--------------------------------------------
         public async Task<bool> UpdateAsync(CountryDto dto)
         {
+
+            if (string.IsNullOrWhiteSpace(dto.Name) || string.IsNullOrWhiteSpace(dto.IsoCode))
+            {
+                return false;
+            }
+
+
             dto.IsoCode = dto.IsoCode.Trim().ToUpper();
             var existing =  await _repository.GetEntityById(dto.Key);
 
