@@ -1,8 +1,8 @@
 ﻿using Application.Services.BaseServices;
-using Application.Dto.TarriffCategories;
 using Persistence.Repositories.OperationalCommercial;
 using Persistence.Entities.OperationalCommercial;
 using Application.Services.Result;
+using Application.DTOs.TarriffCategories;
 namespace Application.Services.TarriffCategories
 {
     public class TarriffCategoriesServices : IServicesBase<TariffCategoriesDto, string>

@@ -1,4 +1,4 @@
-﻿using Application.Dto.Suppliers;
+﻿using Application.DTOs.Suppliers;
 using Application.Services.SuppliersServices;
 using Application.ViewModel.Suppliers;
 using Microsoft.AspNetCore.Mvc;

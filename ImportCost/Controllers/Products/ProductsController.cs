@@ -3,7 +3,7 @@ using Application.ViewModel.Products;
 using Application.Services.ProductsServices;
 using Application.Services.TarriffCategories;
 using Application.ViewModel.Select;
-using Application.Dto.Products;
+using Application.DTOs.Products;
 
 namespace ImportCost.Controllers.Products
 {

@@ -1,4 +1,4 @@
-﻿namespace Application.Dto.Base
+﻿namespace Application.DTOs.Base
 {
     public abstract class DtoBase<Tkey>
     {

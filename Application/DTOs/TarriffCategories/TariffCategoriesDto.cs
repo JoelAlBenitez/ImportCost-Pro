@@ -1,5 +1,5 @@
-﻿using Application.Dto.Base;
-namespace Application.Dto.TarriffCategories
+﻿using Application.DTOs.Base;
+namespace Application.DTOs.TarriffCategories
 {
     public class TariffCategoriesDto : DtoBase<string>
     {
