@@ -2,33 +2,33 @@ using Application.DTOs.FinancialCore;
 using Application.Interfaces.FinancialCore;
 using Persistence.Repositories.FinancialCore;
 
-namespace Application.Services.FinancialCore
+namespace Application.Services.ExchangeRates
 {
-    public class TaxConfigurationService : ITaxConfigurationService
+    public class ExchangeRateService : IExchangeRateService
     {
-        private readonly TaxConfigurationRepository _repository;
+        private readonly ExchangeRateRepository _repository;
 
-        public TaxConfigurationService(TaxConfigurationRepository repository)
+        public ExchangeRateService(ExchangeRateRepository repository)
         {
             _repository = repository;
         }
 
-        public Task<IReadOnlyCollection<TaxConfigurationDto>> GetAllAsync()
+        public Task<IReadOnlyCollection<ExchangeRateDto>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<TaxConfigurationDto?> GetByIdAsync(int id)
+        public Task<ExchangeRateDto?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> CreateAsync(TaxConfigurationDto dto)
+        public Task<bool> CreateAsync(ExchangeRateDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateAsync(TaxConfigurationDto dto)
+        public Task<bool> UpdateAsync(ExchangeRateDto dto)
         {
             throw new NotImplementedException();
         }

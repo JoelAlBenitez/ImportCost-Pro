@@ -5,7 +5,7 @@ using Persistence.Entities.FinancialCore;
 using Persistence.Repositories.FinancialCore;
 using Persistence.Repositories.OperationalCommercial;
 
-namespace Application.Services.FinancialCore
+namespace Application.Services.Countries
 {
     public class CountryService : ICountryService
     {

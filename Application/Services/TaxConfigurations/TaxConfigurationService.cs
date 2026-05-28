@@ -2,33 +2,33 @@ using Application.DTOs.FinancialCore;
 using Application.Interfaces.FinancialCore;
 using Persistence.Repositories.FinancialCore;
 
-namespace Application.Services.FinancialCore
+namespace Application.Services.TaxConfigurations
 {
-    public class CurrencyService : ICurrencyService
+    public class TaxConfigurationService : ITaxConfigurationService
     {
-        private readonly CurrencyRepository _repository;
+        private readonly TaxConfigurationRepository _repository;
 
-        public CurrencyService(CurrencyRepository repository)
+        public TaxConfigurationService(TaxConfigurationRepository repository)
         {
             _repository = repository;
         }
 
-        public Task<IReadOnlyCollection<CurrencyDto>> GetAllAsync()
+        public Task<IReadOnlyCollection<TaxConfigurationDto>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<CurrencyDto?> GetByIdAsync(int id)
+        public Task<TaxConfigurationDto?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> CreateAsync(CurrencyDto dto)
+        public Task<bool> CreateAsync(TaxConfigurationDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateAsync(CurrencyDto dto)
+        public Task<bool> UpdateAsync(TaxConfigurationDto dto)
         {
             throw new NotImplementedException();
         }
