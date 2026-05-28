@@ -18,8 +18,7 @@ public class ImportationExpenseCreateDTO
     public decimal ExpenseAmount { get; set; }
 
     [Required(ErrorMessage = "Debe seleccionar una Moneda.")]
-    [MaxLength(3)]
-    public string CurrencyId { get; set; }
+    public int CurrencyId { get; set; }
 
     [Required(ErrorMessage = "Debe seleccionar un método de distribución.")]
     public DistributionMethod DistributionMethod { get; set; }

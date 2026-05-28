@@ -1,5 +1,6 @@
 ﻿using Persistence.Entities.Enums;
 using Persistence.Entities.OperationalCommercial;
+using Persistence.Entities.FinancialCore;
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {
@@ -13,7 +14,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         public required int OriginCountryId { get; set; }
 
-        public required string CurrencyId { get; set; }
+        public required int CurrencyId { get; set; }
 
         public required DateTime OrderDate { get; set; }
 
@@ -26,9 +27,9 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         public virtual Suppliers Supplier { get; set; } = null!;
 
-        //public required Countries Countries { get; set; }
+        public virtual Country OriginCountry { get; set; } = null!;
 
-        //public required Currencies Currencies { get; set; }
+        public virtual Currency Currency { get; set; } = null!;
 
         public virtual ICollection<ImportationOrderDetail> ImportationOrderDetails { get; set; } = new List<ImportationOrderDetail>();
 

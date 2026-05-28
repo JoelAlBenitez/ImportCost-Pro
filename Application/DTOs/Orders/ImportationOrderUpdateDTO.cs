@@ -20,7 +20,7 @@ public class ImportationOrderUpdateDTO
 
         [Required(ErrorMessage = "Debe seleccionar una moneda.")]
         [MaxLength(3)]
-        public string CurrencyId { get; set; } = null!;
+        public int CurrencyId { get; set; }
 
         [Required(ErrorMessage = "La fecha de la orden es requerida.")]
         public DateTime OrderDate { get; set; }

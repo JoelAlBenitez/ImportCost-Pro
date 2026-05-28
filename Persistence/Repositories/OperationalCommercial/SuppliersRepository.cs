@@ -22,8 +22,9 @@ namespace Persistence.Repositories.OperationalCommercial
             return result > 0;
         }
 
-        public async Task<bool> DeleteAsync(Suppliers entity)
+        public async Task<bool> DeleteAsync(int tkey)
         {
+            var entity = await _context.Suppliers.FindAsync(tkey);
             if (entity != null)
             {
                 _context.Suppliers.Remove(entity);
@@ -46,12 +47,16 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Suppliers>> GetAllAsync()
         {
-            return await _context.Suppliers.Where(s => s.State == true).ToListAsync();
+            return await _context.Suppliers.Where(s => s.State == true)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Suppliers> GetEntityById(int key)
         {
-            return await _context.Suppliers.FirstAsync(s => s.Key == key); 
+            return await _context.Suppliers
+                .AsNoTracking()
+                .FirstAsync(s => s.Key == key); 
         }
 
 

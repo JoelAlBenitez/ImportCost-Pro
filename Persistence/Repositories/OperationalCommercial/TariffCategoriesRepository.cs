@@ -6,7 +6,7 @@ using Persistence.Repositories.Base;
 
 namespace Persistence.Repositories.OperationalCommercial
 {
-    public class TariffCategoriesRepository : BaseRepository<TariffCategories, int>
+    public class TariffCategoriesRepository : BaseRepository<TariffCategories, string>
     {
         private readonly ContextImportCost _context;
 
@@ -21,18 +21,19 @@ namespace Persistence.Repositories.OperationalCommercial
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
-
-        public async Task<bool> DeleteAsync(TariffCategories entity)
+     
+        public async Task<bool> DeleteAsync(string tkey)
         {
-            if(entity != null)
+            var entity = await _context.TariffCategories.FindAsync(tkey);
+            if (entity != null)
             {
                _context.TariffCategories.Remove(entity);
                var result= await _context.SaveChangesAsync();
                return result > 0;
 
-            }return false;
+            }
+            return false;
         }
-
         public async Task<bool> EditAsync(TariffCategories entity)
         {
             if(entity != null)
@@ -44,14 +45,25 @@ namespace Persistence.Repositories.OperationalCommercial
             }return false;
         }
 
-        public async Task<IReadOnlyCollection<TariffCategories>> GetAllAsync()
+        public async Task<bool> AssociatedProductsC(string code)
         {
-            return await _context.TariffCategories.Where(t => t.State == true).ToListAsync();
+            bool associatedPC = await _context.TariffCategories
+                .AnyAsync(c => c.Key == code && c.Products!.Any());
+            return associatedPC;
         }
 
-        public async Task<TariffCategories> GetEntityById(int key)
+        public async Task<IReadOnlyCollection<TariffCategories>> GetAllAsync()
         {
-           return await _context.TariffCategories.FirstAsync(t =>  t.Key == key);
+            return await _context.TariffCategories.Where(t => t.State == true)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<TariffCategories> GetEntityById(string key)
+        {
+           return await _context.TariffCategories
+                .AsNoTracking()
+                .FirstAsync(t => t.Key == key);
         }
 
         public async Task<bool> ExistTariffCode(string code)

@@ -22,8 +22,9 @@ namespace Persistence.Repositories.OperationalCommercial
 
         }
 
-        public async Task<bool> DeleteAsync(Products entity)
+        public async Task<bool> DeleteAsync(int tkey)
         {
+            var entity = await _context.Products.FindAsync(tkey);
             if(entity != null)
             {
                  _context.Products.Remove(entity);
@@ -38,9 +39,7 @@ namespace Persistence.Repositories.OperationalCommercial
             if(entity != null)
             {
                  _context.Products.Update(entity);
-                var result = await _context.SaveChangesAsync();
-                return result > 0;
-                
+                return await _context.SaveChangesAsync() > 0;
             }
             return false;
 
@@ -48,12 +47,16 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Products>> GetAllAsync()
         {
-            return await _context.Products.Where(p => p.State == true).ToListAsync();
+            return await _context.Products.Where(p => p.State == true)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Products> GetEntityById(int key)
         {
-            return await  _context.Products.FirstAsync(p => p.Key == key);
+            return await  _context.Products
+                .AsNoTracking()
+                .FirstAsync(p => p.Key == key);
         }
 
         public async Task<bool> ExistProductsByCodeReference(string codeReference)

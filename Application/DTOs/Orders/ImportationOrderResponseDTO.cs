@@ -13,7 +13,7 @@ public class ImportationOrderResponseDTO
 
     public int OriginCountryId { get; set; }
 
-    public string CurrencyId { get; set; } = null!;
+    public int CurrencyId { get; set; }
 
     public DateTime OrderDate { get; set; }
 

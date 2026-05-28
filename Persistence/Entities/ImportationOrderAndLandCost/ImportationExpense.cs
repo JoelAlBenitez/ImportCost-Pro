@@ -1,6 +1,7 @@
 ﻿
 
 using Persistence.Entities.Enums;
+using Persistence.Entities.FinancialCore;
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {
@@ -14,7 +15,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         public required decimal ExpenseAmount { get; set; }
 
-        public required string CurrencyId { get; set; }
+        public required int CurrencyId { get; set; }
 
         public required DistributionMethod DistributionMethod { get; set; }
 
@@ -24,6 +25,6 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         public virtual ImportationOrder ImportationOrder { get; set; } = null!;
 
-        //public required Currencies Currencies { get; set; }
+        public virtual Currency Currency { get; set; } = null!;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Persistence.Entities.ImportationOrderAndLandCost;
+using Persistence.Entities.FinancialCore;
 using Persistence.Entities.OperationalCommercial;
 using System.Reflection;
 
@@ -13,6 +14,10 @@ namespace Persistence.Context
         public DbSet<Products> Products { get; set; }
         public DbSet<Suppliers> Suppliers { get; set; }
         public DbSet<TariffCategories> TariffCategories { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
+        public DbSet<ExchangeRate> ExchangeRates { get; set; }
+        public DbSet<TaxConfiguration> TaxConfigurations { get; set; }
 
 
         //Importation Order and Landed Cost sets
@@ -22,6 +27,8 @@ namespace Persistence.Context
         public DbSet<ImportationExpense> ImportationExpenses { get; set; }
         public DbSet<LandedCostDetail> LandedCostDetails { get; set; }
         public DbSet<LandedCostSummary> LandedCostSummaries { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
