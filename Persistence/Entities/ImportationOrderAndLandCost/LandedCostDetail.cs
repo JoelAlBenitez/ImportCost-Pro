@@ -42,9 +42,9 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         //navigation properties
 
-        public virtual LandedCostSummary LandedCostSummary { get; set; } = null!;
+        public  LandedCostSummary LandedCostSummary { get; set; }
 
-        public virtual Products Product { get; set; } = null!;
+        public  Products Product { get; set; }
 
 
     }

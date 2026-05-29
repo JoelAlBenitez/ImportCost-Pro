@@ -19,7 +19,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         public required decimal ExpectedProfitMargin { get; set; }
 
         //navigation properties
-        public virtual Products Product { get; set; } = null!;
-        public virtual ImportationOrder ImportationOrder { get; set; } = null!;
+        public  Products Product { get; set; }
+        public  ImportationOrder ImportationOrder { get; set; }
     }
 }

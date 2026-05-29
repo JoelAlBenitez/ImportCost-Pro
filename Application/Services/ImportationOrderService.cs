@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Orders;
 using Application.Interfaces.Services;
+using Microsoft.Identity.Client;
 using Persistence.Entities.Enums;
 using Persistence.Entities.ImportationOrderAndLandCost;
 using Persistence.Interfaces.Repositories.ImportationOrderAndLandCost;
@@ -107,6 +108,10 @@ namespace Application.Services
                 SupplierId = order.SupplierId,
                 OriginCountryId = order.OriginCountryId,
                 CurrencyId = order.CurrencyId,
+                ImporterName = order.Importer?.Name,
+                SupplierName = order.Supplier?.Name,
+                OriginCountryName = order.Country?.Name,
+                CurrencyCode = order.Currency?.IsoCode,
                 OrderDate = order.OrderDate,
                 TransportMode = order.TransportMode,
                 OrderState = order.OrderState,
@@ -190,5 +195,33 @@ namespace Application.Services
 
             return response;
         }
+
+        public async Task<bool> CloseOrderAsync(string id)
+        {
+            //Buscar la orden
+            var order = await _orderRepository.GetEntityById(id);
+            if (order == null)
+                return false;
+
+            //validar que este calculada
+            if(order.OrderState != OrderState.Calculada)
+            {
+                throw new InvalidOperationException("Solo se pueden cerrar órdenes que estén en estado 'Calculada'.");
+            }
+
+            if (order.LandedCostSummary == null)
+            {
+                throw new InvalidOperationException("No se puede cerrar esta orden porque no tiene un resumen de landed cost asociado.");
+            }
+
+            //Cambiar el estado a cerrada
+            order.OrderState = OrderState.Cerrada;
+
+            //Guardar cambios
+            await _orderRepository.EditAsync(order);
+
+            return true;
+        }
+
     }
 }

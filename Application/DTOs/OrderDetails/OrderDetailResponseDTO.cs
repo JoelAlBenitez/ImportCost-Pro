@@ -1,7 +1,6 @@
 ﻿namespace Application.DTOs.OrderDetails;
 
 using System;
-using System.ComponentModel.DataAnnotations;
 using Persistence.Entities.Enums;
 
 public class OrderDetailResponseDTO

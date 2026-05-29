@@ -25,6 +25,9 @@ namespace Application.Interfaces.Services
         //5. ELIMINAR UNA ORDEN
         Task<bool> DeleteAsync(string id);
 
+        //6. CERRAR UNA ORDEN
+        Task<bool> CloseOrderAsync(string id);
+
 
     }
 }

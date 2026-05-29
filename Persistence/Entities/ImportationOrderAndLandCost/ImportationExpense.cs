@@ -23,8 +23,8 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         //navigation properties
 
-        public virtual ImportationOrder ImportationOrder { get; set; } = null!;
+        public  ImportationOrder ImportationOrder { get; set; }
 
-        public virtual Currency Currency { get; set; } = null!;
+        public  Currency Currency { get; set; }
     }
 }

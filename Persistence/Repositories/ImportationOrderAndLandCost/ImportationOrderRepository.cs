@@ -2,6 +2,7 @@
 using Persistence.Entities.ImportationOrderAndLandCost;
 using Persistence.Interfaces.Repositories.ImportationOrderAndLandCost;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Entities.FinancialCore;
 
 namespace Persistence.Repositories.ImportationOrderAndLandCost
 {
@@ -17,13 +18,27 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
         // 1. GET BY ID
         public async Task<ImportationOrder?> GetEntityById(string orderId)
         {
-            return await _context.ImportationOrders.FindAsync(orderId);
+            return await _context.ImportationOrders
+        .Include(o => o.Importer)
+        .Include(o => o.Supplier)
+        .Include(o => o.Country)
+        .Include(o => o.Currency)
+        .Include(o => o.ImportationOrderDetails)
+        .Include(o => o.ImportationExpenses)
+        .FirstOrDefaultAsync(o => o.OrderId == orderId);
         }
 
         // 2. GET ALL
         public async Task<IReadOnlyCollection<ImportationOrder>> GetAllAsync()
         {
-            return await _context.ImportationOrders.ToListAsync();
+            return await _context.ImportationOrders
+        .Include(o => o.Importer)
+        .Include(o => o.Supplier)
+        .Include(o => o.Country)
+        .Include(o => o.Currency)
+        .Include(o => o.ImportationOrderDetails)
+        .Include(o => o.ImportationExpenses)
+        .ToListAsync();
         }
 
         // 3. CREATE

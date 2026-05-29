@@ -38,9 +38,9 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         //navigation properties
 
         //antes: public required ImportationOrder ImportationOrder { get; set; }
-        public virtual ImportationOrder ImportationOrder { get; set; } = null!;
+        public  ImportationOrder ImportationOrder { get; set; }
 
-        public virtual ICollection<LandedCostDetail> LandedCostDetails { get; set; } = new List<LandedCostDetail>();
+        public  ICollection<LandedCostDetail> LandedCostDetails { get; set; }
 
     }
 }

@@ -1,7 +1,6 @@
 ﻿namespace Application.DTOs.Orders;
 
 using System;
-using System.ComponentModel.DataAnnotations;
 using Persistence.Entities.Enums;
 public class ImportationOrderResponseDTO
 {
@@ -14,6 +13,11 @@ public class ImportationOrderResponseDTO
     public int OriginCountryId { get; set; }
 
     public int CurrencyId { get; set; }
+
+    public string? ImporterName { get; set; }
+    public string? SupplierName { get; set; }
+    public string? OriginCountryName { get; set; }
+    public string? CurrencyCode { get; set; }
 
     public DateTime OrderDate { get; set; }
 

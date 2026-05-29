@@ -1,7 +1,10 @@
-﻿using Persistence.Context;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Context;
 using Persistence.Entities.ImportationOrderAndLandCost;
 using Persistence.Interfaces.Repositories.ImportationOrderAndLandCost;
-using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories.ImportationOrderAndLandCost
 {
@@ -14,36 +17,13 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
             _context = context;
         }
 
-        public async Task<IEnumerable<ImportationExpense>> GetByOrderIdAsync(string orderId)
+        // 1. Cambiamos el retorno a IReadOnlyCollection
+        public async Task<IReadOnlyCollection<ImportationExpense>> GetByOrderIdAsync(string orderId)
         {
             return await _context.ImportationExpenses
+                                 .AsNoTracking()
                                  .Where(e => e.OrderId == orderId)
                                  .ToListAsync();
-        }
-
-        public async Task<ImportationExpense?> GetByIdAsync(string id)
-        {
-            return await _context.ImportationExpenses.FindAsync(id);
-        }
-
-        public async Task AddAsync(ImportationExpense expense)
-        {
-            await _context.ImportationExpenses.AddAsync(expense);
-        }
-
-        public Task UpdateAsync(ImportationExpense expense)
-        {
-            _context.ImportationExpenses.Update(expense);
-            return Task.CompletedTask;
-        }
-
-        public async Task DeleteAsync(string id)
-        {
-            var expense = await GetByIdAsync(id);
-            if (expense != null)
-            {
-                _context.ImportationExpenses.Remove(expense);
-            }
         }
     }
 }

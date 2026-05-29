@@ -1,7 +1,6 @@
 ﻿namespace Application.DTOs.LandedCost;
 
 using System;
-using System.ComponentModel.DataAnnotations;
 using Persistence.Entities.Enums;
 
 public class LandedCostSummaryDTO
@@ -10,7 +9,7 @@ public class LandedCostSummaryDTO
 
     public string OrderId { get; set; }
 
-    public string LocalCurrencyUsed { get; set; }
+    public int LocalCurrencyUsed { get; set; }
 
     public decimal ExchangeRate { get; set; }
 
@@ -36,4 +35,6 @@ public class LandedCostSummaryDTO
     public decimal TotalImportationCost { get; set; }
 
     public decimal TotalImportedQuantity { get; set; }
+
+    public List<LandedCostDetailDTO> ProductDetails { get; set; } = new();
 }
