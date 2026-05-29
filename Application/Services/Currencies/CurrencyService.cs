@@ -1,11 +1,11 @@
 using Application.DTOs.Currencies;
-using Application.Interfaces.Currencies;
+using Application.Services.BaseServices;
 using Application.Services.Result;
 using Persistence.Repositories.FinancialCore;
 
 namespace Application.Services.Currencies
 {
-    public class CurrencyService : ICurrencyService
+    public class CurrencyService : IServicesBase<CurrencyDto, int>
     {
         private readonly CurrencyRepository _repository;
 
@@ -19,7 +19,7 @@ namespace Application.Services.Currencies
             throw new NotImplementedException();
         }
 
-        public Task<CurrencyDto?> GetByIdAsync(int id)
+        public Task<CurrencyDto> GetKeyAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -29,7 +29,7 @@ namespace Application.Services.Currencies
             throw new NotImplementedException();
         }
 
-        public Task<ServiceResult> UpdateAsync(CurrencyDto dto)
+        public Task<ServiceResult> EditAsync(CurrencyDto dto)
         {
             throw new NotImplementedException();
         }

@@ -1,11 +1,11 @@
 using Application.DTOs.TaxConfigurations;
-using Application.Interfaces.TaxConfigurations;
+using Application.Services.BaseServices;
 using Application.Services.Result;
 using Persistence.Repositories.FinancialCore;
 
 namespace Application.Services.TaxConfigurations
 {
-    public class TaxConfigurationService : ITaxConfigurationService
+    public class TaxConfigurationService : IServicesBase<TaxConfigurationDto, int>
     {
         private readonly TaxConfigurationRepository _repository;
 
@@ -19,7 +19,7 @@ namespace Application.Services.TaxConfigurations
             throw new NotImplementedException();
         }
 
-        public Task<TaxConfigurationDto?> GetByIdAsync(int id)
+        public Task<TaxConfigurationDto> GetKeyAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -29,7 +29,7 @@ namespace Application.Services.TaxConfigurations
             throw new NotImplementedException();
         }
 
-        public Task<ServiceResult> UpdateAsync(TaxConfigurationDto dto)
+        public Task<ServiceResult> EditAsync(TaxConfigurationDto dto)
         {
             throw new NotImplementedException();
         }

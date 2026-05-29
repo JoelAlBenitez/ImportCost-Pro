@@ -1,5 +1,5 @@
 using Application.DTOs.Countries;
-using Application.Interfaces.Countries;
+using Application.Services.BaseServices;
 using Application.Services.Result;
 using Persistence.Entities.FinancialCore;
 using Persistence.Repositories.FinancialCore;
@@ -7,7 +7,7 @@ using Persistence.Repositories.OperationalCommercial;
 
 namespace Application.Services.Countries
 {
-    public class CountryService : ICountryService
+    public class CountryService : IServicesBase<CountryDto, int>
     {
         private readonly CountryRepository _repository;
         private readonly ImportersRepository _importersRepository;
@@ -37,10 +37,10 @@ namespace Application.Services.Countries
             }).ToList();
         }
 
-        public async Task<CountryDto?> GetByIdAsync(int id)
+        public async Task<CountryDto> GetKeyAsync(int id)
         {
             var resultEntity = await _repository.GetEntityById(id);
-            if (resultEntity == null) return null;
+            if (resultEntity == null) return null!;
 
             return new CountryDto
             {
@@ -92,7 +92,7 @@ namespace Application.Services.Countries
             }
         }
 
-        public async Task<ServiceResult> UpdateAsync(CountryDto dto)
+        public async Task<ServiceResult> EditAsync(CountryDto dto)
         {
             try
             {
