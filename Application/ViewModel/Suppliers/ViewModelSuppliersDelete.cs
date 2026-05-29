@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModel.Suppliers
+namespace Application.ViewModel.Suppliers
 {
     public class ViewModelSuppliersDelete
     {

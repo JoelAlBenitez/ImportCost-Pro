@@ -1,4 +1,4 @@
-namespace Application.DTOs.FinancialCore
+namespace Application.DTOs.TaxConfigurations
 {
     public class TaxConfigurationDto
     {

@@ -1,6 +1,6 @@
-﻿using Application.Dto.Base;
+using Application.DTOs.Base;
 using Persistence.Entities.Enums;
-namespace Application.Dto.Products
+namespace Application.DTOs.Products
 {
     public  class ProductsDto : DtoBase<int>
     {

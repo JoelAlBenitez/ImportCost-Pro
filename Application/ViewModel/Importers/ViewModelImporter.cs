@@ -1,4 +1,4 @@
-﻿using Application.ViewModel.Base;
+using Application.ViewModel.Base;
 
 namespace Application.ViewModel.Importers
 {

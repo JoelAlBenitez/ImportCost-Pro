@@ -1,5 +1,5 @@
-﻿using Application.Services.BaseServices;
-using Application.Dto.TarriffCategories;
+using Application.Services.BaseServices;
+using Application.DTOs.TarriffCategories;
 using Persistence.Repositories.OperationalCommercial;
 using Persistence.Entities.OperationalCommercial;
 using Application.Services.Result;

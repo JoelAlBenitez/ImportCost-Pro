@@ -1,5 +1,6 @@
-using Application.DTOs.FinancialCore;
-using Application.Interfaces.FinancialCore;
+using Application.DTOs.Currencies;
+using Application.Interfaces.Currencies;
+using Application.Services.Result;
 using Persistence.Repositories.FinancialCore;
 
 namespace Application.Services.Currencies
@@ -23,17 +24,17 @@ namespace Application.Services.Currencies
             throw new NotImplementedException();
         }
 
-        public Task<bool> CreateAsync(CurrencyDto dto)
+        public Task<ServiceResult> CreateAsync(CurrencyDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateAsync(CurrencyDto dto)
+        public Task<ServiceResult> UpdateAsync(CurrencyDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public Task<ServiceResult> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }

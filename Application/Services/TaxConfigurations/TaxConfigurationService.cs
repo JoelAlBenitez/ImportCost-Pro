@@ -1,5 +1,6 @@
-using Application.DTOs.FinancialCore;
-using Application.Interfaces.FinancialCore;
+using Application.DTOs.TaxConfigurations;
+using Application.Interfaces.TaxConfigurations;
+using Application.Services.Result;
 using Persistence.Repositories.FinancialCore;
 
 namespace Application.Services.TaxConfigurations
@@ -23,17 +24,17 @@ namespace Application.Services.TaxConfigurations
             throw new NotImplementedException();
         }
 
-        public Task<bool> CreateAsync(TaxConfigurationDto dto)
+        public Task<ServiceResult> CreateAsync(TaxConfigurationDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateAsync(TaxConfigurationDto dto)
+        public Task<ServiceResult> UpdateAsync(TaxConfigurationDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public Task<ServiceResult> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }

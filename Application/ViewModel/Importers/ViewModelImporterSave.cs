@@ -1,4 +1,4 @@
-﻿using Application.ViewModel.Select;
+using Application.ViewModel.Select;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModel.Importers
@@ -8,15 +8,15 @@ namespace Application.ViewModel.Importers
 
         public int Key { get; set; }
 
-        [Required(ErrorMessage = "Nombre inválido o demasiado largo, por favor ingrese un nombre válido de no más de 150 caracteres.")]
+        [Required(ErrorMessage = "Nombre inv�lido o demasiado largo, por favor ingrese un nombre v�lido de no m�s de 150 caracteres.")]
         [StringLength(150, MinimumLength = 3)]
         public required string Name { get; set; }
 
         [StringLength(20, MinimumLength = 3)]
-        [Required(ErrorMessage = "Identificación inválida o demasiado larga, por favor ingrese una identificación válida de no más de 20 caracteres.")]
+        [Required(ErrorMessage = "Identificaci�n inv�lida o demasiado larga, por favor ingrese una identificaci�n v�lida de no m�s de 20 caracteres.")]
         public required string Identifcation { get; set; }
 
-        [Required(ErrorMessage = "País inválido, por favor seleccione un país válido.")]
+        [Required(ErrorMessage = "Pa�s inv�lido, por favor seleccione un pa�s v�lido.")]
         public required int countryId { get; set; }
         public List<ViewModelSelectCountries>? Countries { get; set; }
 
@@ -31,7 +31,7 @@ namespace Application.ViewModel.Importers
         [StringLength(250, MinimumLength = 0)]
         public string? Address { get; set; }
 
-        [Required(ErrorMessage = "Debe seleccionar un estado válido para el importador que intenta crear.")]
+        [Required(ErrorMessage = "Debe seleccionar un estado v�lido para el importador que intenta crear.")]
         public required bool State { get; set; }
     }
 }

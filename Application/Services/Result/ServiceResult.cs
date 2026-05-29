@@ -1,4 +1,4 @@
-﻿namespace Application.Services.Result
+namespace Application.Services.Result
 {
     public class ServiceResult
     {

@@ -1,7 +1,7 @@
-using Application.DTOs.FinancialCore;
+using Application.DTOs.Countries;
 using Application.Services.Result;
 
-namespace Application.Interfaces.FinancialCore
+namespace Application.Interfaces.Countries
 {
     public interface ICountryService
     {

@@ -1,4 +1,4 @@
-﻿using Application.ViewModel.Base;
+using Application.ViewModel.Base;
 using Persistence.Entities.Enums;
 
 namespace Application.ViewModel.Products

@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModel.Base
+namespace Application.ViewModel.Base
 {
     public abstract class BaseViewModel <Tkey, TName>
     {

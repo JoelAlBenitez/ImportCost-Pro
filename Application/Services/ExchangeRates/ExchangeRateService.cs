@@ -1,5 +1,6 @@
-using Application.DTOs.FinancialCore;
-using Application.Interfaces.FinancialCore;
+using Application.DTOs.ExchangeRates;
+using Application.Interfaces.ExchangeRates;
+using Application.Services.Result;
 using Persistence.Repositories.FinancialCore;
 
 namespace Application.Services.ExchangeRates
@@ -23,17 +24,17 @@ namespace Application.Services.ExchangeRates
             throw new NotImplementedException();
         }
 
-        public Task<bool> CreateAsync(ExchangeRateDto dto)
+        public Task<ServiceResult> CreateAsync(ExchangeRateDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateAsync(ExchangeRateDto dto)
+        public Task<ServiceResult> UpdateAsync(ExchangeRateDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public Task<ServiceResult> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }

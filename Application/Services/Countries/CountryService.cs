@@ -1,5 +1,5 @@
-using Application.DTOs.FinancialCore;
-using Application.Interfaces.FinancialCore;
+using Application.DTOs.Countries;
+using Application.Interfaces.Countries;
 using Application.Services.Result;
 using Persistence.Entities.FinancialCore;
 using Persistence.Repositories.FinancialCore;

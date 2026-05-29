@@ -1,5 +1,5 @@
-﻿using Application.Dto.Base;
-namespace Application.Dto.Importers
+using Application.DTOs.Base;
+namespace Application.DTOs.Importers
 {
     public class ImporterDto : DtoBase<int>
     {

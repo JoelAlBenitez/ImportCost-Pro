@@ -1,4 +1,4 @@
-﻿using Application.ViewModel.Select;
+using Application.ViewModel.Select;
 using Persistence.Entities.Enums;
 using System.ComponentModel.DataAnnotations;
 namespace Application.ViewModel.Products
@@ -8,15 +8,15 @@ namespace Application.ViewModel.Products
 
         public int Key { get; set; }
 
-        [Required(ErrorMessage = "Ingrese un nombre de producto válido que no supere los 150 caracteres.")]
+        [Required(ErrorMessage = "Ingrese un nombre de producto v�lido que no supere los 150 caracteres.")]
         [StringLength(150)]
         public required string Name { get; set; }
 
-        [Required(ErrorMessage = "Ingrese un código de referencia válido que no supere los 50 caracteres.")]
+        [Required(ErrorMessage = "Ingrese un c�digo de referencia v�lido que no supere los 50 caracteres.")]
         [StringLength(50)]
         public required string CodeReference { get; set; }
 
-        [Required(ErrorMessage = "Ingrese un precio unitario válido, mayor que 0.")]
+        [Required(ErrorMessage = "Ingrese un precio unitario v�lido, mayor que 0.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Ingrese un precio unitario mayor que 0.")]
         public required decimal UnitWeight { get; set; }
 
@@ -27,7 +27,7 @@ namespace Application.ViewModel.Products
         public decimal? Broad { get; set; } = 0;
         public decimal? High { get; set; } = 0;
 
-        [Required(ErrorMessage = "Seleccione una unidad de medida válida para el producto.")]
+        [Required(ErrorMessage = "Seleccione una unidad de medida v�lida para el producto.")]
         public required UnitMesaurement unit { get; set; }
         //public List<ViewModelSelectUnit> UnitUnits { get; set; }
 
@@ -36,12 +36,12 @@ namespace Application.ViewModel.Products
         [StringLength(250)]
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "Seleccione un estado válido para el producto que intenta crear.")]
+        [Required(ErrorMessage = "Seleccione un estado v�lido para el producto que intenta crear.")]
         public required bool State { get; set; }
         
         public required string CategoriesId { get; set; }
 
-        [Required(ErrorMessage = "El país seleccionado no corresponde a un país válido.")]
+        [Required(ErrorMessage = "El pa�s seleccionado no corresponde a un pa�s v�lido.")]
         public required int CountryId { get; set; }
 
     }
