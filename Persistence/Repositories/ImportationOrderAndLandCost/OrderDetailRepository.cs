@@ -1,11 +1,14 @@
-﻿using Persistence.Context;
-using Persistence.Entities.ImportationOrderAndLandCost;
-using Persistence.Interfaces.Repositories.ImportationOrderAndLandCost;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Context;
+using Persistence.Entities.ImportationOrderAndLandCost;
 
 namespace Persistence.Repositories.ImportationOrderAndLandCost
 {
-    public class OrderDetailRepository : IOrderDetailRepository
+    // 1. Eliminamos la herencia de IOrderDetailRepository
+    public class OrderDetailRepository
     {
         private readonly ContextImportCost _context;
 
@@ -14,38 +17,45 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
             _context = context;
         }
 
-        // Busca todos los productos que pertenezcan a un OrderId específico
-        public async Task<IEnumerable<ImportationOrderDetail>> GetByOrderIdAsync(string orderId)
+        // 2. Reglas de Joel: IReadOnlyCollection y AsNoTracking()
+        public async Task<IReadOnlyCollection<ImportationOrderDetail>> GetByOrderIdAsync(string orderId)
         {
             return await _context.ImportationOrderDetails
+                                 .AsNoTracking()
                                  .Where(od => od.OrderId == orderId)
                                  .ToListAsync();
         }
 
-        // Busca un solo detalle por su ID único (usando string)
         public async Task<ImportationOrderDetail?> GetByIdAsync(string id)
         {
             return await _context.ImportationOrderDetails.FindAsync(id);
         }
 
-        public async Task AddAsync(ImportationOrderDetail orderDetail)
+        // 3. Agregamos SaveChangesAsync para que realmente se guarde en la Base de Datos
+        public async Task<bool> AddAsync(ImportationOrderDetail orderDetail)
         {
             await _context.ImportationOrderDetails.AddAsync(orderDetail);
+            var result = await _context.SaveChangesAsync();
+            return result > 0;
         }
 
-        public Task UpdateAsync(ImportationOrderDetail orderDetail)
+        public async Task<bool> UpdateAsync(ImportationOrderDetail orderDetail)
         {
             _context.ImportationOrderDetails.Update(orderDetail);
-            return Task.CompletedTask;
+            var result = await _context.SaveChangesAsync();
+            return result > 0;
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(string id)
         {
             var orderDetail = await GetByIdAsync(id);
             if (orderDetail != null)
             {
                 _context.ImportationOrderDetails.Remove(orderDetail);
+                var result = await _context.SaveChangesAsync();
+                return result > 0;
             }
+            return false;
         }
     }
 }

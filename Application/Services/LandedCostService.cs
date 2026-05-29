@@ -1,21 +1,20 @@
 ﻿using Application.DTOs.LandedCost;
-using Application.Interfaces.Services;
 using Microsoft.Identity.Client;
 using Persistence.Entities.Enums;
 using Persistence.Entities.FinancialCore;
 using Persistence.Entities.ImportationOrderAndLandCost;
-using Persistence.Interfaces.Repositories.ImportationOrderAndLandCost;
 using Persistence.Repositories.Base;
+using Persistence.Repositories.ImportationOrderAndLandCost;
 // Asegúrate de agregar los using de tus repositorios aquí
 
-public class LandedCostService : ILandedCostService
+public class LandedCostService
 {
-    private readonly IImportationOrderRepository _orderRepository;
-    // private readonly ICurrencyRepository _currencyRepository;
-    // private readonly IExchangeRateRepository _exchangeRateRepository;
-    // private readonly ITaxConfigurationRepository _taxConfigRepository;
+    private readonly ImportationOrderRepository _orderRepository;
+   // private readonly ICurrencyRepository _currencyRepository;
+    //private readonly IExchangeRateRepository _exchangeRateRepository;
+    //private readonly ITaxConfigurationRepository _taxConfigRepository;
     public LandedCostService(
-        IImportationOrderRepository orderRepository
+        ImportationOrderRepository orderRepository
         /*
         ICurrencyRepository currencyRepository,
         IExchangeRateRepository exchangeRateRepository,
@@ -24,11 +23,11 @@ public class LandedCostService : ILandedCostService
         )
     {
         _orderRepository = orderRepository;
-        /*
-        _currencyRepository = currencyRepository;
-        _exchangeRateRepository = exchangeRateRepository;
-        _taxConfigRepository = taxConfigRepository;
-        */
+
+        //_currencyRepository = currencyRepository;
+        //  _exchangeRateRepository = exchangeRateRepository;
+        //_taxConfigRepository = taxConfigRepository;
+
     }
 
     public class ExpenseAllocation
@@ -62,16 +61,11 @@ public class LandedCostService : ILandedCostService
                 throw new InvalidOperationException("La orden debe tener un gasto de tipo Seguro internacional registrado.");
 
         // Validar configuración de impuestos (COMENTADO TEMPORALMENTE)
-        // var taxConfig = await _taxConfigRepository.GetActiveConfigurationAsync();
-        // if (taxConfig == null) throw new InvalidOperationException("Debe existir una configuración de impuestos activa.");
-        var taxConfig = new { CustomsServiceFeePercentage = 0m, GeneralItbisPercentage = 0m }; // <-- OBJETO FALSO
-
-        //Identificar la moneda local (COMENTADO TEMPORALMENTE)
-        // var localCurrency = await _currencyRepository.GetLocalCurrencyAsync();
-        // if (localCurrency == null) throw new InvalidOperationException("No existe una moneda local configurada en el sistema.");
-        var localCurrency = new { CurrencyId = 1 }; // <-- OBJETO FALSO
-                                                    //conversión de tasas de cambio.
-                                                    //Calcular FOB por Producto
+        // MOCKS TEMPORALES PARA PODER COMPILAR
+        var taxConfig = new { CustomsServiceFeePercentage = 0m, GeneralItbisPercentage = 0m };
+        var localCurrency = new { CurrencyId = 1 };
+        //conversión de tasas de cambio.
+        //Calcular FOB por Producto
         var ProductFOB = order.ImportationOrderDetails.ToDictionary(
                 item => item.ProductId,
                 item => item.Quantity * item.FOBUnitPrice
@@ -94,9 +88,8 @@ public class LandedCostService : ILandedCostService
         else
         {
             // COMENTADO TEMPORALMENTE
-            // var exchangeRate = await _exchangeRateRepository.GetExchangeRateAsync(order.CurrencyId, localCurrency.CurrencyId, order.OrderDate);
-            // if (exchangeRate == null) throw new InvalidOperationException("No se pudo obtener la tasa de cambio para la moneda de la orden.");
-            var exchangeRate = new { Rate = 1m }; // <-- OBJETO FALSO
+            // var exchangeRate = await _exchangeRateRepository... (BORRADO/COMENTADO)
+            var exchangeRate = new { Rate = 1m };
             ExchangeRateValue = exchangeRate.Rate;
         }
 
@@ -123,10 +116,8 @@ public class LandedCostService : ILandedCostService
                 else
                 {
                     // COMENTADO TEMPORALMENTE
-                    // var expenseRate = await _exchangeRateRepository.GetExchangeRateAsync(expense.CurrencyId, localCurrency.CurrencyId, expense.ImportationExpenseDate);
-                    // if (expenseRate == null) throw new InvalidOperationException($"No se pudo obtener la tasa de cambio para el gasto {expense.ImportationExpenseId}.");
-                    var expenseRate = new { Rate = 1m }; // <-- OBJETO FALSO
-
+                    // var expenseRate = await _exchangeRateRepository... (BORRADO/COMENTADO)
+                    var expenseRate = new { Rate = 1m };
                     expenseRateValue = expenseRate.Rate;
                 }
 
@@ -212,28 +203,22 @@ public class LandedCostService : ILandedCostService
                 decimal cif = localFob + alloc.AssignedFreight + alloc.AssignedInsurance;
 
             // COMENTADO TEMPORALMENTE
-            // decimal porcentajeArancel = detail.Product?.TariffCategory?.TariffPercentage ?? 0m;
-            decimal porcentajeArancel = 0m; // <-- VALOR FALSO
+            // MOCKS TEMPORALES PARA TARIFF CATEGORY
+            decimal porcentajeArancel = 0m;
             decimal arancel = cif * (porcentajeArancel / 100m);
 
             decimal impuestoSelectivo = 0m;
-            // COMENTADO TEMPORALMENTE
-            // bool aplicaSelectivo = detail.Product?.TariffCategory?.AppliesSelectiveTax ?? false;
-            bool aplicaSelectivo = false; // <-- VALOR FALSO
+            bool aplicaSelectivo = false;
             if (aplicaSelectivo)
             {
-                // COMENTADO TEMPORALMENTE
-                // decimal porcentajeSelectivo = detail.Product?.TariffCategory?.SelectiveTaxPercentage ?? 0m;
-                decimal porcentajeSelectivo = 0m; // <-- VALOR FALSO
+                decimal porcentajeSelectivo = 0m;
                 impuestoSelectivo = cif * (porcentajeSelectivo / 100m);
             }
 
             decimal tasaServicioAduanal = cif * (taxConfig.CustomsServiceFeePercentage / 100m);
 
             decimal itbis = 0m;
-            // COMENTADO TEMPORALMENTE
-            // bool aplicaItbis = detail.Product?.TariffCategory?.AppliesItbis ?? false;
-            bool aplicaItbis = false; // <-- VALOR FALSO
+            bool aplicaItbis = false;
             if (aplicaItbis)
                 {
                     decimal baseItbis = cif + arancel + impuestoSelectivo + tasaServicioAduanal;

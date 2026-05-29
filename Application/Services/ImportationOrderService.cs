@@ -1,32 +1,33 @@
 ﻿using Application.DTOs.Orders;
-using Application.Interfaces.Services;
+// BORRAMOS: using Application.Interfaces.Services;
 using Microsoft.Identity.Client;
 using Persistence.Entities.Enums;
 using Persistence.Entities.ImportationOrderAndLandCost;
-using Persistence.Interfaces.Repositories.ImportationOrderAndLandCost;
+// BORRAMOS: using Persistence.Interfaces.Repositories.ImportationOrderAndLandCost;
+using Persistence.Repositories.ImportationOrderAndLandCost; // AGREGAMOS EL NAMESPACE DE LAS CLASES
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class ImportationOrderService : IImportationOrderService
+    // 1. Ya no hereda de IImportationOrderService
+    public class ImportationOrderService
     {
-        private readonly IImportationOrderRepository _orderRepository;
+        // 2. Usamos la CLASE concreta de tu repositorio
+        private readonly ImportationOrderRepository _orderRepository;
 
-        public ImportationOrderService(IImportationOrderRepository orderRepository)
+        public ImportationOrderService(ImportationOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;
         }
 
-
-        //METODOS
+        // --- LOS MÉTODOS SE QUEDAN IGUALES POR AHORA ---
         public async Task<IEnumerable<ImportationOrderResponseDTO>> GetAllAsync()
         {
-            // LLamar BDD
             var entities = await _orderRepository.GetAllAsync();
 
-            //Mapeo
             var dtos = entities.Select(order => new ImportationOrderResponseDTO
             {
                 OrderId = order.OrderId,
@@ -44,30 +45,25 @@ namespace Application.Services
                 (order.ImportationExpenses != null ? order.ImportationExpenses.Sum(e => e.ExpenseAmount) : 0)
             }).ToList();
 
-            // Return lista final
             return dtos;
         }
 
         public async Task<ImportationOrderResponseDTO> CreateAsync(ImportationOrderCreateDTO orderCreateDTO)
         {
-            // Mapear de DTO a Entidad
             var newOrder = new ImportationOrder
             {
                 OrderId = Guid.NewGuid().ToString(),
-                OrderDate = DateTime.UtcNow,        
-                OrderState = OrderState.Abierta,    
+                OrderDate = DateTime.UtcNow,
+                OrderState = OrderState.Abierta,
 
                 ImporterId = orderCreateDTO.ImporterId,
                 SupplierId = orderCreateDTO.SupplierId,
                 OriginCountryId = orderCreateDTO.OriginCountryId,
                 TransportMode = orderCreateDTO.TransportMode,
                 CurrencyId = orderCreateDTO.CurrencyId,
-                
-
             };
 
             await _orderRepository.CreateAsync(newOrder);
-
 
             var response = new ImportationOrderResponseDTO
             {
@@ -79,8 +75,6 @@ namespace Application.Services
                 OrderDate = newOrder.OrderDate,
                 TransportMode = newOrder.TransportMode,
                 OrderState = newOrder.OrderState,
-
-                //orden recién creada no tiene productos ni gastos
                 TotalFOB = 0,
                 TotalImportationExpected = 0
             };
@@ -90,17 +84,9 @@ namespace Application.Services
 
         public async Task<ImportationOrderResponseDTO> GetEntityById(string id)
         {
-            
             var order = await _orderRepository.GetEntityById(id);
+            if (order == null) return null;
 
-            
-            if (order == null)
-            {
-
-                return null;
-            }
-
-            // 3. Mapear de Entidad a DTO
             var response = new ImportationOrderResponseDTO
             {
                 OrderId = order.OrderId,
@@ -125,15 +111,12 @@ namespace Application.Services
             (order.ImportationExpenses != null ? order.ImportationExpenses.Sum(e => e.ExpenseAmount) : 0)
             };
 
-            // 4. Retornar el resultado
             return response;
         }
+
         public async Task<bool> DeleteAsync(string id)
         {
-            
             var order = await _orderRepository.GetEntityById(id);
-
-            //Validar que la orden exista y no esté calculada
             if (order == null) return false;
 
             if (order.OrderState == OrderState.Calculada)
@@ -141,37 +124,28 @@ namespace Application.Services
                 throw new InvalidOperationException("No se puede eliminar esta orden porque ya tiene un cálculo oficial de landed cost.");
             }
 
-            //Enviar la entidad completa al repositorio para que la elimine de SQL
             var result = await _orderRepository.DeleteAsync(order);
             return result;
         }
 
         public async Task<ImportationOrderResponseDTO> EditAsync(string id, ImportationOrderUpdateDTO orderUpdateDTO)
         {
-            
             var existingOrder = await _orderRepository.GetEntityById(id);
-
-            // Validar que exista y que su estado permita edición
             if (existingOrder == null) return null;
 
             if (existingOrder.OrderState == OrderState.Cerrada || existingOrder.OrderState == OrderState.Cancelada)
             {
-                // Lanza una excepción o devuelve nulo
                 throw new InvalidOperationException("No se puede editar esta orden porque está cerrada o cancelada.");
             }
 
-
-            // Sobreescribir los datos viejos con los datos nuevos del DTO
             existingOrder.ImporterId = orderUpdateDTO.ImporterId;
             existingOrder.SupplierId = orderUpdateDTO.SupplierId;
             existingOrder.OriginCountryId = orderUpdateDTO.OriginCountryId;
             existingOrder.CurrencyId = orderUpdateDTO.CurrencyId;
             existingOrder.TransportMode = orderUpdateDTO.TransportMode;
 
-            // Guardar los cambios en la base de datos
             await _orderRepository.EditAsync(existingOrder);
 
-            // Preparar la respuesta mapeando la entidad ya actualizada
             var response = new ImportationOrderResponseDTO
             {
                 OrderId = existingOrder.OrderId,
@@ -182,7 +156,6 @@ namespace Application.Services
                 OrderDate = existingOrder.OrderDate,
                 TransportMode = existingOrder.TransportMode,
                 OrderState = existingOrder.OrderState,
-
 
                 TotalFOB = existingOrder.ImportationOrderDetails != null
                     ? existingOrder.ImportationOrderDetails.Sum(d => d.Quantity * d.FOBUnitPrice)
@@ -198,13 +171,10 @@ namespace Application.Services
 
         public async Task<bool> CloseOrderAsync(string id)
         {
-            //Buscar la orden
             var order = await _orderRepository.GetEntityById(id);
-            if (order == null)
-                return false;
+            if (order == null) return false;
 
-            //validar que este calculada
-            if(order.OrderState != OrderState.Calculada)
+            if (order.OrderState != OrderState.Calculada)
             {
                 throw new InvalidOperationException("Solo se pueden cerrar órdenes que estén en estado 'Calculada'.");
             }
@@ -214,14 +184,9 @@ namespace Application.Services
                 throw new InvalidOperationException("No se puede cerrar esta orden porque no tiene un resumen de landed cost asociado.");
             }
 
-            //Cambiar el estado a cerrada
             order.OrderState = OrderState.Cerrada;
-
-            //Guardar cambios
             await _orderRepository.EditAsync(order);
-
             return true;
         }
-
     }
 }

@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Entities.ImportationOrderAndLandCost;
-using Persistence.Interfaces.Repositories.ImportationOrderAndLandCost;
 
 namespace Persistence.Repositories.ImportationOrderAndLandCost
 {
-    public class ImportationExpenseRepository : IImportationExpenseRepository
+    // 1. Queda como clase independiente
+    public class ImportationExpenseRepository
     {
         private readonly ContextImportCost _context;
 
@@ -17,11 +17,10 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
             _context = context;
         }
 
-        // 1. Cambiamos el retorno a IReadOnlyCollection
         public async Task<IReadOnlyCollection<ImportationExpense>> GetByOrderIdAsync(string orderId)
         {
             return await _context.ImportationExpenses
-                                 .AsNoTracking()
+                                 .AsNoTracking() // 2. Regla de Joel
                                  .Where(e => e.OrderId == orderId)
                                  .ToListAsync();
         }

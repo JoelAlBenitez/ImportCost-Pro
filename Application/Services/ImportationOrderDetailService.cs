@@ -1,11 +1,12 @@
 ﻿using Application.DTOs.OrderDetails;
-using Application.DTOs.Orders; // Aquí es donde viven tus OrderDetailCreateDTO y OrderDetailUpdateDTO
+using Application.DTOs.Orders;
 using Persistence.Entities.Enums;
 using Persistence.Entities.ImportationOrderAndLandCost;
 using Persistence.Entities.OperationalCommercial;
-using Persistence.Interfaces.Repositories.ImportationOrderAndLandCost;
-using Persistence.Repositories.Base; // El namespace de tu interfaz genérica
-using Persistence.Repositories.OperationalCommercial;
+// BORRAMOS: using Persistence.Interfaces.Repositories.ImportationOrderAndLandCost;
+// BORRAMOS: using Persistence.Repositories.Base; 
+using Persistence.Repositories.ImportationOrderAndLandCost; // AGREGAMOS
+using Persistence.Repositories.OperationalCommercial; // AGREGAMOS (Para ProductsRepository)
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,23 +15,24 @@ namespace Application.Services
 {
     public class ImportationOrderDetailService
     {
-        // Cambiamos a BaseRepository<Entidad, TipoDelID>
-        private readonly BaseRepository<ImportationOrder, string> _orderRepository;
-        private readonly BaseRepository<ImportationOrderDetail, string> _detailRepository;
-        // Asumiendo que el ID de Products es int, según vimos en los DTOs pasados
-        private readonly BaseRepository<Products, int> _productRepository;
+        // 1. Usamos las Clases concretas (sin la 'I' y sin BaseRepository)
+        private readonly ImportationOrderRepository _orderRepository;
+        private readonly OrderDetailRepository _detailRepository;
+
+        // Asumimos que tu compañero creó esta clase sin la 'I'
+        private readonly ProductsRepository _productRepository;
 
         public ImportationOrderDetailService(
-            BaseRepository<ImportationOrder, string> orderRepository,
-            BaseRepository<ImportationOrderDetail, string> detailRepository,
-            BaseRepository<Products, int> productRepository)
+            ImportationOrderRepository orderRepository,
+            OrderDetailRepository detailRepository,
+            ProductsRepository productRepository)
         {
             _orderRepository = orderRepository;
             _detailRepository = detailRepository;
             _productRepository = productRepository;
         }
 
-        // CAMBIO AQUÍ: Usamos TU OrderDetailCreateDTO
+        // --- LOS MÉTODOS SE QUEDAN IGUALES POR AHORA ---
         public async Task<bool> AddProductToOrderAsync(string orderId, OrderDetailCreateDTO dto)
         {
             var order = await _orderRepository.GetEntityById(orderId);
@@ -56,14 +58,13 @@ namespace Application.Services
                 ExpectedProfitMargin = dto.ExpectedProfitMargin
             };
 
-            await _detailRepository.CreateAsync(newDetail);
+            await _detailRepository.AddAsync(newDetail); // NOTA: Cambié CreateAsync por AddAsync según tu repositorio
             return true;
         }
 
-        // CAMBIO AQUÍ: Usamos TU OrderDetailUpdateDTO
         public async Task<bool> EditProductInOrderAsync(string orderDetailId, OrderDetailUpdateDTO dto)
         {
-            var detail = await _detailRepository.GetEntityById(orderDetailId);
+            var detail = await _detailRepository.GetByIdAsync(orderDetailId);
             if (detail == null) throw new Exception("El detalle del producto no existe.");
 
             var order = await _orderRepository.GetEntityById(detail.OrderId);
@@ -79,13 +80,13 @@ namespace Application.Services
             detail.FOBUnitPrice = dto.FOBUnitPrice;
             detail.ExpectedProfitMargin = dto.ExpectedProfitMargin;
 
-            await _detailRepository.EditAsync(detail);
+            await _detailRepository.UpdateAsync(detail); // NOTA: Cambié EditAsync por UpdateAsync según tu repositorio
             return true;
         }
 
         public async Task<bool> RemoveProductFromOrderAsync(string orderDetailId)
         {
-            var detail = await _detailRepository.GetEntityById(orderDetailId);
+            var detail = await _detailRepository.GetByIdAsync(orderDetailId);
             if (detail == null) return false;
 
             var order = await _orderRepository.GetEntityById(detail.OrderId);
@@ -96,4 +97,4 @@ namespace Application.Services
             return true;
         }
     }
-}   
+}
