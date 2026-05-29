@@ -1,6 +1,7 @@
-﻿using Persistence.Entities.Base;
+using Persistence.Entities.Base;
 using Persistence.Entities.Enums;
 using Persistence.Entities.FinancialCore;
+
 namespace Persistence.Entities.OperationalCommercial
 {
     public class Products : BaseEntity<int, string>

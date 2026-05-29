@@ -2,7 +2,7 @@
 
 namespace Application.Services.BaseServices
 {
-    public interface IServicesBase <TDto, TKey>
+    public interface IServicesBase<TDto, TKey>
     {
         Task<ServiceResult> CreateAsync(TDto dto);
         Task<ServiceResult> EditAsync(TDto dto);
