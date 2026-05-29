@@ -7,9 +7,7 @@ namespace Application.Dto.Importers
         public string? Phone {  get; set; }
         public string? Address { get; set; }
         public string? Email { get; set; }
-
-        public int CountryId { get; set; }
-
-        //public Countrys country {get; set;}
+        public required int CountryId { get; set; }
+        public string? CountryName {  get; set; }
     }
 }

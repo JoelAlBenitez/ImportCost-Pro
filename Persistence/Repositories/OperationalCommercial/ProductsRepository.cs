@@ -24,10 +24,10 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> DeleteAsync(int tkey)
         {
-            var entity = await _context.Products.FindAsync(tkey);
-            if(entity != null)
+            var entity = await _context.products.FindAsync(tkey);
+            if (entity != null)
             {
-                 _context.Products.Remove(entity);
+                _context.products.Remove(entity);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
             }
@@ -36,10 +36,11 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> EditAsync(Products entity)
         {
-            if(entity != null)
+            if (entity != null)
             {
-                 _context.Products.Update(entity);
+                _context.products.Update(entity);
                 return await _context.SaveChangesAsync() > 0;
+
             }
             return false;
 
@@ -54,15 +55,18 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<Products> GetEntityById(int key)
         {
-            return await  _context.Products
+            return await _context.products
                 .AsNoTracking()
                 .FirstAsync(p => p.Key == key);
         }
 
         public async Task<bool> ExistProductsByCodeReference(string codeReference)
         {
-            return await _context.Products.FirstAsync(p => p.CodeRefence == codeReference) != null;
-          
+            return await _context.products.FirstAsync(p => p.CodeRefence == codeReference) != null;        }
+
+        public async Task<bool> HasProductsByCountryId(int countryId)
+        {
+            return await _context.products.AnyAsync(p => p.countryId == countryId);
         }
     }
 }

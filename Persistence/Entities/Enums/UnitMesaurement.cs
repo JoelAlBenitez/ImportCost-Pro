@@ -1,6 +1,6 @@
-﻿namespace Persistence.Entities.Enums
+namespace Persistence.Entities.Enums
 {
-    public enum  UnitMesaurement
+    public enum UnitMesaurement
     {
         Unit,
         Box,

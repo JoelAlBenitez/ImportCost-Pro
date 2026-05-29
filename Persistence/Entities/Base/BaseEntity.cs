@@ -1,4 +1,4 @@
-﻿namespace Persistence.Entities.Base
+namespace Persistence.Entities.Base
 {
     public class BaseEntity <Tkey, TName>
     {

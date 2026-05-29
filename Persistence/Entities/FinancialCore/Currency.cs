@@ -18,7 +18,7 @@ namespace Persistence.Entities.FinancialCore
 
 
 
-        public virtual ICollection<Suppliers>? Suppliers { get; set; }
+        public ICollection<Suppliers>? Suppliers { get; set; }
         // La dema las agregare cuando creemos esas clasesxd
     }
 }
