@@ -20,6 +20,7 @@ namespace Persistence.Context
         public DbSet<TaxConfiguration> TaxConfigurations { get; set; }
 
 
+
         //Importation Order and Landed Cost sets
 
         public DbSet<ImportationOrder> ImportationOrders { get; set; }
