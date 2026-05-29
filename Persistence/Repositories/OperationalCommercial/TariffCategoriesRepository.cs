@@ -48,19 +48,19 @@ namespace Persistence.Repositories.OperationalCommercial
         public async Task<bool> AssociatedProductsC(string code)
         {
            
-            return await _context.products.AnyAsync(c => c.tarrifCategoriesId == code);
+            return await _context.Products.AnyAsync(c => c.tarrifCategoriesId == code);
         }
 
         public async Task<IReadOnlyCollection<TariffCategories>> GetAllAsync()
         {
-            return await _context.tariffCategories
+            return await _context.TariffCategories
                 .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task<TariffCategories> GetEntityById(string key)
         {
-            return await _context.tariffCategories
+            return await _context.TariffCategories
                  .AsNoTracking()
                  .FirstAsync(t => t.Key == key);
         }

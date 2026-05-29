@@ -17,7 +17,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> CreateAsync(Suppliers entity)
         {
-            await _context.suppliers.AddAsync(entity);
+            await _context.Suppliers.AddAsync(entity);
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
@@ -50,7 +50,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Suppliers>> GetAllAsync()
         {
-            return await _context.suppliers
+            return await _context.Suppliers
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -64,7 +64,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> ExistName(string name)
         {
-             var s = await _context.suppliers
+             var s = await _context.Suppliers
                 .AsNoTracking()
                 .FirstAsync(s => s.Name.Trim() == name.Trim());
             return s != null;
@@ -72,7 +72,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> HasSuppliersByCountryId(int countryId)
         {
-            return await _context.suppliers.AnyAsync(s => s.countryId == countryId);
+            return await _context.Suppliers.AnyAsync(s => s.countryId == countryId);
         }
     }
 }

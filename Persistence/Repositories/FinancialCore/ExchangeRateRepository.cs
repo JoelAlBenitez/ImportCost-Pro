@@ -16,22 +16,22 @@ namespace Persistence.Repositories.FinancialCore
 
         public async Task<bool> CreateAsync(ExchangeRate entity)
         {
-            await _context.exchangeRates.AddAsync(entity);
+            await _context.ExchangeRates.AddAsync(entity);
             return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> EditAsync(ExchangeRate entity)
         {
-            _context.exchangeRates.Update(entity);
+            _context.ExchangeRates.Update(entity);
             return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> DeleteAsync(int key)
         {
-            var entity = await _context.exchangeRates.FindAsync(key);
+            var entity = await _context.ExchangeRates.FindAsync(key);
             if (entity != null)
             {
-                _context.exchangeRates.Remove(entity);
+                _context.ExchangeRates.Remove(entity);
                 return await _context.SaveChangesAsync() > 0;
             }
             return false;
@@ -39,7 +39,7 @@ namespace Persistence.Repositories.FinancialCore
 
         public async Task<ExchangeRate> GetEntityById(int key)
         {
-            return await _context.exchangeRates
+            return await _context.ExchangeRates
                 .Include(e => e.SourceCurrency)
                 .Include(e => e.DestinationCurrency)
                 .FirstAsync(e => e.Key == key);
@@ -47,7 +47,7 @@ namespace Persistence.Repositories.FinancialCore
 
         public async Task<IReadOnlyCollection<ExchangeRate>> GetAllAsync()
         {
-            return await _context.exchangeRates
+            return await _context.ExchangeRates
                 .Include(e => e.SourceCurrency)
                 .Include(e => e.DestinationCurrency)
                 .ToListAsync();
@@ -55,7 +55,7 @@ namespace Persistence.Repositories.FinancialCore
 
         public async Task<ExchangeRate?> GetLatestRateAsync(int sourceId, int destinationId, DateTime date)
         {
-            return await _context.exchangeRates
+            return await _context.ExchangeRates
                 .Where(e => e.SourceCurrencyId == sourceId 
                          && e.DestinationCurrencyId == destinationId 
                          && e.State == true 

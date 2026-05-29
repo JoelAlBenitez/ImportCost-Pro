@@ -61,12 +61,12 @@ namespace Persistence.Repositories.OperationalCommercial
         }
 public async Task<bool> ExistImportersByRnc(string rnc)
 {
-    return await _context.importers.FirstAsync(i => i.Identification == rnc) != null; 
+    return await _context.Importers.FirstAsync(i => i.Identification == rnc) != null; 
 }
 
 public async Task<bool> HasImportersByCountryId(int countryId)
 {
-    return await _context.importers.AnyAsync(i => i.countryId == countryId);
+    return await _context.Importers.AnyAsync(i => i.countryId == countryId);
 }
 }
 }
