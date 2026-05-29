@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.Orders;
+
 // BORRAMOS: using Application.Interfaces.Services;
 using Microsoft.Identity.Client;
 using Persistence.Entities.Enums;
@@ -10,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Application.Services
+namespace Application.Services.ImportationOrderServices
 {
     // 1. Ya no hereda de IImportationOrderService
     public class ImportationOrderService
