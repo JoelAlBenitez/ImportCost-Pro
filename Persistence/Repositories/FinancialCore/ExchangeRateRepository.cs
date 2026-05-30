@@ -53,6 +53,12 @@ namespace Persistence.Repositories.FinancialCore
                 .ToListAsync();
         }
 
+        public async Task<bool> HasExchangeRatesByCurrencyId(int currencyId)
+        {
+            return await _context.ExchangeRates
+                .AnyAsync(e => e.SourceCurrencyId == currencyId || e.DestinationCurrencyId == currencyId);
+        }
+
         public async Task<ExchangeRate?> GetLatestRateAsync(int sourceId, int destinationId, DateTime date)
         {
             return await _context.ExchangeRates
