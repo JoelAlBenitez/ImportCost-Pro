@@ -2,18 +2,21 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Services.Importers;
 using Application.ViewModel.Importers;
 using Application.DTOs.Importers;
+using Application.Services.Countries;
+using Application.ViewModel.Select;
 namespace ImportCost.Controllers.Importers
 {
     public class ImportersController : Controller
     {
 
         private readonly ImportersServices _importersServices;
-        public ImportersController(ImportersServices importersServices)
+        private readonly CountryService _countriesServices;
+        public ImportersController(ImportersServices importersServices, CountryService countryService)
         {
             _importersServices = importersServices;
+            _countriesServices = countryService;
         }
 
-        //agregar metodo getCountries
         public async Task<IActionResult> Index()
         {
             var list = await _importersServices.GetAllAsync();
@@ -27,13 +30,33 @@ namespace ImportCost.Controllers.Importers
                     Identification = item.Identification,
                     Phone = item.Phone,
                     Email = item.Email,
-                    CountryName = item.CountryName,
+                    CountryName = item.CountryName!,
                     CountryId = item.CountryId
                 };
                 listView.Add(viewModel);
             }
             return View(listView);
         }
+
+        private async Task<List<ViewModelSelectCountries>> GetCountries(int key = 0)
+        {
+            var list = new List<ViewModelSelectCountries>();
+            var countries = await _countriesServices.GetAllAsync();
+            foreach (var item in countries)
+            {
+               if(item.State || key != 0 && item.Key != key)
+                {
+                    ViewModelSelectCountries viewModelSelectCountries = new()
+                    {
+                        CountryId = item.Key,
+                        CountryName = item.Name
+                    };
+                    list.Add(viewModelSelectCountries);
+                }
+            }
+            return list;
+        }
+
         public async Task<IActionResult> Create()
         {
             return View("Save", new ViewModelImporterSave
@@ -42,7 +65,7 @@ namespace ImportCost.Controllers.Importers
                 Identifcation = "",
                 State  = true,
                 countryId = 0,
-                Countries = null, //cambiar por el getCountries,
+                Countries = await GetCountries(), 
                 PhoneNumber = "",
                 Email = "",
                 Address = ""
@@ -74,7 +97,7 @@ namespace ImportCost.Controllers.Importers
         
             var importes = await _importersServices.GetKeyAsync(id);
             if (importes == null) return RedirectToRoute(new { controller = "Importers", action = "Edit" });
-            //var countries = GetCountries();
+            
             ViewModelImporterSave viewModelImporterSave = new() { 
                 Key = importes.Key,
                 Name = importes.Name,
@@ -84,7 +107,7 @@ namespace ImportCost.Controllers.Importers
                 Address = importes.Address,
                 PhoneNumber = importes.Phone,
                 Email = importes.Email,
-                Countries = null //cambiar por el la lista de paises 
+                Countries = await GetCountries(importes.CountryId)
             };
             return View("Edit", viewModelImporterSave);
         }

@@ -58,7 +58,8 @@ namespace Application.Services.Importers
         {
             try
             {
-                //agregar validacion de verificacion en caso del importador estar asociado con ordenes de importacion 
+                bool exitsImp = await _importersRepository.AssociatedImportationOrderByImporters(key);
+                if (exitsImp) return new ServiceResult { Success = false, Message = "Este importador tiene ordenes de importación asociadas por lo que no se puede eliminar", TypeAlert= "danger"};
 
                 bool delete =  await _importersRepository.DeleteAsync(key);
                 if (delete) return new ServiceResult { Success = true, Message = "Importador eliminado con extio", TypeAlert = "success" };

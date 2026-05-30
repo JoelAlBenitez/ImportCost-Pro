@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-Ôªøusing Application.ViewModel.Select;
-=======
 using Application.ViewModel.Select;
-using Persistence.Entities.Enums;
->>>>>>> origin/feature/FinancialCore
+
 using System.ComponentModel.DataAnnotations;
 namespace Application.ViewModel.Products
 {
@@ -27,39 +23,27 @@ namespace Application.ViewModel.Products
         [Required(ErrorMessage = "Debe seleccionar una categoria valida del listado de categorias")]
         public required List<ViewModelSelectCategories> Categories { get; set; }
 
-<<<<<<< HEAD
         [Required(ErrorMessage = "Seleccione una unidad de medida v√°lida para el producto.")]
         public required List<ViewModelSelectUnit> Units { get; set; }
-=======
-        public decimal? Large { get; set; } = 0;
-        public decimal? Broad { get; set; } = 0;
-        public decimal? High { get; set; } = 0;
-
-        [Required(ErrorMessage = "Seleccione una unidad de medida v·lida para el producto.")]
-        public required UnitMesaurement unit { get; set; }
-        //public List<ViewModelSelectUnit> UnitUnits { get; set; }
->>>>>>> origin/feature/FinancialCore
 
         [Required(ErrorMessage = "El pa√≠s seleccionado no corresponde a un pa√≠s v√°lido.")]
-        //public required List<ViewModelSelectCountries> countries { get; set;} //descomentar cuando se creen los servicios de paises
+        public required List<ViewModelSelectCountries> countries { get; set;} 
 
         [StringLength(250)]
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "Seleccione un estado v·lido para el producto que intenta crear.")]
         public required bool State { get; set; }
+
         
         public required string CategoriesId { get; set; }
-<<<<<<< HEAD
         public required int unit { get; set; }
-=======
 
-        [Required(ErrorMessage = "El paÌs seleccionado no corresponde a un paÌs v·lido.")]
->>>>>>> origin/feature/FinancialCore
         public required int CountryId { get; set; }
         public decimal? Large { get; set; }
         public decimal? Broad { get; set; }
         public decimal? High { get; set; }
+
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

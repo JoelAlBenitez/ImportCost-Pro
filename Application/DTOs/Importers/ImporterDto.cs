@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿using Application.DTOs.Base;
-=======
-using Application.DTOs.Base;
->>>>>>> origin/feature/FinancialCore
 namespace Application.DTOs.Importers
 {
     public class ImporterDto : DtoBase<int>

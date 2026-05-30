@@ -5,6 +5,7 @@ using Application.Services.TarriffCategories;
 using Application.ViewModel.Select;
 using Application.DTOs.Products;
 using Persistence.Entities.Enums;
+using Application.Services.Countries;
 
 
 namespace ImportCost.Controllers.Products
@@ -14,13 +15,14 @@ namespace ImportCost.Controllers.Products
 
         private readonly ProductsServices _productsServices;
         private readonly TarriffCategoriesServices _tarriffCategoriesServices;
-        //
+        private readonly CountryService _countriesService;
 
-        public ProductsController(ProductsServices productsServices, TarriffCategoriesServices tarriffCategoriesServices)
+        public ProductsController(ProductsServices productsServices, TarriffCategoriesServices tarriffCategoriesServices, CountryService countriesService)
         {
             _productsServices = productsServices;
             _tarriffCategoriesServices = tarriffCategoriesServices;
-            //note: add services countries to load the countries. 
+            _countriesService = countriesService;
+            
         }
 
         public async Task<IActionResult> Index()
@@ -80,6 +82,25 @@ namespace ImportCost.Controllers.Products
                 .ToList();
         }
 
+        private async Task<List<ViewModelSelectCountries>> GetCountries(int key = 0)
+        {
+            var list = new List<ViewModelSelectCountries>();
+            var countries = await _countriesService.GetAllAsync();
+            foreach (var item in countries)
+            {
+                if (item.State || key != 0 && item.Key != key)
+                {
+                    ViewModelSelectCountries viewModelSelectCountries = new()
+                    {
+                        CountryId = item.Key,
+                        CountryName = item.Name
+                    };
+                    list.Add(viewModelSelectCountries);
+                }
+            }
+            return list;
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(ViewModelProductsSave vp)
         {
@@ -109,7 +130,7 @@ namespace ImportCost.Controllers.Products
         public async Task<IActionResult> Create()
         {
             var list = await GetCategories();
-            //agregar categorias de paises cuando se bajen los cambios y unidad cambiar por listado.
+            
             return View("Save", new ViewModelProductsSave
             {
                 Key = 0,
@@ -125,7 +146,8 @@ namespace ImportCost.Controllers.Products
                 Description = "",
                 CategoriesId = "",
                 CountryId = 0,
-                Units = GetUnitMeasurements()
+                Units = GetUnitMeasurements(),
+                countries = await GetCountries()
             });
         }
 
@@ -177,8 +199,9 @@ namespace ImportCost.Controllers.Products
                 High = product.High,
                 Description = product.Description,
                 CountryId = product.CountrysId,
-                Units = GetUnitMeasurements()
-                //agregar el elemento de paises cuando se descomente
+                Units = GetUnitMeasurements(),
+                countries = await GetCountries()
+
             };
             return View("Edit", vp);
         }

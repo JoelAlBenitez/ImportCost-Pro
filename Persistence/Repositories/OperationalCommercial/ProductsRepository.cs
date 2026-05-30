@@ -40,6 +40,7 @@ namespace Persistence.Repositories.OperationalCommercial
             {
                 _context.Products.Update(entity);
                 return await _context.SaveChangesAsync() > 0;
+
             }
             return false;
 
@@ -47,7 +48,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Products>> GetAllAsync()
         {
-            return await _context.Products.Where(p => p.State == true)
+            return await _context.Products
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -62,11 +63,15 @@ namespace Persistence.Repositories.OperationalCommercial
         public async Task<bool> ExistProductsByCodeReference(string codeReference)
         {
             return await _context.Products.FirstAsync(p => p.CodeRefence == codeReference) != null;
-
         }
-        public async Task<bool> AssociateImportationOrderDetailsByProducts(int id)
+
+        public async Task<bool> HasProductsByCountryId(int countryId)
         {
-            return await _context.ImportationOrderDetails.AnyAsync(i => i.ProductId == id);
+            return await _context.Products.AnyAsync(p => p.countryId == countryId);
+        }
+        public async Task<bool> AssociateImportationOrderDetailsByProducts(int key)
+        {
+            return await _context.ImportationOrderDetails.AnyAsync(p => p.ProductId == key);
         }
     }
 }

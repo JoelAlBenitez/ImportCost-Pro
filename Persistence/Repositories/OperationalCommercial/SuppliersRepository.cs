@@ -39,6 +39,7 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             if (entity != null)
             {
+
                 _context.Suppliers.Update(entity);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
@@ -69,10 +70,13 @@ namespace Persistence.Repositories.OperationalCommercial
             return s != null;
         }
 
-        public async Task<bool> AssociateImportationOrderBySupplier(int id)
+        public async Task<bool> HasSuppliersByCountryId(int countryId)
         {
-            return await _context.ImportationOrders.AnyAsync(i => i.SupplierId == id);
+            return await _context.Suppliers.AnyAsync(s => s.countryId == countryId);
         }
-
+        public async Task<bool> AssociateImportationOrderBySupplier(int key)
+        {
+            return await _context.ImportationOrders.AnyAsync(s => s.SupplierId == key);
+        }
     }
 }

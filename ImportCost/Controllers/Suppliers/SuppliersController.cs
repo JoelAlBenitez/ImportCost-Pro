@@ -1,6 +1,8 @@
 ﻿using Application.DTOs.Suppliers;
-
+using Application.Services.Countries;
+using Application.Services.Currencies;
 using Application.Services.SuppliersServices;
+using Application.ViewModel.Select;
 using Application.ViewModel.Suppliers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +11,14 @@ namespace ImportCost.Controllers.Suppliers
     public class SuppliersController : Controller
     {
         private readonly SuppliersServices _suppliersServices;
+        private readonly CountryService _countryService;
+        private readonly CurrencyService _currencyService;
 
-        public SuppliersController(SuppliersServices suppliersServices)
+        public SuppliersController(SuppliersServices suppliersServices, CountryService countryService, CurrencyService currencyService)
         {
             _suppliersServices = suppliersServices;
+            _countryService = countryService;
+            _currencyService = currencyService;
         }
 
 
@@ -41,18 +47,56 @@ namespace ImportCost.Controllers.Suppliers
             return View(listS);
         }
 
-        //add metodo para rellenar de monedas y otro para rellenar de paises
+        private async Task<List<ViewModelSelectCountries>> GetCountries(int key = 0)
+        {
+            var list = new List<ViewModelSelectCountries>();
+            var countries = await _countryService.GetAllAsync();
+            foreach (var item in countries)
+            {
+                if (item.State || key != 0 && item.Key != key)
+                {
+                    ViewModelSelectCountries viewModelSelectCountries = new()
+                    {
+                        CountryId = item.Key,
+                        CountryName = item.Name
+                    };
+                    list.Add(viewModelSelectCountries);
+                }
+            }
+            return list;
+        }
+
+        private async Task<List<ViewModelSelectCurrency>> GetCurrencies(int key =0)
+        {
+            var list = new List<ViewModelSelectCurrency>();
+            var countries = await _countryService.GetAllAsync();
+            foreach (var item in countries)
+            {
+                if (item.State || key != 0 && item.Key != key)
+                {
+                    ViewModelSelectCurrency viewModelSelectCountries = new()
+                    {
+                        Id = item.Key,
+                        NameCurrency = item.Name
+                    };
+                    list.Add(viewModelSelectCountries);
+                }
+            }
+            return list;
+        }
+
+
 
         public async Task<IActionResult> Create() { 
             return View("Save", new ViewModelSuppliersSave {
                 Name = "",
                 Email = "",
                 Phone = "",
-                Countries = null!, //cambiar por el get country
+                Countries = await GetCountries(), 
                 State = true,
                 CountryId = 0, 
-                Currencies = null!, //cambiar por el get currencies
-                CurrencyId = 0 //cambiar por el id seleccioando
+                Currencies =  await GetCurrencies(),
+                CurrencyId = 0 
             });
         }
         public async Task<IActionResult> Edit(int key)
@@ -62,13 +106,13 @@ namespace ImportCost.Controllers.Suppliers
             ViewModelSuppliersSave vs = new() { 
                 Key = s.Key,
                 Name = s.Name,
-                CountryId = s.CountryId, //id seleccionado
+                CountryId = s.CountryId, 
                 State = s.State,
                 Email = s.Email  ?? "NA",
                 Phone = s.PhoneNumber ?? "-",
-                Countries = null!, //cambiar por el getCountries
-                CurrencyId = s.CurrencyId, //id seleccionado
-                Currencies = null!// cambiar por el getCurrencies
+                Countries = await GetCountries(),
+                CurrencyId = s.CurrencyId, 
+                Currencies = await GetCurrencies(s.CurrencyId)
             };
             return View(vs);
         }

@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 ﻿using Application.DTOs.Base;
-=======
-using Application.DTOs.Base;
->>>>>>> origin/feature/FinancialCore
+
 using Persistence.Entities.Enums;
 namespace Application.DTOs.Products
 {
