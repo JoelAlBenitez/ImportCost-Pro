@@ -1,4 +1,4 @@
-﻿using Application.ViewModel.Select;
+using Application.ViewModel.Select;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModel.Suppliers
@@ -20,7 +20,7 @@ namespace Application.ViewModel.Suppliers
         [StringLength(20)]
         public required string Phone {  get; set; }
 
-        [Required(ErrorMessage = "Debe seleccionar un país valido del listado de paises")]
+        [Required(ErrorMessage = "Debe seleccionar un pa�s valido del listado de paises")]
         public required List<ViewModelSelectCountries> Countries { get; set; }
 
         [Required(ErrorMessage = "Seleccione un estado valido para el suplidor que esta intentando operar")]

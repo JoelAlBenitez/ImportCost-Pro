@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModel.Importers
+namespace Application.ViewModel.Importers
 {
     public class ViewModelImportDelete
     {

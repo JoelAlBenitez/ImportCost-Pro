@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Application.DTOs.TarriffCategories;
+
 using Application.Services.TarriffCategories;
 using Application.ViewModel.TarriffCategories;
-using Application.DTOs.TarriffCategories;
 namespace ImportCost.Controllers.TariffCategories
 {
 
