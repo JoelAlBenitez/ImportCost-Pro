@@ -8,7 +8,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         public required string OrderId { get; set; }
 
-        public required int LocalCurrencyUsed { get; set; }
+        public required int LocalCurrencyId { get; set; }
 
         public required decimal ExchangeRate { get; set; }
 

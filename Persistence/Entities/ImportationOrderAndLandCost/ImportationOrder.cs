@@ -1,7 +1,6 @@
 ﻿using Persistence.Entities.Enums;
 using Persistence.Entities.OperationalCommercial;
 using Persistence.Entities.FinancialCore;
-using Persistence.Entities.FinancialCore;
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {

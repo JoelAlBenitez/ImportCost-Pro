@@ -23,6 +23,12 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
             builder.Property(x => x.TransportMode).IsRequired().HasConversion<string>();
             builder.Property(x => x.OrderState).IsRequired().HasConversion<string>();
 
+            //arreglo de relación uno a uno entre ImportationOrder y LandedCostSummary
+            builder.HasOne(o => o.LandedCostSummary)
+             .WithOne(s => s.ImportationOrder) 
+             .HasForeignKey<LandedCostSummary>(s => s.OrderId)
+             .OnDelete(DeleteBehavior.Cascade); 
+
             #endregion
         }
     }

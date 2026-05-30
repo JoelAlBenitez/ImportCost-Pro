@@ -1,11 +1,8 @@
 ﻿using Application.DTOs.Orders;
 
-// BORRAMOS: using Application.Interfaces.Services;
-using Microsoft.Identity.Client;
 using Persistence.Entities.Enums;
 using Persistence.Entities.ImportationOrderAndLandCost;
-// BORRAMOS: using Persistence.Interfaces.Repositories.ImportationOrderAndLandCost;
-using Persistence.Repositories.ImportationOrderAndLandCost; // AGREGAMOS EL NAMESPACE DE LAS CLASES
+using Persistence.Repositories.ImportationOrderAndLandCost;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +10,9 @@ using System.Threading.Tasks;
 
 namespace Application.Services.ImportationOrderServices
 {
-    // 1. Ya no hereda de IImportationOrderService
+
     public class ImportationOrderService
     {
-        // 2. Usamos la CLASE concreta de tu repositorio
         private readonly ImportationOrderRepository _orderRepository;
 
         public ImportationOrderService(ImportationOrderRepository orderRepository)
@@ -24,7 +20,7 @@ namespace Application.Services.ImportationOrderServices
             _orderRepository = orderRepository;
         }
 
-        // --- LOS MÉTODOS SE QUEDAN IGUALES POR AHORA ---
+        
         public async Task<IEnumerable<ImportationOrderResponseDTO>> GetAllAsync()
         {
             var entities = await _orderRepository.GetAllAsync();

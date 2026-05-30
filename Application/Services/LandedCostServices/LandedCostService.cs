@@ -6,7 +6,7 @@ using Persistence.Entities.ImportationOrderAndLandCost;
 using Persistence.Repositories.Base;
 using Persistence.Repositories.FinancialCore;
 using Persistence.Repositories.ImportationOrderAndLandCost;
-// Asegúrate de agregar los using de tus repositorios aquí
+
 
 public class LandedCostService
 {
@@ -37,7 +37,6 @@ public class LandedCostService
         public async Task<LandedCostSummaryDTO> CalculateLandedCostAsync(string orderId)
         {
 
-            //Obtener la orden (asumimos que el repositorio usa .Include() para traer detalles y gastos)
             var order = await _orderRepository.GetEntityById(orderId);
             if (order == null)
                 throw new Exception("La orden no existe.");
@@ -57,6 +56,20 @@ public class LandedCostService
             if (!order.ImportationExpenses.Any(e => e.ExpenseType == ExpenseType.SeguroInternacional))
                 throw new InvalidOperationException("La orden debe tener un gasto de tipo Seguro internacional registrado.");
 
+        //// Nuevas Validaciones de dimensiones y peso para prorrateo (Prevención División por 0)
+        if (order.ImportationExpenses.Any(e => e.DistributionMethod == DistributionMethod.PorVolumen))
+        {
+            if (order.ImportationOrderDetails.Any(d => (d.Product?.Large ?? 0m) <= 0 || (d.Product?.Broad ?? 0m) <= 0 || (d.Product?.High ?? 0m) <= 0))
+                throw new InvalidOperationException("Existen gastos distribuidos por volumen, pero hay productos sin dimensiones (largo, ancho, alto) válidas configuradas.");
+        }
+
+        if (order.ImportationExpenses.Any(e => e.DistributionMethod == DistributionMethod.PorPeso))
+        {
+            if (order.ImportationOrderDetails.Any(d => (d.Product?.UnitWeight ?? 0m) <= 0))
+                throw new InvalidOperationException("Existen gastos distribuidos por peso, pero hay productos sin peso unitario válido configurado.");
+        }
+        
+
         // Validar configuración de impuestos
         var taxConfig = await _taxConfigRepository.GetCurrentConfigAsync();
         if (taxConfig == null)
@@ -67,6 +80,7 @@ public class LandedCostService
         if (localCurrency == null)
             throw new InvalidOperationException("No existe una moneda local configurada en el sistema.");
         //conversión de tasas de cambio.
+
         //Calcular FOB por Producto
         var ProductFOB = order.ImportationOrderDetails.ToDictionary(
                 item => item.ProductId,
@@ -104,36 +118,51 @@ public class LandedCostService
                 item => item.Value * ExchangeRateValue
             );
 
-            //gastos a moneda local
-            var LocalExpenses = new List<(ExpenseType Type, DistributionMethod Method, decimal LocalAmount)>();
-            if (order.ImportationExpenses != null)
-            {
-                foreach (var expense in order.ImportationExpenses)
-                {
-                    decimal expenseRateValue;
+        //gastos a moneda local
+        var LocalExpenses = new List<(ExpenseType Type, DistributionMethod Method, decimal LocalAmount)>();
+        if (order.ImportationExpenses != null)
+        {
+            // nueva Optimización N+1 (Carga en bloque de tasas de gastos) ---
+            var tasasNecesarias = order.ImportationExpenses
+                .Where(e => e.CurrencyId != localCurrency.Key)
+                .Select(e => new { e.CurrencyId, Fecha = e.ImportationExpenseDate.Date })
+                .Distinct()
+                .ToList();
 
-                    if (expense.CurrencyId == localCurrency.Key)
-                    {
-                        expenseRateValue = 1m;
-                    }
+            var diccionarioTasas = new Dictionary<string, decimal>();
+
+            foreach (var req in tasasNecesarias)
+            {
+                var expenseRate = await _exchangeRateRepository.GetLatestRateAsync(req.CurrencyId, localCurrency.Key, req.Fecha);
+                if (expenseRate == null)
+                    throw new InvalidOperationException($"No se pudo obtener la tasa de cambio para la moneda ID {req.CurrencyId} en la fecha {req.Fecha:yyyy-MM-dd}.");
+
+                diccionarioTasas[$"{req.CurrencyId}-{req.Fecha:yyyy-MM-dd}"] = expenseRate.RateValue;
+            }
+
+            foreach (var expense in order.ImportationExpenses)
+            {
+                decimal expenseRateValue;
+
+                if (expense.CurrencyId == localCurrency.Key)
+                {
+                    expenseRateValue = 1m;
+                }
                 else
                 {
-                    var expenseRate = await _exchangeRateRepository.GetLatestRateAsync(expense.CurrencyId, localCurrency.Key, expense.ImportationExpenseDate);
-                    if (expenseRate == null)
-                        throw new InvalidOperationException($"No se pudo obtener la tasa de cambio para el gasto {expense.ImportationExpenseId}.");
-
-                    expenseRateValue = expenseRate.RateValue;
+                    // Se extrae la tasa de la memoria RAM, no de la Base de Datos
+                    string key = $"{expense.CurrencyId}-{expense.ImportationExpenseDate.Date:yyyy-MM-dd}";
+                    expenseRateValue = diccionarioTasas[key];
                 }
 
                 decimal localAmount = expense.ExpenseAmount * expenseRateValue;
-
-                    LocalExpenses.Add((expense.ExpenseType, expense.DistributionMethod, localAmount));
-                }
+                LocalExpenses.Add((expense.ExpenseType, expense.DistributionMethod, localAmount));
             }
-            //CALCULO DE TOTALES
+        }
+        //CALCULO DE TOTALES
 
-            //Peso total de la orden
-            decimal TotalWeight = order.ImportationOrderDetails.Sum(item =>
+        //Peso total de la orden
+        decimal TotalWeight = order.ImportationOrderDetails.Sum(item =>
                                   item.Quantity * (item.Product?.UnitWeight ?? 0m));
             //Volumen total de la orden
             decimal TotalVolume = order.ImportationOrderDetails.Sum(item =>
@@ -217,7 +246,6 @@ public class LandedCostService
                 impuestoSelectivo = cif * (porcentajeSelectivo / 100m);
             }
 
-            // Si el compañero le puso otro nombre a CustomsServiceFeePercentage en su entidad, ajustalo aquí
             decimal tasaServicioAduanal = cif * (taxConfig.CustomsServiceRatePercentage / 100m);
 
             decimal itbis = 0m;
@@ -246,16 +274,16 @@ public class LandedCostService
                     Quantity = detail.Quantity,
                     OriginalTotalFob = originalFob,
                     LocalTotalFob = localFob,
-                    TotalFreight = alloc.AssignedFreight,
-                    TotalInsurance = alloc.AssignedInsurance,
+                    AssignedFreight = alloc.AssignedFreight,
+                    AssignedInsurance = alloc.AssignedInsurance,
                     TotalCif = cif,
                     TotalTariff = arancel,
                     TotalSelectiveTax = impuestoSelectivo,
                     TotalCustomsServiceFee = tasaServicioAduanal,
                     TotalItbis = itbis,
-                    TotalLocalExpenses = alloc.AssignedLocalExpenses,
-                    TotalImportationCost = costoTotalImportado,
-                    TotalImportedQuantity = costoUnitarioImportado, // Asumiendo que esta propiedad la usas para el Costo Unitario
+                    AssignedLocalExpenses = alloc.AssignedLocalExpenses,
+                    TotalImportedCost = costoTotalImportado,
+                    UnitImportedCost = costoUnitarioImportado,
                     DesiredMargin = detail.ExpectedProfitMargin,
                     SuggestedSalePrice = precioSugerido
                 };
@@ -276,7 +304,7 @@ public class LandedCostService
             {
                 // El LandedCostSummaryId y OrderId se asignarían al momento de guardar el cálculo final en BDD
                 OrderId = order.OrderId,
-                LocalCurrencyUsed = localCurrency.Key, // Asumiendo que la propiedad se llama IsoCode
+                LocalCurrencyUsed = localCurrency.Key,
                 ExchangeRate = ExchangeRateValue,
                 OriginalTotalFob = totalFob,
                 LocalTotalFob = TotalLocalFob,
@@ -310,7 +338,6 @@ public class LandedCostService
                 throw new InvalidOperationException("Solo se pueden guardar cálculos de órdenes en estado Abierta.");
 
             // 3. Mapear el DTO a la Entidad real de Base de Datos
-            // 1. Generamos el ID del cálculo maestro primero, para poder dárselo a los detalles
             string newSummaryId = Guid.NewGuid().ToString();
 
             // 3. Mapear el DTO a la Entidad real de Base de Datos
@@ -318,7 +345,7 @@ public class LandedCostService
             {
                 LandedCostSummaryId = newSummaryId,
                 OrderId = orderId,
-                LocalCurrencyUsed = calculationResult.LocalCurrencyUsed,
+                LocalCurrencyId = calculationResult.LocalCurrencyUsed,
                 ExchangeRate = calculationResult.ExchangeRate,
                 OriginalTotalFob = calculationResult.OriginalTotalFob,
                 LocalTotalFob = calculationResult.LocalTotalFob,
@@ -336,7 +363,7 @@ public class LandedCostService
                 // Mapear la lista de detalles
                 LandedCostDetails = calculationResult.ProductDetails.Select(d => new LandedCostDetail
                 {
-                    // CORRECCIÓN: Agregamos las dos propiedades 'required' que faltaban
+                    
                     LandedCostDetailId = Guid.NewGuid().ToString(),
                     LandedCostSummaryId = newSummaryId,
 
@@ -344,16 +371,16 @@ public class LandedCostService
                     Quantity = d.Quantity,
                     OriginalFOB = d.OriginalTotalFob,
                     LocalFob = d.LocalTotalFob,
-                    AssignedFreight = d.TotalFreight,
-                    AssignedInsurance = d.TotalInsurance,
+                    AssignedFreight = d.AssignedFreight,
+                    AssignedInsurance = d.AssignedInsurance,
                     Cif = d.TotalCif,
                     Tariff = d.TotalTariff,
                     SelectiveTax = d.TotalSelectiveTax,
                     CustomsServiceFee = d.TotalCustomsServiceFee,
                     Itbis = d.TotalItbis,
-                    AssignedLocalExpenses = d.TotalLocalExpenses,
-                    TotalImportedCost = d.TotalImportationCost,
-                    UnitImportedCost = d.TotalImportedQuantity,
+                    AssignedLocalExpenses = d.AssignedLocalExpenses,
+                    TotalImportedCost = d.TotalImportedCost,
+                    UnitImportedCost = d.UnitImportedCost,
                     DesiredMargin = d.DesiredMargin,
                     SuggestedSalePrice = d.SuggestedSalePrice
                 }).ToList()
@@ -362,7 +389,7 @@ public class LandedCostService
             // 4. Cambiar el estado de la orden a Calculada
             order.OrderState = OrderState.Calculada;
 
-            // 5. Guardar en Base de Datos (Opción A implementada)
+            // 5. Guardar en Base de Datos
             order.LandedCostSummary = summaryEntity;
             await _orderRepository.EditAsync(order);
 

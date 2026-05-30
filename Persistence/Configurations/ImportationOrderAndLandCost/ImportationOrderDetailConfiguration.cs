@@ -12,6 +12,8 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
             builder.HasKey(x => x.OrderDetailId);
             builder.Property(x => x.OrderDetailId).HasMaxLength(50);
             builder.Property(x => x.OrderId).HasMaxLength(30);
+            builder.Property(d => d.FOBUnitPrice).HasPrecision(18, 2);
+
 
             builder.ToTable("ImportationOrderDetails", t =>
             {
