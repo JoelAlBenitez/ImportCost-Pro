@@ -9,6 +9,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ContextImportCost>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Environment.IsDevelopment();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
