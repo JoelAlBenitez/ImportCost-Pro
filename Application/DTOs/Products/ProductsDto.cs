@@ -1,4 +1,5 @@
-using Application.DTOs.Base;
+﻿using Application.DTOs.Base;
+
 using Persistence.Entities.Enums;
 namespace Application.DTOs.Products
 {

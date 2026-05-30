@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Application.DTOs.TarriffCategories;
+
 using Application.Services.TarriffCategories;
 using Application.ViewModel.TarriffCategories;
 namespace ImportCost.Controllers.TariffCategories
@@ -9,7 +10,6 @@ namespace ImportCost.Controllers.TariffCategories
     {
         private readonly TarriffCategoriesServices _tarriffCategories;
 
-        // agregar validacion en el service qe dtermine si el tax selective esta activo para que se agregue un porcentaje selectivo valido
         public TariffController (TarriffCategoriesServices tarriffCategories)
         {
             _tarriffCategories = tarriffCategories;

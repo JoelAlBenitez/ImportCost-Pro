@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModel.TarriffCategories
 {
-    public class ViewModelTarriffCategoriesSave
+    public class ViewModelTarriffCategoriesSave : IValidatableObject
     {
 
    
@@ -23,10 +23,29 @@ namespace Application.ViewModel.TarriffCategories
 
         [Required(ErrorMessage = "Debe indicar una opción válida para la aplicación o no aplicación del Impuesto Selectivo.")]
         public required bool SelectiveTaxApplies { get; set; }
+
+        [Range(0,100, ErrorMessage = "El porcentaje de impuesto selectivo debe encontrarseen el rango de 0 a 100 ")]
         public decimal? PorcentageTaxSelective { get; set; }
 
         [Required(ErrorMessage = "La categoría de arancel debe tener un estado válido.")]
         public required bool State { get; set; }
 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (SelectiveTaxApplies && PorcentageTaxSelective <= 0)
+            {
+                yield return new ValidationResult(
+                    "Si el impuesto selectivo esta marcado como verdadero, el porcentaje del impuesto selectivo debe ser mayor a 0",
+                    new[] { nameof(PorcentageTaxSelective) }
+                    );
+            }
+            if(!SelectiveTaxApplies && PorcentageTaxSelective != 0)
+            {
+                yield return new ValidationResult(
+                   "Si el impuestose selectivo no aplica, el porcentaje delimpuesto selectivo debe ser 0.",
+                   new[] { nameof(PorcentageTaxSelective) }
+                   );
+            }            
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿﻿using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Entities.OperationalCommercial;
 using Persistence.Repositories.Base;
@@ -17,18 +17,18 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> CreateAsync(Importers entity)
         {
-            await _context.importers.AddAsync(entity);
+            await _context.Importers.AddAsync(entity);
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
 
         public async Task<bool> DeleteAsync(int tkey)
         {
-            var import = await _context.importers.FindAsync(tkey);
+            var import = await _context.Importers.FindAsync(tkey);
 
             if(import != null)
             {
-                 _context.importers.Remove(import);
+                 _context.Importers.Remove(import);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
             }
@@ -39,7 +39,7 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             if (entity != null) {
 
-                _context.importers.Update(entity);
+                _context.Importers.Update(entity);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
 
@@ -48,28 +48,33 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<IReadOnlyCollection<Importers>> GetAllAsync()
         {
-            return await _context.importers.Where(i => i.State == true)
+            return await _context.Importers.Where(i => i.State == true)
                 .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task<Importers> GetEntityById(int key)
         {
-            return await _context.importers
+            return await _context.Importers
                 .AsNoTracking()
                 .FirstAsync(i => i.Key == key); 
         }
-public async Task<bool> ExistImportersByRnc(string rnc)
-{
-    return await _context.importers.FirstAsync(i => i.Identification == rnc) != null; 
-}
+        public async Task<bool> ExistImportersByRnc(string rnc)
+        {
+            return await _context.Importers.FirstAsync(i => i.Identification == rnc) != null; 
+        }
 
-public async Task<bool> HasImportersByCountryId(int countryId)
-{
-    return await _context.importers.AnyAsync(i => i.countryId == countryId);
-}
-}
+        public async Task<bool> HasImportersByCountryId(int countryId)
+        {
+            return await _context.Importers.AnyAsync(i => i.countryId == countryId);
+        }
+
+        public async Task<bool> AssociatedImportationOrderByImporters(int key)
+        {
+            return await _context.ImportationOrders.AnyAsync(i => i.ImporterId == key);
+        }
+    }
+
 }
       
     
-

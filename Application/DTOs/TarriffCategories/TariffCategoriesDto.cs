@@ -1,12 +1,17 @@
-using Application.DTOs.Base;
+﻿using Application.DTOs.Base;
+
 namespace Application.DTOs.TarriffCategories
 {
     public class TariffCategoriesDto : DtoBase<string>
     {
-        public decimal PorcentageTariff { get; set; }
-        public bool ITBIS { get; set; }
-        public bool SelectiveTaxApplies { get; set; }
-        public decimal? PorcentageTaxSelective { get; set; }
 
+        public required decimal PorcentageTariff { get; set; }
+        public required bool ITBIS { get; set; }
+        public required bool SelectiveTaxApplies { get; set; }
+        public decimal? PorcentageTaxSelective { get; set; }
     }
 }
+
+       
+
+   
