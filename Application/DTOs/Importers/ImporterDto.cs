@@ -1,5 +1,5 @@
-﻿using Application.Dto.Base;
-namespace Application.Dto.Importers
+﻿using Application.DTOs.Base;
+namespace Application.DTOs.Importers
 {
     public class ImporterDto : DtoBase<int>
     {
@@ -9,5 +9,7 @@ namespace Application.Dto.Importers
         public string? Email { get; set; }
         public required int CountryId { get; set; }
         public string? CountryName {  get; set; }
+
+       
     }
 }

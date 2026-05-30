@@ -1,4 +1,5 @@
-﻿using Application.Dto.Suppliers;
+﻿using Application.DTOs.Suppliers;
+
 using Application.Services.BaseServices;
 using Application.Services.Result;
 using Persistence.Entities.OperationalCommercial;
@@ -29,16 +30,16 @@ namespace Application.Services.SuppliersServices
                      MainCurrencyId = dto.CurrencyId
                 };
 
-                bool exits =  await _suppliersRepository.ExistName(s.Name.Trim());
-                //agregar validacion de email no duplicado o asociado al usuario que se esta intentado crear
-                if (exits) return new ServiceResult {Success =false,Message= "Ya existe un suplidor con este nombre", TypeAlert ="danger"};
+                var valid = await ValidateExistOtherSupplierWithData(dto);
+                if (valid != null) return valid; 
+               
                 bool create = await _suppliersRepository.CreateAsync(s);
                 if (create) return new ServiceResult {Success= true, Message = "Suplidor creado con exito", TypeAlert ="success"};
                 return new ServiceResult{ Success = true, Message = "Ha ocurrido un error al intentar crear el suplidor", TypeAlert = "danger"};
                 
             }catch(Exception ex)
             {
-                return new ServiceResult {Success = true, Message = $"Ha ocurrido un error en la comunicacion con el servicio {ex.Message}", TypeAlert= "danger"};
+                return new ServiceResult {Success = true, Message = $"Ha ocurrido un error en la comunicación con el servicio {ex.Message}", TypeAlert= "danger"};
             }
         }
 
@@ -47,7 +48,13 @@ namespace Application.Services.SuppliersServices
             try {
 
 
-                //aregar validaciones de ordenes de importancion 
+                bool AssociateImportationOrderBySuppliers = await _suppliersRepository.AssociateImportationOrderBySupplier(key);
+                if(AssociateImportationOrderBySuppliers) return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Este suplidor tiene ordenes asociadas por lo que no se puede eliminar, se quiere evitar su uso se recomienda editar su estado en el módulo de edición ",
+                    TypeAlert = "danger"
+                };
 
                 bool delete = await _suppliersRepository.DeleteAsync(key);
                 if (delete) return new ServiceResult{Success = true, Message = "Suplidor eliminado con exito", TypeAlert ="success"};
@@ -56,10 +63,26 @@ namespace Application.Services.SuppliersServices
             }catch(Exception ex)
             {
 
-                return new ServiceResult { Success = true, Message = $"Ha ocurrido un error en la comunicacion con el servicio {ex.Message}", TypeAlert = "danger" };
+                return new ServiceResult { Success = true, Message = $"Ha ocurrido un error en la comunicación con el servicio {ex.Message}", TypeAlert = "danger" };
             }
         }
 
+        private async Task<ServiceResult> ValidateExistOtherSupplierWithData(SuppliersDto s)
+        {
+            bool exitsOtherSupplierName = (await _suppliersRepository.GetAllAsync())
+                        .Any(su => su.Name.Trim() == s.Name.Trim() && su.Name.Trim() != s.Name.Trim());
+            if (exitsOtherSupplierName) return new ServiceResult { Success = false, Message = "Ya existe otro suplidor con este nombre, favor verificar este dato", TypeAlert = "danger" };
+
+            bool exitsOtherSupplierEmail = (await _suppliersRepository.GetAllAsync())
+                       .Any(su => su.Email!.Trim() == s.Email!.Trim() && su.Email.Trim() != s.Email.Trim());
+            if (exitsOtherSupplierName) return new ServiceResult { Success = false, Message = "Ya existe otro suplidor con este email, favor verificar este dato", TypeAlert = "danger" };
+
+            bool exitsOtherSupplierPhone = (await _suppliersRepository.GetAllAsync())
+                       .Any(su => su.Phone!.Trim() == s.PhoneNumber!.Trim() && su.Phone!.Trim() != s.PhoneNumber!.Trim());
+            if (exitsOtherSupplierName) return new ServiceResult { Success = false, Message = "Ya existe otro suplidor con este número telefonico, favor verificar este dato", TypeAlert = "danger" };
+
+            return null!;
+        }
         public async Task<ServiceResult> EditAsync(SuppliersDto dto)
         {
             try
@@ -76,19 +99,23 @@ namespace Application.Services.SuppliersServices
                     MainCurrencyId = dto.CurrencyId
                 };
 
-               
-                bool exitsOtherSupplier = (await _suppliersRepository.GetAllAsync()) //agregar validacion de asociar datos criticos como phone,email
-                                                                                     //o adress con suplidores ya registrados
-                        .Any(su => su.Name.Trim() == s.Name.Trim() && su.Name.Trim() != s.Name.Trim());
-               
-                if (exitsOtherSupplier) return new ServiceResult{Success = false, Message="Ya existe otro suplidor con este nombre, favor verificar este dato", TypeAlert ="danger"};
-                //agregar validacion de si el producto tiene ordenes de importancion -> campos criticos
+                var valid = await ValidateExistOtherSupplierWithData(dto);
+                if (valid != null) return  valid;
+                bool AssociateImportationOrderBySuppliers = await _suppliersRepository.AssociateImportationOrderBySupplier(s.Key);
+                var supplier = await _suppliersRepository.GetEntityById(s.Key);
+                if (AssociateImportationOrderBySuppliers)
+                {
+                    bool country = supplier.countryId != s.countryId;
+                    bool currency = supplier.MainCurrencyId != s.MainCurrencyId;
+                    if (country || currency) return new ServiceResult {Success = false, Message="Este suplidor tiene ordenes asociadas por " +
+                        "lo que no puede modificar su pais de origen o moneda principal, si quiere evitar el uso de este puede editar su estado", TypeAlert = "danger" }; 
+                }
                 bool edit = await _suppliersRepository.EditAsync(s);
                 if (edit) return new ServiceResult { Success = true,Message ="Suplidor editado con exito", TypeAlert ="success"};
                 return new ServiceResult { Success = false, Message = "Ha ocurrido un error al intentar editar el suplidor", TypeAlert = "danger" };
 
             }
-            catch (Exception ex) { return new ServiceResult {Success = false, Message = $"Ha ocurrido en la comunicacion con el servicio {ex.Message}", TypeAlert="danger"}; }
+            catch (Exception ex) { return new ServiceResult {Success = false, Message = $"Ha ocurrido en la comunicación con el servicio {ex.Message}", TypeAlert="danger"}; }
         }
 
         public async Task<IReadOnlyCollection<SuppliersDto>> GetAllAsync()

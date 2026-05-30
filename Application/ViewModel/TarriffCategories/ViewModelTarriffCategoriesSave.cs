@@ -1,32 +1,51 @@
-锘縰sing System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModel.TarriffCategories
 {
-    public class ViewModelTarriffCategoriesSave
+    public class ViewModelTarriffCategoriesSave : IValidatableObject
     {
 
    
-        [Required(ErrorMessage = "Debe ingresar un c贸digo de arancel v谩lido que no supere los 20 caracteres.")]
+        [Required(ErrorMessage = "Debe ingresar un c骴igo de arancel v醠ido que no supere los 20 caracteres.")]
         [StringLength(20)]
         public required string TarriffCode { get; set; }
 
-        [Required(ErrorMessage = "Debe ingresar un nombre o descripci贸n de arancel v谩lido que no supere los 150 caracteres.")]
+        [Required(ErrorMessage = "Debe ingresar un nombre o descripci髇 de arancel v醠ido que no supere los 150 caracteres.")]
         [StringLength(150)]
         public required string Name { get; set; }
 
-        [Required(ErrorMessage = "Ingrese un porcentaje de arancel v谩lido, debe estar entre 0 y 100.")]
+        [Required(ErrorMessage = "Ingrese un porcentaje de arancel v醠ido, debe estar entre 0 y 100.")]
         [Range(0, 100)]
         public required decimal TarriffPorcetage { get; set; }
 
-        [Required(ErrorMessage = "Debe indicar una opci贸n v谩lida para la aplicaci贸n o no aplicaci贸n del ITBIS.")]
+        [Required(ErrorMessage = "Debe indicar una opci髇 v醠ida para la aplicaci髇 o no aplicaci髇 del ITBIS.")]
         public required bool ITBIS { get; set; }
 
-        [Required(ErrorMessage = "Debe indicar una opci贸n v谩lida para la aplicaci贸n o no aplicaci贸n del Impuesto Selectivo.")]
+        [Required(ErrorMessage = "Debe indicar una opci髇 v醠ida para la aplicaci髇 o no aplicaci髇 del Impuesto Selectivo.")]
         public required bool SelectiveTaxApplies { get; set; }
+
+        [Range(0,100, ErrorMessage = "El porcentaje de impuesto selectivo debe encontrarseen el rango de 0 a 100 ")]
         public decimal? PorcentageTaxSelective { get; set; }
 
-        [Required(ErrorMessage = "La categor铆a de arancel debe tener un estado v谩lido.")]
+        [Required(ErrorMessage = "La categor韆 de arancel debe tener un estado v醠ido.")]
         public required bool State { get; set; }
 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (SelectiveTaxApplies && PorcentageTaxSelective <= 0)
+            {
+                yield return new ValidationResult(
+                    "Si el impuesto selectivo esta marcado como verdadero, el porcentaje del impuesto selectivo debe ser mayor a 0",
+                    new[] { nameof(PorcentageTaxSelective) }
+                    );
+            }
+            if(!SelectiveTaxApplies && PorcentageTaxSelective != 0)
+            {
+                yield return new ValidationResult(
+                   "Si el impuestose selectivo no aplica, el porcentaje delimpuesto selectivo debe ser 0.",
+                   new[] { nameof(PorcentageTaxSelective) }
+                   );
+            }            
+        }
     }
 }
