@@ -118,13 +118,12 @@ namespace Application.Services.ExchangeRates
                     return new ServiceResult { Success = false, Message = "La tasa de cambio que intenta actualizar no existe.", TypeAlert = "danger" };
                 }
 
-                // Paso 1: Identificar cambios críticos (Pág. 66)
+             
                 bool isCriticalChanged = existing.SourceCurrencyId != dto.SourceCurrencyId ||
                                          existing.DestinationCurrencyId != dto.DestinationCurrencyId ||
                                          existing.RateValue != dto.RateValue ||
                                          existing.EffectiveDate.Date != dto.EffectiveDate.Date;
 
-                // Paso 2: Validación Preventiva si hubo cambios críticos
                 if (isCriticalChanged)
                 {
                     bool inUse = await _ordersRepository.IsRateInUseAsync(existing);
@@ -134,7 +133,7 @@ namespace Application.Services.ExchangeRates
                     }
                 }
 
-                // Paso 3: Validaciones básicas
+              
                 if (dto.SourceCurrencyId == dto.DestinationCurrencyId)
                 {
                     return new ServiceResult { Success = false, Message = "La moneda origen no puede ser igual a la moneda destino.", TypeAlert = "danger" };
@@ -171,7 +170,7 @@ namespace Application.Services.ExchangeRates
                     return new ServiceResult { Success = false, Message = "La tasa de cambio que intenta eliminar no existe.", TypeAlert = "danger" };
                 }
 
-                // Validación Preventiva (Pág. 68)
+
                 bool inUse = await _ordersRepository.IsRateInUseAsync(existing);
                 if (inUse)
                 {
