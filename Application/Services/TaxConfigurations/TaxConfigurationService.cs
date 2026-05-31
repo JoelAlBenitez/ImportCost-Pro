@@ -46,24 +46,24 @@ namespace Application.Services.TaxConfigurations
         {
             try
             {
-               
+
                 if (dto.GeneralItbisPercentage < 0 || dto.GeneralItbisPercentage > 100 ||
                     dto.CustomsServiceRatePercentage < 0 || dto.CustomsServiceRatePercentage > 100)
                 {
                     return new ServiceResult { Success = false, Message = "Los porcentajes de impuestos deben estar entre 0 y 100.", TypeAlert = "danger" };
                 }
 
-                
+
                 if (dto.State)
                 {
                     var existingActive = await _repository.GetCurrentConfigAsync();
                     if (existingActive != null)
                     {
-                        return new ServiceResult 
-                        { 
-                            Success = false, 
-                            Message = "Ya existe una configuración de impuestos activa en el sistema. Debe inactivar la actual antes de activar una nueva.", 
-                            TypeAlert = "danger" 
+                        return new ServiceResult
+                        {
+                            Success = false,
+                            Message = "Ya existe una configuración de impuestos activa en el sistema. Debe inactivar la actual antes de activar una nueva.",
+                            TypeAlert = "danger"
                         };
                     }
                 }
@@ -93,7 +93,7 @@ namespace Application.Services.TaxConfigurations
         {
             try
             {
-                
+
                 if (dto.GeneralItbisPercentage < 0 || dto.GeneralItbisPercentage > 100 ||
                     dto.CustomsServiceRatePercentage < 0 || dto.CustomsServiceRatePercentage > 100)
                 {
@@ -106,17 +106,17 @@ namespace Application.Services.TaxConfigurations
                     return new ServiceResult { Success = false, Message = "La configuración que intenta actualizar no existe.", TypeAlert = "danger" };
                 }
 
-             
+
                 if (!existing.State && dto.State)
                 {
                     var existingActive = await _repository.GetCurrentConfigAsync();
                     if (existingActive != null && existingActive.Key != dto.Key)
                     {
-                        return new ServiceResult 
-                        { 
-                            Success = false, 
-                            Message = "Ya existe otra configuración de impuestos activa. Inactiva la actual antes de activar esta.", 
-                            TypeAlert = "danger" 
+                        return new ServiceResult
+                        {
+                            Success = false,
+                            Message = "Ya existe otra configuración de impuestos activa. Inactiva la actual antes de activar esta.",
+                            TypeAlert = "danger"
                         };
                     }
                 }
@@ -148,13 +148,13 @@ namespace Application.Services.TaxConfigurations
                     return new ServiceResult { Success = false, Message = "La configuración que intenta eliminar no existe.", TypeAlert = "danger" };
                 }
 
-               
+
                 if (existing.State)
                 {
                     return new ServiceResult { Success = false, Message = "No se puede eliminar una configuración de impuestos que esté activa.", TypeAlert = "danger" };
                 }
 
-               
+
 
                 var result = await _repository.DeleteAsync(id);
                 if (result)
