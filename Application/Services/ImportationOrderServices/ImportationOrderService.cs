@@ -1,5 +1,5 @@
 ﻿using Application.DTOs.Orders;
-
+using Application.Services.Result;
 using Persistence.Entities.Enums;
 using Persistence.Entities.ImportationOrderAndLandCost;
 using Persistence.Repositories.ImportationOrderAndLandCost;
@@ -45,38 +45,47 @@ namespace Application.Services.ImportationOrderServices
             return dtos;
         }
 
-        public async Task<ImportationOrderResponseDTO> CreateAsync(ImportationOrderCreateDTO orderCreateDTO)
+   
+        public async Task<ServiceResult> CreateOrderAsync(ImportationOrderCreateDTO dto)
         {
+            // Limpiar espacios
+            string finalOrderId = dto.OrderId?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrEmpty(finalOrderId))
+                return new ServiceResult { Success = false, Message = "El número de orden es requerido.", TypeAlert = "warning" };
+
+            // Prefijo: ORIM-
+            if (!finalOrderId.StartsWith("ORIM-", StringComparison.OrdinalIgnoreCase))
+            {
+                finalOrderId = $"ORIM-{finalOrderId}";
+            }
+
+            finalOrderId = finalOrderId.ToUpper();
+
+            // 3. Validar duplicados
+            var existingOrder = await _orderRepository.GetEntityById(finalOrderId);
+            if (existingOrder != null)
+            {
+                return new ServiceResult { Success = false, Message = $"Ya existe una orden de importación registrada con el número {finalOrderId}.", TypeAlert = "warning" };
+            }
+
+            // Mapeo
             var newOrder = new ImportationOrder
             {
-                OrderId = Guid.NewGuid().ToString(),
-                OrderDate = DateTime.UtcNow,
-                OrderState = OrderState.Abierta,
-
-                ImporterId = orderCreateDTO.ImporterId,
-                SupplierId = orderCreateDTO.SupplierId,
-                OriginCountryId = orderCreateDTO.OriginCountryId,
-                TransportMode = orderCreateDTO.TransportMode,
-                CurrencyId = orderCreateDTO.CurrencyId,
+                OrderId = finalOrderId,
+                ImporterId = dto.ImporterId,
+                SupplierId = dto.SupplierId,
+                OriginCountryId = dto.OriginCountryId,
+                CurrencyId = dto.CurrencyId,
+                TransportMode = dto.TransportMode,
+                OrderDate = dto.OrderDate,
+                OrderState = OrderState.Abierta
             };
 
+            // 5. Guardar en BD
             await _orderRepository.CreateAsync(newOrder);
 
-            var response = new ImportationOrderResponseDTO
-            {
-                OrderId = newOrder.OrderId,
-                ImporterId = newOrder.ImporterId,
-                SupplierId = newOrder.SupplierId,
-                OriginCountryId = newOrder.OriginCountryId,
-                CurrencyId = newOrder.CurrencyId,
-                OrderDate = newOrder.OrderDate,
-                TransportMode = newOrder.TransportMode,
-                OrderState = newOrder.OrderState,
-                TotalFOB = 0,
-                TotalImportationExpected = 0
-            };
-
-            return response;
+            return new ServiceResult { Success = true, Message = "Orden de importación creada exitosamente.", TypeAlert = "success" };
         }
 
         public async Task<ImportationOrderResponseDTO> GetEntityById(string id)
