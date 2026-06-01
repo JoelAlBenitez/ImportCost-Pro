@@ -70,7 +70,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> ExistTariffCode(string code)
         {
-            return await _context.TariffCategories.FirstAsync(t => t.TariffCode == code) != null;
+            return await _context.TariffCategories.FirstAsync(t => t.Key == code) != null;
         }
     }
 }

@@ -47,9 +47,11 @@ namespace ImportCost.Controllers.Products
                     CountryId = item.CountrysId,
                     CountryName = item.CountryName!
                 };
-
+            
                 listViewProducts.Add(p);
+
             }
+
             return View(listViewProducts);
         }
 
@@ -72,7 +74,7 @@ namespace ImportCost.Controllers.Products
             }
             return list;
         }
-        
+      
         private List<ViewModelSelectUnit> GetUnitMeasurements()
         {
             return Enum.GetValues(typeof(UnitMeasurement))
@@ -111,7 +113,7 @@ namespace ImportCost.Controllers.Products
               Name = vp.Name,
               State = vp.State,
               CodeReference = vp.CodeReference,
-              TarriffCategoriesId = vp.CategoriesId,
+              TarriffCategoriesId = vp.TariffCategoriesId,
               UnitWeight = vp.UnitWeight,
               Large =  vp.Large ?? 0,
               Broad = vp.Broad ?? 0,
@@ -144,7 +146,7 @@ namespace ImportCost.Controllers.Products
                 Broad = 0,
                 unit = 0,
                 Description = "",
-                CategoriesId = "",
+                TariffCategoriesId = "",
                 CountryId = 0,
                 Units = GetUnitMeasurements(),
                 countries = await GetCountries()
@@ -161,7 +163,7 @@ namespace ImportCost.Controllers.Products
                  Name = vp.Name,
                  State = vp.State,
                  CodeReference = vp.CodeReference,
-                 TarriffCategoriesId = vp.CategoriesId,
+                 TarriffCategoriesId = vp.TariffCategoriesId,
                  UnitWeight = vp.UnitWeight,
                  Large = vp.Large,
                  Broad = vp.Broad,
@@ -190,7 +192,7 @@ namespace ImportCost.Controllers.Products
                 Name = product.Name,
                 State = product.State,
                 CodeReference = product.CodeReference,
-                CategoriesId = product.TarriffCategoriesId,
+                TariffCategoriesId = product.TarriffCategoriesId,
                 unit = ((int)product.unitMesaurement),
                 UnitWeight = product.UnitWeight,
                 Categories = listCategories,

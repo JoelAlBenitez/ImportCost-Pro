@@ -50,6 +50,8 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             return await _context.Products
                 .AsNoTracking()
+                .Include(p => p.country)
+                .Include(p => p.tariffCategories)
                 .ToListAsync();
         }
 
@@ -57,6 +59,8 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             return await _context.Products
                 .AsNoTracking()
+                .Include(p => p.country)
+                .Include(p => p.tariffCategories)
                 .FirstAsync(p => p.Key == key);
         }
 

@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <Content Remove="wwwroot\img\productsBanner.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 
@@ -25,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\img\" />
+    <Resource Include="wwwroot\img\productsBanner.jpg" />
   </ItemGroup>
 
 </Project>

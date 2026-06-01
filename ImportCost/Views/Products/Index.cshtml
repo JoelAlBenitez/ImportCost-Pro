@@ -1,35 +1,134 @@
 ﻿@using Application.ViewModel.Products;
 @model List<ViewModelProducts>;
 
-<div class="w-100 h-100 container row gap-4 ">
-    @*header products*@
-    <section class="w-100 d-flex col-6 gap-5 " >
-          <div class="col-lg-8 col-md-4 col-2" >
-            <div class="input-group">
-                <input style="outline:none; box-shadow:none;" type="text"
-                       maxlength="15"
-                       class="form-control"
-                       placeholder="Buscar" />
-                <span style="cursor:pointer; background:none;" class="input-group-text">
+@{
+    ViewData["Title"] = "Gestión de Productos";
+}
+
+<div class="container-fluid py-4">
+    
+    <div class="row mb-4 align-items-center">
+        <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
+            <div class="input-group shadow-sm rounded-3 overflow-hidden bg-white">
+                <span class="input-group-text bg-white border-0 text-muted ps-3">
                     <i class="bi bi-search"></i>
                 </span>
+                <input type="text" id="liveSearch" class="form-control border-0 shadow-none py-2" placeholder="Buscar producto..." maxlength="15" />
             </div>
-          </div>
-          <div class="col-lg-7 col-md-3 col-2  " >
-                <button style="border-bottom-style:none; font-weight:600; " class="bg-primary p-2 text-white shadow-sm border-opacity-10 rounded-2">
-                <i class="bi bi-plus-circle"></i>
-                 Agregar Nuevo
-                </button>
-          </div>
-    </section>
-    <section class="col-6" >
-        <div class=" d-flex card" >
-            <p class="text-wrap " >
-                Gestiona los diveros productos del sistema con un solo clic
-                <a class="link-info">Necesitas ayuda?<i class="bi bi-info-circle-fill"></i></a>
-            </p>
-            <img class="img-fluid w-50 h-25" src="../wwwroot/img/productsBanner.jpg" />
         </div>
-    </section>
-    
+        
+        <div class="col-12 col-md-6 text-md-end">
+            <a asp-controller="Products" asp-action="Create" class="btn btn-primary px-4 py-2 fw-semibold rounded-3 shadow-sm d-inline-flex align-items-center gap-2">
+                <i class="bi bi-plus-circle"></i>
+                Agregar Nuevo
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-light">
+        <div class="row g-0 align-items-center">
+            <div class="col-md-8 p-4 p-md-5">
+                <h2 class="h4 fw-bold text-dark mb-2">Catálogo de Sistema</h2>
+                <p class="text-secondary mb-3 text-wrap">
+                    Gestiona los diversos productos del sistema con un solo clic. Agrega, edita o elimina inventario de manera eficiente.
+                </p>
+                <a href="#" class="text-decoration-none fw-semibold d-inline-flex align-items-center gap-1 text-primary">
+                    ¿Necesitas Ayuda? <i class="bi bi-info-circle-fill"></i>
+                </a>
+            </div>
+            <div class="col-md-4 d-none d-md-block text-end pe-4">
+                <img width="200" height="200" src="/img/productsBanner.jpg" alt="Banner de productos" class="img-fluid rounded-3 opacity-75" style="object-fit: cover; border-radius: 50%;" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row gap-4 gap-lg-0">
+        
+        <div class="col-12 col-lg-2">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="list-group list-group-flush rounded-3">
+                    <a href="#" class="list-group-item list-group-item-action active fw-semibold border-0 py-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-box-seam"></i> Productos
+                    </a>
+                    <a asp-controller="CountrysController" asp-action="Index" class="list-group-item list-group-item-action border-0 py-3 text-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-globe-americas"></i> Países
+                    </a>
+                    <a asp-controller="TariffController" asp-action="Index" class="list-group-item list-group-item-action border-0 py-3 text-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-tags"></i> Categorías Arancelarias
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-10">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="productsTable">
+                        <thead class="table-light text-secondary text-uppercase" style="font-size: 0.85rem;">
+                            <tr>
+                                <th class="py-3 ps-4 fw-semibold">Cód/Ref</th>
+                                <th class="py-3 fw-semibold">Nombre</th>
+                                <th class="py-3 fw-semibold">Categoría</th>
+                                <th class="py-3 fw-semibold">País</th>
+                                <th class="py-3 fw-semibold">Medidas</th>
+                                <th class="py-3 text-end pe-4 fw-semibold">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="border-top-0" id="tableBody">
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr class="product-row">
+                                        <td class="ps-4 text-muted font-monospace small">@item.CodeReference</td>
+                                        <td class="fw-semibold text-dark">@item.Name</td>
+                                        <td>
+                                            <span class="badge bg-light text-dark border px-2 py-1 rounded-2 fw-normal">@item.TarffCategoriesName</span>
+                                        </td>
+                                        <td class="text-secondary small">@item.CountryName</td>
+                                       
+                                        <td class="text-secondary small">
+                                            @item.UnitWeight <span class="text-muted">@item.unitMesaurement</span>
+                                        </td>
+
+                                        <td class="text-end pe-4">
+                                            <div class="btn-group shadow-sm rounded-3">
+                                                @* <a asp-action="" asp-route-id="@item.key" class="btn btn-sm btn-light text-primary border-end" title="Ver Detalles">
+                                                    <i class="bi bi-eye"></i>
+                                                </a> *@
+                                                <a asp-controller="Products" asp-action="Edit" asp-route-id="@item.key" class="btn btn-sm btn-light text-success border-end" title="Editar">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <a asp-controller="Products" asp-action="Delete" asp-route-id="@item.key" class="btn btn-sm btn-light text-danger" title="Eliminar">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr id="noDataRow">
+                                    <td colspan="6" class="text-center py-5 text-muted">
+                                        <i class="bi bi-inbox fs-2 d-block mb-2 opacity-50"></i>
+                                        No hay productos registrados.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card-footer bg-white border-top-0 p-3 d-flex justify-content-between align-items-center">
+                    <span class="text-muted small" id="paginationInfo">Mostrando 0 productos</span>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                            </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
