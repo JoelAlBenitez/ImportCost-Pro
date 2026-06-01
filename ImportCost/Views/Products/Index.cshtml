@@ -1,0 +1,35 @@
+﻿@using Application.ViewModel.Products;
+@model List<ViewModelProducts>;
+
+<div class="w-100 h-100 container row gap-4 ">
+    @*header products*@
+    <section class="w-100 d-flex col-6 gap-5 " >
+          <div class="col-lg-8 col-md-4 col-2" >
+            <div class="input-group">
+                <input style="outline:none; box-shadow:none;" type="text"
+                       maxlength="15"
+                       class="form-control"
+                       placeholder="Buscar" />
+                <span style="cursor:pointer; background:none;" class="input-group-text">
+                    <i class="bi bi-search"></i>
+                </span>
+            </div>
+          </div>
+          <div class="col-lg-7 col-md-3 col-2  " >
+                <button style="border-bottom-style:none; font-weight:600; " class="bg-primary p-2 text-white shadow-sm border-opacity-10 rounded-2">
+                <i class="bi bi-plus-circle"></i>
+                 Agregar Nuevo
+                </button>
+          </div>
+    </section>
+    <section class="col-6" >
+        <div class=" d-flex card" >
+            <p class="text-wrap " >
+                Gestiona los diveros productos del sistema con un solo clic
+                <a class="link-info">Necesitas ayuda?<i class="bi bi-info-circle-fill"></i></a>
+            </p>
+            <img class="img-fluid w-50 h-25" src="../wwwroot/img/productsBanner.jpg" />
+        </div>
+    </section>
+    
+</div>

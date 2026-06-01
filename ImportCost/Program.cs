@@ -1,13 +1,17 @@
+using Application.ServicesRegistration;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
-
+using Persistence.ServiceRegistration;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ContextImportCost>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+builder.Services.AddApplicationRegistration();
+builder.Services.AddPersistenceRegistration(builder.Configuration);
 
 builder.Environment.IsDevelopment();
 
