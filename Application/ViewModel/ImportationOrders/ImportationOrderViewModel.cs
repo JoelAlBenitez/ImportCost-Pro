@@ -1,12 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.ViewModel.ImportationOrders
+namespace ImportCost.ViewModels.ImportationOrders
 {
-    internal class ImportationOrderViewModel
+    public class ImportationOrderViewModel
     {
+        [Display(Name = "Número de Orden")]
+        public string OrderId { get; set; } = string.Empty;
+
+        [Display(Name = "Importador")]
+        public string ImporterName { get; set; } = string.Empty;
+
+        [Display(Name = "Proveedor")]
+        public string SupplierName { get; set; } = string.Empty;
+
+        [Display(Name = "País de Origen")]
+        public string OriginCountryName { get; set; } = string.Empty;
+
+        [Display(Name = "Moneda")]
+        public string CurrencyCode { get; set; } = string.Empty;
+
+        [Display(Name = "Fecha")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime OrderDate { get; set; }
+
+        [Display(Name = "Transporte")]
+        public string TransportMode { get; set; } = string.Empty;
+
+        [Display(Name = "Estado")]
+        public string OrderState { get; set; } = string.Empty;
+
+        
+        [Display(Name = "FOB Total")]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
+        public decimal TotalFob { get; set; }
+
+        [Display(Name = "Total Estimado de Importación")]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
+        public decimal EstimatedTotalCost { get; set; }
     }
 }

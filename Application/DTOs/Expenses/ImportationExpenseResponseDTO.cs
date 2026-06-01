@@ -5,8 +5,8 @@ using Persistence.Entities.Enums;
 
 public class ImportationExpenseResponseDTO
 {
-    public string ImportationExpenseId { get; set; }
-    public string OrderId { get; set; }
+    public required string ImportationExpenseId { get; set; }
+    public required string OrderId { get; set; }
     public ExpenseType ExpenseType { get; set; }
     public decimal ExpenseAmount { get; set; }
     public int CurrencyId { get; set; }

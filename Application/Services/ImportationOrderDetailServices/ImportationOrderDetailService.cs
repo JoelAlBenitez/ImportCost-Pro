@@ -74,7 +74,7 @@ namespace Application.Services.ImportationOrderDetailServices
             if (detail == null) throw new Exception("El detalle del producto no existe.");
 
             var order = await _orderRepository.GetEntityById(detail.OrderId);
-            if (order.OrderState != OrderState.Abierta)
+            if (order?.OrderState != OrderState.Abierta)
                 throw new InvalidOperationException("No se puede editar este producto porque la orden ya no está Abierta.");
 
             if (dto.Quantity <= 0) throw new InvalidOperationException("La cantidad debe ser mayor a cero.");
@@ -96,7 +96,7 @@ namespace Application.Services.ImportationOrderDetailServices
             if (detail == null) return false;
 
             var order = await _orderRepository.GetEntityById(detail.OrderId);
-            if (order.OrderState != OrderState.Abierta)
+            if (order?.OrderState != OrderState.Abierta)
                 throw new InvalidOperationException("No se puede eliminar este producto porque la orden ya no está Abierta.");
 
             await _detailRepository.DeleteAsync(orderDetailId);

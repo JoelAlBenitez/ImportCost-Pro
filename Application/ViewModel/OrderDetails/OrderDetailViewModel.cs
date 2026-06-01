@@ -1,12 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.ViewModel.OrderDetails
+namespace ImportCost.ViewModels.OrderDetails
 {
-    internal class OrderDetailViewModel
+    public class OrderDetailViewModel
     {
+        
+        public string OrderDetailId { get; set; } = string.Empty;
+
+        [Display(Name = "Producto")]
+        public string ProductName { get; set; } = string.Empty;
+
+        [Display(Name = "Cantidad")]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
+        public decimal Quantity { get; set; }
+
+        [Display(Name = "Precio Unitario FOB")]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
+        public decimal FOBUnitPrice { get; set; }
+
+        //CAMPOS CALCULADOS
+        // (Cantidad * Precio Unitario FOB)
+        [Display(Name = "FOB Total")]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
+        public decimal TotalFob { get; set; }
+
+        // (Cantidad * Peso Unitario del Producto)
+        [Display(Name = "Peso Total (kg)")]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
+        public decimal TotalWeight { get; set; }
+
+        // (Cantidad * Largo * Ancho * Alto)
+        [Display(Name = "Volumen Total (cm³)")]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
+        public decimal TotalVolume { get; set; }
+
+        [Display(Name = "Margen Deseado (%)")]
+        [DisplayFormat(DataFormatString = "{0:N2}%")]
+        public decimal ExpectedProfitMargin { get; set; }
     }
 }

@@ -1,12 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.ViewModel.OrderDetails
+namespace ImportCost.ViewModels.OrderDetails
 {
-    internal class OrderDetailEditViewModel
+    public class OrderDetailEditViewModel
     {
+        //IDs  ocultos vitales para saber qué registro exacto estamos actualizando
+        [Required]
+        public string OrderDetailId { get; set; } = string.Empty;
+
+        [Required]
+        public string OrderId { get; set; } = string.Empty;
+
+        [Required]
+        public int ProductId { get; set; }
+
+        // Propiedad de Solo Lectura para la Vista
+
+        [Display(Name = "Producto")]
+        public string ProductName { get; set; } = string.Empty;
+
+        // Campos editables con sus validaciones estrictas
+        [Required(ErrorMessage = "La cantidad es obligatoria.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "La cantidad debe ser mayor que 0.")]
+        [Display(Name = "Cantidad a Importar")]
+        public decimal Quantity { get; set; }
+
+        [Required(ErrorMessage = "El precio unitario FOB es obligatorio.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "El precio FOB debe ser mayor que 0.")]
+        [Display(Name = "Precio Unitario FOB")]
+        public decimal FOBUnitPrice { get; set; }
+
+        [Required(ErrorMessage = "El margen de ganancia es obligatorio.")]
+        [Range(0, 99.99, ErrorMessage = "El margen debe ser mayor o igual a 0 y menor que 100.")]
+        [Display(Name = "Margen de Ganancia Esperado (%)")]
+        public decimal ExpectedProfitMargin { get; set; }
     }
 }

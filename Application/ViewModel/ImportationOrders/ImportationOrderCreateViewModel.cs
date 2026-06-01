@@ -1,12 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Persistence.Entities.Enums;
+using System.ComponentModel.DataAnnotations;
 
-namespace Application.ViewModel.ImportationOrders
+namespace ImportCost.ViewModels.ImportationOrders
 {
-    internal class ImportationOrderCreateViewModel
+    public class ImportationOrderCreateViewModel
     {
+        [Required(ErrorMessage = "El número de orden es obligatorio.")]
+        [MaxLength(30, ErrorMessage = "El número de orden no puede superar los 30 caracteres.")]
+        [Display(Name = "Número de Orden")]
+        public string OrderId { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Debe seleccionar un importador.")]
+        [Display(Name = "Importador")]
+        public int ImporterId { get; set; }
+
+        [Required(ErrorMessage = "Debe seleccionar un proveedor.")]
+        [Display(Name = "Proveedor")]
+        public int SupplierId { get; set; }
+
+        [Required(ErrorMessage = "Debe seleccionar un país de origen.")]
+        [Display(Name = "País de Origen")]
+        public int OriginCountryId { get; set; }
+
+        [Required(ErrorMessage = "Debe seleccionar una moneda.")]
+        [Display(Name = "Moneda")]
+        public int CurrencyId { get; set; }
+
+        [Required(ErrorMessage = "La fecha de la orden es obligatoria.")]
+        [DataType(DataType.Date)]
+        [Display(Name = "Fecha de la Orden")]
+        public DateTime OrderDate { get; set; } = DateTime.Today;
+
+        [Required(ErrorMessage = "Debe seleccionar una modalidad de transporte.")]
+        [Display(Name = "Modalidad de Transporte")]
+        public TransportMode TransportMode { get; set; }
+        // -------------------------------------------------------------------------
+        // Propiedades de apoyo para la Vista (Llenar los DropDownLists / Selects)
+        // -------------------------------------------------------------------------
+        public Dictionary<int, string>? ImportersList { get; set; }
+        public Dictionary<int, string>? SuppliersList { get; set; }
+        public Dictionary<int, string>? CountriesList { get; set; }
+        public Dictionary<int, string>? CurrenciesList { get; set; }
     }
 }

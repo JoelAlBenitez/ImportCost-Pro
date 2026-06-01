@@ -5,9 +5,9 @@ using Persistence.Entities.Enums;
 
 public class LandedCostSummaryDTO
 {
-    public string LandedCostSummaryId { get; set; }
+    public string LandedCostSummaryId { get; set; }  
 
-    public string OrderId { get; set; }
+    public required string OrderId { get; set; }
 
     public int LocalCurrencyUsed { get; set; }
 
