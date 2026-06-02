@@ -5,6 +5,7 @@ using Persistence.ServiceRegistration;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSession();
 
 builder.Services.AddDbContext<ContextImportCost>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -26,6 +27,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();

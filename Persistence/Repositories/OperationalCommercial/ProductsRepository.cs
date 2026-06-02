@@ -61,12 +61,12 @@ namespace Persistence.Repositories.OperationalCommercial
                 .AsNoTracking()
                 .Include(p => p.country)
                 .Include(p => p.tariffCategories)
-                .FirstAsync(p => p.Key == key);
+                .FirstOrDefaultAsync(p => p.Key == key);
         }
 
         public async Task<bool> ExistProductsByCodeReference(string codeReference)
         {
-            return await _context.Products.FirstAsync(p => p.CodeRefence == codeReference) != null;
+            return await _context.Products.FirstOrDefaultAsync(p => p.CodeRefence == codeReference) != null;
         }
 
         public async Task<bool> HasProductsByCountryId(int countryId)

@@ -20,14 +20,12 @@ namespace Application.ViewModel.Products
         [Range(0.01, double.MaxValue, ErrorMessage = "Ingrese un precio unitario mayor que 0.")]
         public required decimal UnitWeight { get; set; }
 
-        [Required(ErrorMessage = "Debe seleccionar una categoria valida del listado de categorias")]
-        public required List<ViewModelSelectCategories> Categories { get; set; }
+        public  List<ViewModelSelectCategories>? Categories { get; set; }
 
-        [Required(ErrorMessage = "Seleccione una unidad de medida v√°lida para el producto.")]
-        public required List<ViewModelSelectUnit> Units { get; set; }
+        public  List<ViewModelSelectUnit>? Units { get; set; }
 
-        [Required(ErrorMessage = "El pa√≠s seleccionado no corresponde a un pa√≠s v√°lido.")]
-        public required List<ViewModelSelectCountries> countries { get; set;} 
+  
+        public List<ViewModelSelectCountries>? countries { get; set;} 
 
         [StringLength(250)]
         public string? Description { get; set; }
@@ -35,10 +33,14 @@ namespace Application.ViewModel.Products
         [Required(ErrorMessage = "Seleccione un estado v·lido para el producto que intenta crear.")]
         public required bool State { get; set; }
 
-        
+        [Required(ErrorMessage = "Debe seleccionar una categoria valida del listado de categorias")]
         public required string TariffCategoriesId { get; set; }
+
+        [Required(ErrorMessage = "Seleccione una unidad de medida v·lida para el producto.")]
+
         public required int unit { get; set; }
 
+        [Required(ErrorMessage = "El paÌs seleccionado no corresponde a un paÌ≠s v·lido.")]
         public required int CountryId { get; set; }
         public decimal? Large { get; set; }
         public decimal? Broad { get; set; }

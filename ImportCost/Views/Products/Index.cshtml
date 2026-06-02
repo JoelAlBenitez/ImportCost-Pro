@@ -5,8 +5,16 @@
     ViewData["Title"] = "Gestión de Productos";
 }
 
+@*mensaje que retorna el controller segun lo que haya pasado*@
+@if (TempData["Message"] != null)
+{
+    <div class="alert @TempData["TypeAlert"] w-auto h-25 position-fixed top-50 start-50 translate-middle">
+        @TempData["Message"]
+    </div>
+}
 <div class="container-fluid py-4">
     
+  
     <div class="row mb-4 align-items-center">
         <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
             <div class="input-group shadow-sm rounded-3 overflow-hidden bg-white">
@@ -17,8 +25,9 @@
             </div>
         </div>
         
-        <div class="col-12 col-md-6 text-md-end">
-            <a asp-controller="Products" asp-action="Create" class="btn btn-primary px-4 py-2 fw-semibold rounded-3 shadow-sm d-inline-flex align-items-center gap-2">
+        <div class="col-12 col-md-6 text-md-end"> 
+            <a  asp-controller="Products" asp-action="Create"
+            class="btn btn-primary px-4 py-2 fw-semibold rounded-3 shadow-sm d-inline-flex align-items-center gap-2">
                 <i class="bi bi-plus-circle"></i>
                 Agregar Nuevo
             </a>
@@ -47,7 +56,7 @@
         <div class="col-12 col-lg-2">
             <div class="card border-0 shadow-sm rounded-3">
                 <div class="list-group list-group-flush rounded-3">
-                    <a href="#" class="list-group-item list-group-item-action active fw-semibold border-0 py-3 d-flex align-items-center gap-2">
+                    <a class="list-group-item list-group-item-action active fw-semibold border-0 py-3 d-flex align-items-center gap-2">
                         <i class="bi bi-box-seam"></i> Productos
                     </a>
                     <a asp-controller="CountrysController" asp-action="Index" class="list-group-item list-group-item-action border-0 py-3 text-secondary d-flex align-items-center gap-2">
@@ -93,13 +102,10 @@
 
                                         <td class="text-end pe-4">
                                             <div class="btn-group shadow-sm rounded-3">
-                                                @* <a asp-action="" asp-route-id="@item.key" class="btn btn-sm btn-light text-primary border-end" title="Ver Detalles">
-                                                    <i class="bi bi-eye"></i>
-                                                </a> *@
-                                                <a asp-controller="Products" asp-action="Edit" asp-route-id="@item.key" class="btn btn-sm btn-light text-success border-end" title="Editar">
+                                                <a data-modal="true" asp-controller="Products" asp-action="Edit" asp-route-id="@item.key" class="btn btn-sm btn-light text-success border-end" title="Editar">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
-                                                <a asp-controller="Products" asp-action="Delete" asp-route-id="@item.key" class="btn btn-sm btn-light text-danger" title="Eliminar">
+                                                <a  data-modal="true" asp-controller="Products" asp-action="Delete"  asp-route-id="@item.key" class="btn btn-sm btn-light text-danger" title="Eliminar">
                                                     <i class="bi bi-trash"></i>
                                                 </a>
                                             </div>

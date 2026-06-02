@@ -1,4 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
+
     const searchInput = document.getElementById("liveSearch");
     const allRows = Array.from(document.querySelectorAll(".product-row"));
     const paginationControls = document.getElementById("paginationControls");
@@ -25,7 +26,7 @@
         }
 
         paginationInfo.textContent = totalItems > 0
-            ? `Mostrando ${startIndex + 1} - ${Math.min(endIndex, totalItems)} - ${totalItems}`
+            ? `Mostrando ${startIndex + 1} de ${Math.min(endIndex, totalItems)} - ${totalItems}`
             : "No se encontraron registros";
 
         renderPaginationButtons(totalPages);
@@ -70,4 +71,6 @@
     }
 
     renderTable();
+
 });
+

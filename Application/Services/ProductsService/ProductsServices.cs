@@ -62,7 +62,7 @@ namespace Application.Services.ProductsServices
                 bool create = await _productsRepository.CreateAsync(products);
 
                 //agregar validacion de pais activo o no activo
-
+                
                 if (create) return new ServiceResult { Success = true, Message = "Producto creado éxitosamente", TypeAlert = "success" };
                 return new ServiceResult { Success = false, Message = "Ha ocurrido un error al crear el producto", TypeAlert = "danger" };
             }

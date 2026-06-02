@@ -106,27 +106,35 @@ namespace ImportCost.Controllers.Products
         [HttpPost]
         public async Task<IActionResult> Create(ViewModelProductsSave vp)
         {
-            if (!ModelState.IsValid) return RedirectToRoute(new {controller="Products",action ="Save"});
-            
-            ProductsDto p = new() { 
-              Key = 0,
-              Name = vp.Name,
-              State = vp.State,
-              CodeReference = vp.CodeReference,
-              TarriffCategoriesId = vp.TariffCategoriesId,
-              UnitWeight = vp.UnitWeight,
-              Large =  vp.Large ?? 0,
-              Broad = vp.Broad ?? 0,
-              High = vp.High ?? 0,
-              Description = vp.Description,
-              CountrysId = vp.CountryId,
-              unitMesaurement = (UnitMesaurement)vp.unit
+            if (!ModelState.IsValid)
+            {
+
+                vp.Categories = await GetCategories();
+                vp.Units =  GetUnitMeasurements();
+                vp.countries = await GetCountries();
+                return View("Save", vp);
+               
+            }
+            ProductsDto p = new()
+            {
+                Key = 0,
+                Name = vp.Name,
+                State = vp.State,
+                CodeReference = vp.CodeReference,
+                TarriffCategoriesId = vp.TariffCategoriesId,
+                UnitWeight = vp.UnitWeight,
+                Large = vp.Large ?? 0,
+                Broad = vp.Broad ?? 0,
+                High = vp.High ?? 0,
+                Description = vp.Description,
+                CountrysId = vp.CountryId,
+                unitMesaurement = (UnitMesaurement)vp.unit
             };
             var result = await _productsServices.CreateAsync(p);
-            if (!result.Success) return RedirectToRoute(new { controller = "Products", action = "Save" });
+            if (!result.Success) return RedirectToAction(nameof(Create));
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            return RedirectToRoute(new { controller = "Products", action = "Index" });
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Create()
@@ -156,7 +164,13 @@ namespace ImportCost.Controllers.Products
         [HttpPost]
         public async Task<IActionResult> Edit(ViewModelProductsSave vp)
         {
-            if (!ModelState.IsValid) return View("Edit", vp);
+            if (!ModelState.IsValid)
+            {
+                vp.Categories = await GetCategories(vp.TariffCategoriesId);
+                vp.Units = GetUnitMeasurements();
+                vp.countries = await GetCountries(vp.CountryId);
+                return View("Edit", vp);
+            }
 
             ProductsDto productsDto = new() {
                  Key = vp.Key,
