@@ -1,7 +1,7 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
 
     const searchInput = document.getElementById("liveSearch");
-    const allRows = Array.from(document.querySelectorAll(".product-row"));
+    const allRows = Array.from(document.querySelectorAll(".paginationTable"));
     const paginationControls = document.getElementById("paginationControls");
     const paginationInfo = document.getElementById("paginationInfo");
 

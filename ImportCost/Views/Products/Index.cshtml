@@ -11,7 +11,7 @@
     @*mensaje que retorna el controller segun lo que haya pasado*@
     @if (TempData["Message"] != null)
     {
-        <div class="alert alert-@TempData["TypeAlert"] w-auto h-25 alert-dismissible fade show shadow-sm border-0" role="alert" ">
+        <div class="alert alert-@TempData["TypeAlert"] w-auto h-25 alert-dismissible fade show shadow-sm border-0" role="alert" >
             @TempData["Message"]
         </div>
     }
@@ -90,7 +90,7 @@
                             {
                                 foreach (var item in Model)
                                 {
-                                    <tr class="product-row">
+                                    <tr class="paginationTable" >
                                         <td class="ps-4 text-muted font-monospace small">@item.CodeReference</td>
                                         <td class="fw-semibold text-dark">@item.Name</td>
                                         <td>

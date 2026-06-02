@@ -20,8 +20,6 @@ namespace ImportCost.Controllers.Suppliers
             _countryService = countryService;
             _currencyService = currencyService;
         }
-
-
         public async Task<IActionResult> Index()
         {
             var listS = new List<ViewModelSuppliers>();
@@ -34,7 +32,7 @@ namespace ImportCost.Controllers.Suppliers
                         Name = item.Name,
                         CountryId = item.CountryId,
                         NameCountry = item.NameContry!,
-                        Email  =item.Email ?? "NA",
+                        Email  = item.Email ?? "NA",
                         PhoneNumber =item.PhoneNumber ?? "-",
                         MainCurrency = item.CurrencyName!,
                         MainCurrencyId = item.CurrencyId,
@@ -69,7 +67,7 @@ namespace ImportCost.Controllers.Suppliers
         private async Task<List<ViewModelSelectCurrency>> GetCurrencies(int key =0)
         {
             var list = new List<ViewModelSelectCurrency>();
-            var countries = await _countryService.GetAllAsync();
+            var countries = await _currencyService.GetAllAsync();
             foreach (var item in countries)
             {
                 if (item.State || key != 0 && item.Key != key)
@@ -86,8 +84,9 @@ namespace ImportCost.Controllers.Suppliers
         }
 
         public async Task<IActionResult> Create() { 
+
             return View("Save", new ViewModelSuppliersSave {
-                Name = "",
+                Name = null!,
                 Email = "",
                 Phone = "",
                 Countries = await GetCountries(), 
@@ -105,13 +104,13 @@ namespace ImportCost.Controllers.Suppliers
             }
             
             ViewModelSuppliersSave vs = new() { 
-                Key = s.Key,
+                Key = s!.Key,
                 Name = s.Name,
                 CountryId = s.CountryId, 
                 State = s.State,
                 Email = s.Email!,
                 Phone = s.PhoneNumber!,
-                Countries = await GetCountries(),
+                Countries = await GetCountries(s.CountryId),
                 CurrencyId = s.CurrencyId, 
                 Currencies = await GetCurrencies(s.CurrencyId)
             };
@@ -128,12 +127,11 @@ namespace ImportCost.Controllers.Suppliers
         public async Task<IActionResult> Delete(ViewModelSuppliersDelete vs)
         {
             if (!ModelState.IsValid) return View("Delete", vs);
-            
-            
+              
             var result = await _suppliersServices.DeleteAsync(vs.Key);
-            if (!result.Success) return RedirectToAction(nameof(Delete));
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
+            if (!result.Success) return RedirectToAction(nameof(Index));
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
@@ -156,18 +154,18 @@ namespace ImportCost.Controllers.Suppliers
                 CurrencyId = vs.CurrencyId
             };
             var result = await _suppliersServices.EditAsync(sup);
-            if (!result.Success) return RedirectToAction(nameof(Edit));
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
+            if (!result.Success) return RedirectToAction(nameof(Index));
             return RedirectToAction(nameof(Index));
         }
+        [HttpPost]
         public async Task<IActionResult> Create(ViewModelSuppliersSave vs)
         {
             if (!ModelState.IsValid) {
-
                 vs.Currencies = await GetCurrencies();
                 vs.Countries = await GetCountries();
-                View("Save", vs);
+                return View("Save", vs);
             }
             
             SuppliersDto sp = new() { 
@@ -180,9 +178,9 @@ namespace ImportCost.Controllers.Suppliers
                 CurrencyId = vs.CurrencyId
             };
             var result = await _suppliersServices.CreateAsync(sp);
-            if (!result.Success) return RedirectToAction(nameof(Create));
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
+            if (!result.Success) return RedirectToAction(nameof(Index));
             return RedirectToAction(nameof(Index));
         }
     }

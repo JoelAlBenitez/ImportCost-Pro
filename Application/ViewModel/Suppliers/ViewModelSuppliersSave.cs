@@ -16,11 +16,11 @@ namespace Application.ViewModel.Suppliers
 
         [EmailAddress(ErrorMessage = "Ingrese un formato de correo eletronico valido")]
         [StringLength(100, MinimumLength = 7, ErrorMessage ="Ingrese un correo electronico con una longitud minima de 7 caracteres y que no supere los 100 caracteres ")]
-        public required string Email { get; set; }
+        public  string? Email { get; set; }
 
         [Phone(ErrorMessage = "Ingrese un formato de telefonico valido")]
         [StringLength(20, MinimumLength = 3, ErrorMessage = "Ingrese un número de teléfono de al menos 3 digitos  y que no supere los 20 caracteres")]
-        public required string Phone {  get; set; }
+        public  string? Phone {  get; set; }
 
         public  List<ViewModelSelectCountries>? Countries { get; set; }
 
