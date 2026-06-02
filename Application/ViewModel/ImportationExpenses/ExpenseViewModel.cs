@@ -24,5 +24,7 @@ namespace ImportCost.ViewModels.ImportationExpenses
         [Display(Name = "Fecha")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime ImportationExpenseDate { get; set; }
+        public string OrderId { get; set; }
+        public DateTime ExpenseDate { get; set; }
     }
 }

@@ -1,6 +1,122 @@
-﻿namespace ImportCost.Controllers.ImportationOrdersController
+﻿using Application.DTOs.Orders;
+using Application.Services.Countries;
+using Application.Services.Currencies;
+using Application.Services.ImportationOrderServices;
+using Application.Services.Importers;
+using Application.Services.SuppliersServices;
+using ImportCost.ViewModels.ImportationOrders;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ImportCost.Controllers.ImportationOrdersController
 {
-    public class ImportationOrdersController
+    public class ImportationOrdersController : Controller
     {
+        // DEPENDENCIAS
+        private readonly ImportationOrderService _orderService;
+        private readonly ImportersServices _importersService;
+        private readonly CountryService _countryService;
+
+        private readonly SuppliersServices _suppliersService;
+        private readonly CurrencyService _currenciesService;
+
+        // CONSTRUCTOR CON INYECCIÓN MÚLTIPLE
+        public ImportationOrdersController(
+            ImportationOrderService orderService,
+            ImportersServices importersService,
+            CountryService countryService,
+            SuppliersServices suppliersService,
+            CurrencyService currenciesService)
+        {
+            _orderService = orderService;
+            _importersService = importersService;
+            _countryService = countryService;
+            _suppliersService = suppliersService;
+            _currenciesService = currenciesService;
+        }
+        //Action para mostrar la vista de creación de orden de importación
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var orders = await _orderService.GetAllAsync();
+
+            var viewModelList = orders.Select(order => new ImportationOrderViewModel
+            {
+                OrderId = order.OrderId,
+
+                ImporterName = order.ImporterName ?? "Desconocido",
+                SupplierName = order.SupplierName ?? "Desconocido",
+                OriginCountryName = order.OriginCountryName ?? "Desconocido",
+                CurrencyCode = order.CurrencyCode ?? "N/A",
+
+                OrderDate = order.OrderDate,
+                TransportMode = order.TransportMode.ToString(),
+                OrderState = order.OrderState.ToString(),
+
+                TotalFob = order.TotalFOB,
+                EstimatedTotalCost = order.TotalImportationExpected
+            }).ToList();
+
+            return View(viewModelList);
+        }
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> Create(ImportationOrderCreateViewModel viewModel)
+            {
+                
+                if (!ModelState.IsValid)
+                {
+                    await LoadCatalogsAsync(viewModel);
+                    return View(viewModel);
+                }
+
+                
+                var createDto = new ImportationOrderCreateDTO
+                {
+                    OrderId = viewModel.OrderId,
+                    ImporterId = viewModel.ImporterId,
+                    SupplierId = viewModel.SupplierId,
+                    OriginCountryId = viewModel.OriginCountryId,
+                    CurrencyId = viewModel.CurrencyId,
+                    OrderDate = viewModel.OrderDate,
+                    TransportMode = viewModel.TransportMode
+                };
+
+                
+                var result = await _orderService.CreateOrderAsync(createDto);
+
+                
+                if (!result.Success)
+                {
+                    
+                    ModelState.AddModelError(string.Empty, result.Message);
+                    await LoadCatalogsAsync(viewModel);
+                    return View(viewModel);
+                }
+
+                
+                TempData["SuccessMessage"] = result.Message;
+                return RedirectToAction(nameof(Index));
+            } 
+
+       
+        //Cargar los catálogos 
+        
+        private async Task LoadCatalogsAsync(ImportationOrderCreateViewModel viewModel)
+        {
+  
+            var importers = await _importersService.GetAllAsync();
+            viewModel.ImportersList = importers?.ToDictionary(i => i.Key, i => i.Name) ?? new Dictionary<int, string>();
+
+            var countries = await _countryService.GetAllAsync();
+            viewModel.CountriesList = countries?.ToDictionary(c => c.Key, c => c.Name) ?? new Dictionary<int, string>();
+
+     
+            var suppliers = await _suppliersService.GetAllAsync();
+            viewModel.SuppliersList = suppliers?.ToDictionary(s => s.Key, s => s.Name) ?? new Dictionary<int, string>();
+
+            var currencies = await _currenciesService.GetAllAsync();
+            viewModel.CurrenciesList = currencies?.ToDictionary(c => c.Key, c => c.IsoCode ?? c.Name) ?? new Dictionary<int, string>();
+        }
     }
 }

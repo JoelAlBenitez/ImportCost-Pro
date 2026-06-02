@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Entities.ImportationOrderAndLandCost;
+using Persistence.Repositories.Base; 
 
 namespace Persistence.Repositories.ImportationOrderAndLandCost
 {
-    // 1. Queda como clase independiente
-    public class ImportationExpenseRepository
+    
+    public class ImportationExpenseRepository : BaseRepository<ImportationExpense, string>
     {
         private readonly ContextImportCost _context;
 
@@ -17,10 +18,43 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
             _context = context;
         }
 
+
+        public async Task<bool> CreateAsync(ImportationExpense entity)
+        {
+            await _context.ImportationExpenses.AddAsync(entity);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> EditAsync(ImportationExpense entity)
+        {
+            _context.ImportationExpenses.Update(entity);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> DeleteAsync(string id)
+        {
+            var entity = await GetEntityById(id);
+            if (entity == null) return false;
+
+            _context.ImportationExpenses.Remove(entity);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<ImportationExpense> GetEntityById(string key)
+        {
+
+            return await _context.ImportationExpenses.FindAsync(key);
+        }
+
+        public async Task<IReadOnlyCollection<ImportationExpense>> GetAllAsync()
+        {
+            return await _context.ImportationExpenses.AsNoTracking().ToListAsync();
+        }
+
         public async Task<IReadOnlyCollection<ImportationExpense>> GetByOrderIdAsync(string orderId)
         {
             return await _context.ImportationExpenses
-                                 .AsNoTracking() // 2. Regla de Joel
+                                 .AsNoTracking()
                                  .Where(e => e.OrderId == orderId)
                                  .ToListAsync();
         }

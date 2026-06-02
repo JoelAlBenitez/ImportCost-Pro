@@ -26,17 +26,14 @@ public class LandedCostService
         _exchangeRateRepository = exchangeRateRepository;
         _taxConfigRepository = taxConfigRepository;
     }
-
     public class ExpenseAllocation
         {
             public decimal AssignedFreight { get; set; } = 0m;
             public decimal AssignedInsurance { get; set; } = 0m;
             public decimal AssignedLocalExpenses { get; set; } = 0m;
         }
-
         public async Task<LandedCostSummaryDTO> CalculateLandedCostAsync(string orderId)
         {
-
             var order = await _orderRepository.GetEntityById(orderId);
             if (order == null)
                 throw new Exception("La orden no existe.");
@@ -328,19 +325,17 @@ public class LandedCostService
         {
 
 
-            // 1. Buscar la orden para validarla
+            //  Buscar la orden para validarla
             var order = await _orderRepository.GetEntityById(orderId);
             if (order == null)
                 throw new Exception("La orden no existe.");
 
-            // 2. Validar que la orden esté Abierta y no tenga ya un cálculo previo
+            // Validar que la orden esté Abierta y no tenga ya un cálculo previo
             if (order.OrderState != OrderState.Abierta)
                 throw new InvalidOperationException("Solo se pueden guardar cálculos de órdenes en estado Abierta.");
 
-            // 3. Mapear el DTO a la Entidad real de Base de Datos
+            // Mapear el DTO a la Entidad real de Base de Datos
             string newSummaryId = Guid.NewGuid().ToString();
-
-            // 3. Mapear el DTO a la Entidad real de Base de Datos
             var summaryEntity = new LandedCostSummary
             {
                 LandedCostSummaryId = newSummaryId,
@@ -363,10 +358,8 @@ public class LandedCostService
                 // Mapear la lista de detalles
                 LandedCostDetails = calculationResult.ProductDetails.Select(d => new LandedCostDetail
                 {
-                    
                     LandedCostDetailId = Guid.NewGuid().ToString(),
                     LandedCostSummaryId = newSummaryId,
-
                     ProductId = d.ProductId,
                     Quantity = d.Quantity,
                     OriginalFOB = d.OriginalTotalFob,
@@ -385,10 +378,8 @@ public class LandedCostService
                     SuggestedSalePrice = d.SuggestedSalePrice
                 }).ToList()
             };
-
             // 4. Cambiar el estado de la orden a Calculada
             order.OrderState = OrderState.Calculada;
-
             // 5. Guardar en Base de Datos
             order.LandedCostSummary = summaryEntity;
             await _orderRepository.EditAsync(order);

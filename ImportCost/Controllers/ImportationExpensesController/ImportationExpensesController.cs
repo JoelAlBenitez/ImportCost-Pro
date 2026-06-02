@@ -1,6 +1,203 @@
-﻿namespace ImportCost.Controllers.ImportationExpensesController
+﻿using Application.DTOs.Expenses;
+using Application.Services.Currencies;
+using Application.Services.ImportationExpenseServices;
+using ImportCost.ViewModels.ImportationExpenses;
+using Microsoft.AspNetCore.Mvc;
+
+
+namespace ImportCost.Controllers
 {
-    public class ImportationExpensesController
+    public class ImportationExpensesController : Controller
     {
+        // 1. DEPENDENCIAS
+        private readonly ImportationExpenseService _expenseService;
+        private readonly CurrencyService _currenciesService;
+
+        public ImportationExpensesController(
+            ImportationExpenseService expenseService,
+            CurrencyService currenciesService)
+        {
+            _expenseService = expenseService;
+            _currenciesService = currenciesService;
+        }
+
+        //Lista de gastos de una orden
+        [HttpGet]
+        public async Task<IActionResult> Index(string orderId)
+        {
+            if (string.IsNullOrWhiteSpace(orderId))
+            {
+                TempData["ErrorMessage"] = "Debes seleccionar una orden para ver sus gastos.";
+                return RedirectToAction("Index", "ImportationOrders");
+            }
+
+            var expensesList = await _expenseService.GetExpensesByOrderIdAsync(orderId);
+
+           
+            var viewModelList = expensesList.Select(e => new ExpenseViewModel
+            {
+                ImportationExpenseId = e.ImportationExpenseId,
+                OrderId = e.OrderId,
+                ExpenseType = e.ExpenseType.ToString(),
+                ExpenseAmount = e.ExpenseAmount,
+                DistributionMethod = e.DistributionMethod.ToString(),
+                ExpenseDate = e.ExpenseDate
+            }).ToList();
+
+            ViewBag.CurrentOrderId = orderId;
+
+            return View(viewModelList);
+        }
+
+
+        //  CREATE (GET)
+        [HttpGet]
+        public async Task<IActionResult> Create(string orderId)
+        {
+            if (string.IsNullOrWhiteSpace(orderId))
+                return RedirectToAction("Index", "ImportationOrders");
+
+            var viewModel = new ExpenseCreateViewModel
+            {
+                OrderId = orderId,
+                ExpenseDate = DateTime.Today // UX: Fecha por defecto
+            };
+
+            await LoadCatalogsAsync(viewModel);
+            return View(viewModel);
+        }
+
+        // CREATE (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ExpenseCreateViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                await LoadCatalogsAsync(viewModel);
+                return View(viewModel);
+            }
+
+            var dto = new ImportationExpenseCreateDTO
+            {
+                OrderId = viewModel.OrderId,
+                ExpenseType = viewModel.ExpenseType,
+                ExpenseAmount = viewModel.ExpenseAmount,
+                CurrencyId = viewModel.CurrencyId,
+                DistributionMethod = viewModel.DistributionMethod,
+                ExpenseDate = viewModel.ExpenseDate
+            };
+
+            var result = await _expenseService.AddExpenseToOrderAsync(dto);
+
+            if (!result.Success)
+            {
+                ModelState.AddModelError(string.Empty, result.Message);
+                await LoadCatalogsAsync(viewModel);
+                return View(viewModel);
+            }
+
+            TempData["SuccessMessage"] = result.Message;
+            return RedirectToAction(nameof(Index), new { orderId = viewModel.OrderId });
+        }
+
+        // EDIT (GET)
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id) 
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return RedirectToAction("Index", "ImportationOrders");
+
+            var expense = await _expenseService.GetExpenseByIdAsync(id);
+
+            if (expense == null)
+            {
+                TempData["ErrorMessage"] = "No se encontró el gasto solicitado.";
+                return RedirectToAction("Index", "ImportationOrders");
+            }
+
+            var viewModel = new ExpenseEditViewModel
+            {
+                ImportationExpenseId = expense.ImportationExpenseId,
+                OrderId = expense.OrderId,
+                ExpenseType = expense.ExpenseType,
+                ExpenseAmount = expense.ExpenseAmount,
+                CurrencyId = expense.CurrencyId,
+                DistributionMethod = expense.DistributionMethod,
+                ExpenseDate = expense.ExpenseDate
+            };
+
+            await LoadCatalogsAsync(viewModel);
+            return View(viewModel);
+        }
+        //EDIT (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(ExpenseEditViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                await LoadCatalogsAsync(viewModel);
+                return View(viewModel);
+            }
+
+            var dto = new ImportationExpenseUpdateDTO
+            {
+                ImportationExpenseId = viewModel.ImportationExpenseId,
+                ExpenseType = viewModel.ExpenseType,
+                ExpenseAmount = viewModel.ExpenseAmount,
+                CurrencyId = viewModel.CurrencyId,
+                DistributionMethod = viewModel.DistributionMethod,
+                ExpenseDate = viewModel.ExpenseDate
+            };
+
+            try
+            {
+                await _expenseService.EditExpenseAsync(dto);
+                TempData["SuccessMessage"] = "Gasto actualizado correctamente.";
+                return RedirectToAction(nameof(Index), new { orderId = viewModel.OrderId });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                await LoadCatalogsAsync(viewModel);
+                return View(viewModel);
+            }
+        }
+
+        // -------------------------------------------------------------------
+        // 6. DELETE (POST)
+        // -------------------------------------------------------------------
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(string id, string orderId)
+        {
+            try
+            {
+                var result = await _expenseService.RemoveExpenseAsync(id);
+                if (result)
+                    TempData["SuccessMessage"] = "Gasto eliminado.";
+                else
+                    TempData["ErrorMessage"] = "No se pudo eliminar el gasto.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+
+            return RedirectToAction(nameof(Index), new { orderId = orderId });
+        }
+
+        // -------------------------------------------------------------------
+        // 7. HELPER METHOD: Carga el catálogo de Monedas
+        // -------------------------------------------------------------------
+        // Como este helper se usa tanto en Create como en Edit, lo ideal es recibir 
+        // una interfaz genérica o sobrecargarlo, pero por simplicidad puedes usar 'dynamic'
+        // o crear dos helpers. Aquí lo usamos con dynamic para que acepte ambos ViewModels.
+        private async Task LoadCatalogsAsync(dynamic viewModel)
+        {
+            var currencies = await _currenciesService.GetAllAsync();
+            viewModel.CurrenciesList = currencies?.ToDictionary(c => c.Key, c => c.IsoCode ?? c.Name) ?? new Dictionary<int, string>();
+        }
     }
 }

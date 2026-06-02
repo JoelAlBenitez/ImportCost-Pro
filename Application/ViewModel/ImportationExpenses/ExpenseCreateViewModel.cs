@@ -34,5 +34,6 @@ namespace ImportCost.ViewModels.ImportationExpenses
 
         // Diccionario para el Select de Monedas
         public Dictionary<int, string>? CurrenciesList { get; set; }
+        public DateTime ExpenseDate { get; set; }
     }
 }

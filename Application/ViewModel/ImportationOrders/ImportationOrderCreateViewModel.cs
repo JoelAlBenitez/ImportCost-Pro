@@ -34,9 +34,8 @@ namespace ImportCost.ViewModels.ImportationOrders
         [Required(ErrorMessage = "Debe seleccionar una modalidad de transporte.")]
         [Display(Name = "Modalidad de Transporte")]
         public TransportMode TransportMode { get; set; }
-        // -------------------------------------------------------------------------
-        // Propiedades de apoyo para la Vista (Llenar los DropDownLists / Selects)
-        // -------------------------------------------------------------------------
+
+        //Llenar los DropDownLists / Selects
         public Dictionary<int, string>? ImportersList { get; set; }
         public Dictionary<int, string>? SuppliersList { get; set; }
         public Dictionary<int, string>? CountriesList { get; set; }

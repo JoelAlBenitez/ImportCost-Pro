@@ -30,6 +30,47 @@ namespace Application.Services.ImportationOrderDetailServices
             _productRepository = productRepository;
         }
 
+        public async Task<List<OrderDetailResponseDTO>> GetDetailsByOrderIdAsync(string orderId)
+        {
+            var order = await _orderRepository.GetEntityById(orderId);
+
+            if (order == null || order.ImportationOrderDetails == null)
+                return new List<OrderDetailResponseDTO>();
+
+            return order.ImportationOrderDetails.Select(detail => new OrderDetailResponseDTO
+            {
+                OrderDetailId = detail.OrderDetailId,
+                ProductId = detail.ProductId,
+                ProductName = detail.Product?.Name ?? "Producto Desconocido",
+                Quantity = detail.Quantity,
+                FOBUnitPrice = detail.FOBUnitPrice,
+                ExpectedProfitMargin = detail.ExpectedProfitMargin,
+                TotalFOB = detail.Quantity * detail.FOBUnitPrice,
+                TotalWeight = detail.Quantity * (detail.Product?.UnitWeight ?? 0),
+                TotalVolume = detail.Quantity * ((detail.Product?.Large ?? 0) * (detail.Product?.Broad ?? 0) * (detail.Product?.High ?? 0))
+
+            }).ToList();
+        }
+
+
+        public async Task<OrderDetailResponseDTO> GetDetailByIdAsync(string orderDetailId)
+        {
+            var detail = await _detailRepository.GetByIdAsync(orderDetailId);
+
+            if (detail == null) return null!;
+
+            return new OrderDetailResponseDTO
+            {
+                OrderDetailId = detail.OrderDetailId,
+                OrderId = detail.OrderId,
+                ProductId = detail.ProductId,
+                ProductName = detail.Product?.Name ?? "Producto Desconocido",
+                Quantity = detail.Quantity,
+                FOBUnitPrice = detail.FOBUnitPrice,
+                ExpectedProfitMargin = detail.ExpectedProfitMargin
+            };
+        }
+
 
         public async Task<ServiceResult> AddProductToOrderAsync(string orderId, OrderDetailCreateDTO dto)
         {
@@ -64,7 +105,7 @@ namespace Application.Services.ImportationOrderDetailServices
 
             await _detailRepository.AddAsync(newDetail);
 
-            // Retornamos éxito en lugar de "true"
+            // Retornamos éxito
             return new ServiceResult { Success = true, Message = "Producto agregado correctamente.", TypeAlert = "success" }; 
         }
 

@@ -26,5 +26,6 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         public required ImportationOrder ImportationOrder { get; set; }
 
         public required Currency Currency { get; set; }
+        public DateTime ExpenseDate { get; set; }
     }
 }
