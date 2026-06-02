@@ -6,7 +6,6 @@ using Persistence.Entities.ImportationOrderAndLandCost;
 
 namespace Persistence.Repositories.ImportationOrderAndLandCost
 {
-    // 1. Eliminamos la herencia de IImportationOrderRepository
     public class ImportationOrderRepository
     {
         private readonly ContextImportCost _context;
@@ -31,7 +30,7 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
         public async Task<IReadOnlyCollection<ImportationOrder>> GetAllAsync()
         {
             return await _context.ImportationOrders
-                .AsNoTracking() // 2. Regla de Joel: Liberar memoria en consultas de lectura
+                .AsNoTracking()
                 .Include(o => o.Importer)
                 .Include(o => o.Supplier)
                 .Include(o => o.Country)

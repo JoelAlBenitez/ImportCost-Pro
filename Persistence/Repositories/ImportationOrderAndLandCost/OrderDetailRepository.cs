@@ -7,7 +7,6 @@ using Persistence.Entities.ImportationOrderAndLandCost;
 
 namespace Persistence.Repositories.ImportationOrderAndLandCost
 {
-    // 1. Eliminamos la herencia de IOrderDetailRepository
     public class OrderDetailRepository
     {
         private readonly ContextImportCost _context;
@@ -16,8 +15,6 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
         {
             _context = context;
         }
-
-        // 2. Reglas de Joel: IReadOnlyCollection y AsNoTracking()
         public async Task<IReadOnlyCollection<ImportationOrderDetail>> GetByOrderIdAsync(string orderId)
         {
             return await _context.ImportationOrderDetails
@@ -30,8 +27,6 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
         {
             return await _context.ImportationOrderDetails.FindAsync(id);
         }
-
-        // 3. Agregamos SaveChangesAsync para que realmente se guarde en la Base de Datos
         public async Task<bool> AddAsync(ImportationOrderDetail orderDetail)
         {
             await _context.ImportationOrderDetails.AddAsync(orderDetail);
