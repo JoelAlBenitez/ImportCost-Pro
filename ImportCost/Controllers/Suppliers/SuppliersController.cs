@@ -51,7 +51,7 @@ namespace ImportCost.Controllers.Suppliers
             var countries = await _countryService.GetAllAsync();
             foreach (var item in countries)
             {
-                if (item.State || key != 0 && item.Key != key)
+                if (item.State || (key != 0 && item.Key == key))
                 {
                     ViewModelSelectCountries viewModelSelectCountries = new()
                     {
@@ -70,7 +70,7 @@ namespace ImportCost.Controllers.Suppliers
             var countries = await _currencyService.GetAllAsync();
             foreach (var item in countries)
             {
-                if (item.State || key != 0 && item.Key != key)
+                if (item.State || (key != 0 && item.Key == key))
                 {
                     ViewModelSelectCurrency viewModelSelectCountries = new()
                     {
@@ -141,7 +141,7 @@ namespace ImportCost.Controllers.Suppliers
 
                 vs.Currencies = await GetCurrencies();
                 vs.Countries = await GetCountries();
-                View("Edit", vs);
+                return View("Edit", vs);
             }
             
             SuppliersDto sup = new() { 

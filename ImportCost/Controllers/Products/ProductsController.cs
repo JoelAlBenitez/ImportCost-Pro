@@ -90,7 +90,7 @@ namespace ImportCost.Controllers.Products
             var countries = await _countriesService.GetAllAsync();
             foreach (var item in countries)
             {
-                if (item.State || key != 0 && item.Key != key)
+                if (item.State || (key != 0 && item.Key == key))
                 {
                     ViewModelSelectCountries viewModelSelectCountries = new()
                     {
@@ -139,7 +139,7 @@ namespace ImportCost.Controllers.Products
 
         public async Task<IActionResult> Create()
         {
-            var list = await GetCategories();
+            
             
             return View("Save", new ViewModelProductsSave
             {
@@ -148,7 +148,7 @@ namespace ImportCost.Controllers.Products
                 State = true,
                 CodeReference = "",
                 UnitWeight = 0,
-                Categories = list,
+                Categories = await GetCategories(),
                 Large = 0,
                 High = 0,
                 Broad = 0,
@@ -166,9 +166,9 @@ namespace ImportCost.Controllers.Products
         {
             if (!ModelState.IsValid)
             {
-                vp.Categories = await GetCategories(vp.TariffCategoriesId);
+                vp.Categories = await GetCategories();
                 vp.Units = GetUnitMeasurements();
-                vp.countries = await GetCountries(vp.CountryId);
+                vp.countries = await GetCountries();
                 return View("Edit", vp);
             }
 
@@ -199,7 +199,7 @@ namespace ImportCost.Controllers.Products
         {
             var product = await _productsServices.GetKeyAsync(id);
             if (product == null) return RedirectToAction(nameof(Index)); ;
-            var listCategories = await GetCategories(product.TarriffCategoriesId);
+           
             ViewModelProductsSave vp = new()
             {
                 Key = product.Key,
@@ -209,14 +209,14 @@ namespace ImportCost.Controllers.Products
                 TariffCategoriesId = product.TarriffCategoriesId,
                 unit = ((int)product.unitMesaurement),
                 UnitWeight = product.UnitWeight,
-                Categories = listCategories,
+                Categories = await GetCategories(product.TarriffCategoriesId),
                 Large = product.Large,
                 Broad = product.Broad,
                 High = product.High,
                 Description = product.Description,
                 CountryId = product.CountrysId,
                 Units = GetUnitMeasurements(),
-                countries = await GetCountries()
+                countries = await GetCountries(product.CountrysId)
 
             };
             return View("Edit", vp);

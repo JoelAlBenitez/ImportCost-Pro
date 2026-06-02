@@ -44,7 +44,7 @@ namespace ImportCost.Controllers.Importers
             var countries = await _countriesServices.GetAllAsync();
             foreach (var item in countries)
             {
-               if(item.State || key != 0 && item.Key != key)
+               if(item.State || (key != 0 && item.Key == key))
                 {
                     ViewModelSelectCountries viewModelSelectCountries = new()
                     {

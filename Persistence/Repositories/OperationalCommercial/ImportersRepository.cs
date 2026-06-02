@@ -56,10 +56,10 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<Importers> GetEntityById(int key)
         {
-            return await _context.Importers
+            return (await _context.Importers
                 .AsNoTracking()
                 .Include(i => i.country)
-                .FirstOrDefaultAsync(i => i.Key == key); 
+                .FirstOrDefaultAsync(i => i.Key == key))!; 
         }
         public async Task<bool> ExistImportersByRnc(string rnc)
         {

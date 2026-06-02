@@ -3,6 +3,16 @@
 
 <div class="card border-0 shadow-none text-center">
 
+    @* Mensaje de alerta *@
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["TypeAlert"] w-auto alert-dismissible fade show shadow-sm border-0" role="alert">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+
     <div class="card-header border-0 bg-transparent pb-0 mt-3">
         <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 text-danger rounded-circle mb-3" style="width: 70px; height: 70px;">
             <i class="bi bi-exclamation-triangle fs-1"></i>
