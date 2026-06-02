@@ -87,9 +87,11 @@ namespace Application.Services.Importers
                     countryId = dto.CountryId
                 };
                 bool existOtherImporters = (await _importersRepository.GetAllAsync())
-                    .Any(i => i.Identification == importers.Identification && i.Identification != importers.Identification);
+                    .Any(i => i.Identification == importers.Identification && i.Key != importers.Key);
+
                 if (existOtherImporters) return new ServiceResult { Success = false, Message = "Ya existe otro importador con esta identificacion", TypeAlert = "danger"};
                 bool editar =  await _importersRepository.EditAsync(importers);
+
                 if (editar) return new ServiceResult { Success = true,Message = "Importador editado con exito", TypeAlert = "success"};
                 return new ServiceResult {Success = false, Message = "Ha ocurrido un error al editar el importador", TypeAlert = "danger"};
             }

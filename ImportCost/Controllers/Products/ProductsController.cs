@@ -190,7 +190,7 @@ namespace ImportCost.Controllers.Products
             var result = await _productsServices.EditAsync(productsDto);
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            if (!result.Success) return RedirectToAction(nameof(Index)); ;
+            if (!result.Success) return RedirectToAction(nameof(Edit)); ;
             return RedirectToAction(nameof(Index));
            
         }
@@ -232,7 +232,7 @@ namespace ImportCost.Controllers.Products
             var result = await _productsServices.DeleteAsync(vp.Key);
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            if (!result.Success) return RedirectToAction(nameof(Index)); ;
+            if (!result.Success) return RedirectToAction(nameof(Delete)); ;
             return   RedirectToAction(nameof(Index)); ;
         }
       

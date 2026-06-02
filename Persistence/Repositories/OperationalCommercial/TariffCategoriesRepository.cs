@@ -65,12 +65,12 @@ namespace Persistence.Repositories.OperationalCommercial
 
             return await _context.TariffCategories
                  .AsNoTracking()
-                 .FirstAsync(t => t.Key == key);
+                 .FirstOrDefaultAsync(t => t.Key == key);
         }
 
         public async Task<bool> ExistTariffCode(string code)
         {
-            return await _context.TariffCategories.FirstAsync(t => t.Key == code) != null;
+            return await _context.TariffCategories.FirstOrDefaultAsync(t => t.Key == code) != null;
         }
     }
 }

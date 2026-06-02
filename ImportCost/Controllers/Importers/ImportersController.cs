@@ -96,7 +96,7 @@ namespace ImportCost.Controllers.Importers
             var result = await _importersServices.CreateAsync(importerDto);
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            if (!result.Success) return RedirectToAction(nameof(Index));
+            if (!result.Success) return RedirectToAction(nameof(Create));
  
             return RedirectToAction(nameof(Index));
         }
@@ -142,7 +142,7 @@ namespace ImportCost.Controllers.Importers
             var result = await _importersServices.EditAsync(importerDto);
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            if (!result.Success) return RedirectToAction(nameof(Index));
+            if (!result.Success) return RedirectToAction(nameof(Edit));
             return RedirectToAction(nameof(Index));
 
         }
@@ -153,7 +153,7 @@ namespace ImportCost.Controllers.Importers
             var result = await _importersServices.DeleteAsync(vi.Key);
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            if (!result.Success) return RedirectToAction(nameof(Index));
+            if (!result.Success) return RedirectToAction(nameof(Delete));
 
             return  RedirectToAction(nameof(Index));
         }

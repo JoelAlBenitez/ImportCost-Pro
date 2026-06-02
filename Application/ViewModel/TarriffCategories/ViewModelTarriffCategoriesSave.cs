@@ -29,6 +29,8 @@ namespace Application.ViewModel.TarriffCategories
         [Required(ErrorMessage = "La categoría de arancel debe tener un estado válido.")]
         public required bool State { get; set; }
 
+        public string? OldTariffCode { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (SelectiveTaxApplies && PorcentageTaxSelective <= 0  )

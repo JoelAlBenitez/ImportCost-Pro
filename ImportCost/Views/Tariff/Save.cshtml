@@ -1,7 +1,14 @@
 ﻿@using Application.ViewModel.TarriffCategories
 @model ViewModelTarriffCategoriesSave
 
-<div class="card border-0 shadow-sm rounded-4 p-4">
+    @* Mensaje de alerta *@
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["TypeAlert"] w-auto alert-dismissible fade show shadow-sm border-0" role="alert">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
     <div class="card-header bg-white border-0 p-0 mb-4">
         <h5 class="fw-bold text-dark">Registrar Categoría Arancelaria</h5>
         <p class="text-muted small">Complete los detalles para crear una nueva categoría en el sistema.</p>
@@ -65,4 +72,3 @@
             <button type="submit" class="btn btn-primary rounded-3 px-4 shadow-sm ms-2">Guardar Categoría</button>
         </div>
     </form>
-</div>

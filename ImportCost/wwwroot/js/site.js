@@ -72,5 +72,16 @@
 
     renderTable();
 
-});
+    const alertElements = document.querySelectorAll('.alert[role="alert"]');
+    alertElements.forEach(function (alertElement) {
+        new bootstrap.Alert(alertElement);
+        setTimeout(function () {
+            alertElement.classList.remove('show');
+            alertElement.classList.add('hide');
+            setTimeout(function () {
+                alertElement.remove();
+            }, 150); 
+        }, 5000);
+    });
 
+});

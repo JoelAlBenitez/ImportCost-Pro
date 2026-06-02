@@ -82,6 +82,25 @@ namespace Application.Services.TarriffCategories
         {
             try
             {
+
+                if (dto == null) return new ServiceResult
+                {
+                    Success = false,
+                    Message = "La categoría arancelaria no pudo ser seleccionada o no existe en el sistema",
+                    TypeAlert = "danger"
+                };
+
+                if(dto.OldTariffCode!.Trim() != dto.Key.Trim())
+                {
+                    var codeExist = await _tarriffCategoriesRepository.GetEntityById(dto.OldTariffCode);
+                    if (codeExist != null) return new ServiceResult
+                    {
+                        Success = false,
+                        Message = "El codigo ingresado esta asociado a otra categoría en el sistema",
+                        TypeAlert = "danger"
+                    };
+                }
+
                 TariffCategories tariff = new() {
                     Key = dto.Key.Trim(),
                     Name = dto.Name,
@@ -115,8 +134,9 @@ namespace Application.Services.TarriffCategories
          
                 }
                 
+
                 bool edit = await _tarriffCategoriesRepository.EditAsync(tariff);
-                if (edit) return new ServiceResult { Success = true, Message = "categoría arancelaria modificada con éxito", TypeAlert = "success" };
+                if (edit) return new ServiceResult { Success = true, Message = "Categoría arancelaria modificada con éxito", TypeAlert = "success" };
                 return new ServiceResult() { Success = false, Message = "Ha ocurrido un error al procesar la modificación", TypeAlert = "danger" };
             }
             catch (Exception ex)

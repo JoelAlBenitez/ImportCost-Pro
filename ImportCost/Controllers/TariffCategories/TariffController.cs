@@ -41,7 +41,8 @@ namespace ImportCost.Controllers.TariffCategories
             if (t == null) return RedirectToAction(nameof(Index));
 
             ViewModelTarriffCategoriesSave tarriffCategoriesSave = new() { 
-               TarriffCode = t.Key,
+                OldTariffCode = t.Key,
+                TarriffCode = t.Key,
                 Name = t.Name,
                 State = t.State,
                 TarriffPorcetage = t.PorcentageTariff,
@@ -76,11 +77,16 @@ namespace ImportCost.Controllers.TariffCategories
         [HttpPost]
         public async Task<IActionResult> Edit(ViewModelTarriffCategoriesSave vt)
         {
-            if (!ModelState.IsValid) return View("Edit", vt);
+            if (!ModelState.IsValid)
+            {
+
+                return View("Edit", vt);
+            }
 
             TariffCategoriesDto tDto = new()
             {
                 Key = vt.TarriffCode,
+                OldTariffCode = vt.OldTariffCode,
                 Name = vt.Name,
                 State = vt.State,
                 PorcentageTariff = vt.TarriffPorcetage,
@@ -92,8 +98,8 @@ namespace ImportCost.Controllers.TariffCategories
             var result = await _tarriffCategories.EditAsync(tDto);
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            if (!result.Success) return RedirectToAction(nameof(Index));
-            return View("Index");
+            if (!result.Success) return RedirectToAction(nameof(Edit));
+            return RedirectToAction(nameof(Index));
 
         }
 
@@ -105,7 +111,7 @@ namespace ImportCost.Controllers.TariffCategories
             var tariff = await _tarriffCategories.DeleteAsync(vt.TarriffCode);
             TempData["Message"] = tariff.Message;
             TempData["TypeAlert"] = tariff.TypeAlert;
-            if (!tariff.Success) return RedirectToAction(nameof(Index));
+            if (!tariff.Success) return RedirectToAction(nameof(Delete));
            
             return RedirectToAction(nameof(Index));
 
@@ -129,7 +135,7 @@ namespace ImportCost.Controllers.TariffCategories
             var result = await _tarriffCategories.CreateAsync(tariffCategoriesDto);
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            if (!result.Success) return RedirectToAction(nameof(Index));
+            if (!result.Success) return RedirectToAction(nameof(Create));
           
             return RedirectToAction(nameof(Index));
         }

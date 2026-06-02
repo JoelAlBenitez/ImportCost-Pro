@@ -1,16 +1,31 @@
 ﻿@using Application.ViewModel.TarriffCategories
 @model ViewModelTarriffCategoriesSave
 
-<div class="card border-0 shadow-sm rounded-4 p-4">
+
+    @* Mensaje de alerta *@
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["TypeAlert"] w-auto alert-dismissible fade show shadow-sm border-0" role="alert">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
     <div class="card-header bg-white border-0 p-0 mb-4">
         <h5 class="fw-bold text-dark">Editar Categoría Arancelaria</h5>
     </div>
 
+
     <form asp-controller="Tariff" asp-action="Edit" method="POST">
 
-        <input type="hidden" asp-for="TarriffCode" />
+        <input type="hidden" asp-for="OldTariffCode"/>
 
         <div class="row g-3">
+
+            <div class="col-md-6">
+                <label asp-for="TarriffCode" class="form-label fw-semibold small text-muted">Código de Arancel</label>
+                <input asp-for="TarriffCode" class="form-control rounded-3" placeholder="Ej: TAR-001" />
+                <span asp-validation-for="TarriffCode" class="text-danger small"></span>
+            </div>
 
             <div class="col-12">
                 <label asp-for="Name" class="form-label fw-semibold small text-muted">Nombre/Descripción</label>
@@ -60,5 +75,4 @@
             <button type="submit" class="btn btn-success rounded-3 px-4 shadow-sm ms-2">Actualizar Categoría</button>
         </div>
     </form>
-</div>
 

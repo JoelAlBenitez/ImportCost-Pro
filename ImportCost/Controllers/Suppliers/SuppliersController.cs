@@ -131,7 +131,7 @@ namespace ImportCost.Controllers.Suppliers
             var result = await _suppliersServices.DeleteAsync(vs.Key);
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            if (!result.Success) return RedirectToAction(nameof(Index));
+            if (!result.Success) return RedirectToAction(nameof(Delete));
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
@@ -156,7 +156,7 @@ namespace ImportCost.Controllers.Suppliers
             var result = await _suppliersServices.EditAsync(sup);
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            if (!result.Success) return RedirectToAction(nameof(Index));
+            if (!result.Success) return RedirectToAction(nameof(Edit));
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
@@ -180,7 +180,7 @@ namespace ImportCost.Controllers.Suppliers
             var result = await _suppliersServices.CreateAsync(sp);
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            if (!result.Success) return RedirectToAction(nameof(Index));
+            if (!result.Success) return RedirectToAction(nameof(Create));
             return RedirectToAction(nameof(Index));
         }
     }

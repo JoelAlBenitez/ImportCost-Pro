@@ -6,8 +6,18 @@
     <h5 class="fw-bold text-dark">Editar Importador </h5>
 </div>
 
-<form asp-controller="Importers" asp-action="Create" method="POST">
+@* Mensaje de alerta *@
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-@TempData["TypeAlert"] w-auto alert-dismissible fade show shadow-sm border-0" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
+<form asp-controller="Importers" asp-action="Edit" method="POST">
+
+    <input type="hidden" asp-for="Key" />
     <div class="row g-3">
         <div class="col-md-6">
             <label asp-for="Name" class="form-label fw-semibold small text-muted">Nombre Completo</label>
