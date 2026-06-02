@@ -1,6 +1,6 @@
-namespace Application.DTOs.TaxConfigurations
+namespace Application.ViewModel.TaxConfigurations
 {
-    public class TaxConfigurationDto
+    public class ViewModelTaxConfiguration
     {
         public int Key { get; set; }
         public decimal GeneralItbisPercentage { get; set; }

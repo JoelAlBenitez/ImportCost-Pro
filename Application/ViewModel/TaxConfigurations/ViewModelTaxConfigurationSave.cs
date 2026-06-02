@@ -6,10 +6,6 @@ namespace Application.ViewModel.TaxConfigurations
     {
         public int Key { get; set; }
 
-        [Required(ErrorMessage = "El nombre de la configuración de impuestos es obligatorio.")]
-        [StringLength(150, ErrorMessage = "El nombre no puede exceder los 150 caracteres.")]
-        public required string Name { get; set; }
-
         [Required(ErrorMessage = "El porcentaje de ITBIS general es obligatorio.")]
         [Range(0, 100, ErrorMessage = "El ITBIS debe estar entre 0 y 100.")]
         public decimal GeneralItbisPercentage { get; set; }

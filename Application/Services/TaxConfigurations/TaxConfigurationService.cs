@@ -21,7 +21,6 @@ namespace Application.Services.TaxConfigurations
             return entities.Select(e => new TaxConfigurationDto
             {
                 Key = e.Key,
-                Name = e.Name,
                 GeneralItbisPercentage = e.GeneralItbisPercentage,
                 CustomsServiceRatePercentage = e.CustomsServiceRatePercentage,
                 State = e.State
@@ -35,7 +34,6 @@ namespace Application.Services.TaxConfigurations
             return new TaxConfigurationDto
             {
                 Key = e.Key,
-                Name = e.Name,
                 GeneralItbisPercentage = e.GeneralItbisPercentage,
                 CustomsServiceRatePercentage = e.CustomsServiceRatePercentage,
                 State = e.State
@@ -71,7 +69,7 @@ namespace Application.Services.TaxConfigurations
                 var entity = new TaxConfiguration
                 {
                     Key = 0,
-                    Name = dto.Name,
+                    Name = "Configuración Global de Impuestos",
                     GeneralItbisPercentage = dto.GeneralItbisPercentage,
                     CustomsServiceRatePercentage = dto.CustomsServiceRatePercentage,
                     State = dto.State
@@ -121,7 +119,6 @@ namespace Application.Services.TaxConfigurations
                     }
                 }
 
-                existing.Name = dto.Name;
                 existing.GeneralItbisPercentage = dto.GeneralItbisPercentage;
                 existing.CustomsServiceRatePercentage = dto.CustomsServiceRatePercentage;
                 existing.State = dto.State;
