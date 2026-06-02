@@ -56,8 +56,7 @@ namespace Application.Services.ImportationOrderDetailServices
         public async Task<OrderDetailResponseDTO> GetDetailByIdAsync(string orderDetailId)
         {
             var detail = await _detailRepository.GetByIdAsync(orderDetailId);
-
-            if (detail == null) return null!;
+            if (detail == null) return null;
 
             return new OrderDetailResponseDTO
             {
@@ -105,11 +104,11 @@ namespace Application.Services.ImportationOrderDetailServices
 
             await _detailRepository.AddAsync(newDetail);
 
-            // Retornamos éxito
+            // éxito
             return new ServiceResult { Success = true, Message = "Producto agregado correctamente.", TypeAlert = "success" }; 
         }
 
-        public async Task<bool> EditProductInOrderAsync(string orderDetailId, OrderDetailUpdateDTO dto)
+        public async Task<ServiceResult> EditProductInOrderAsync(string orderDetailId, OrderDetailUpdateDTO dto)
         {
             var detail = await _detailRepository.GetByIdAsync(orderDetailId);
             if (detail == null) throw new Exception("El detalle del producto no existe.");
@@ -118,30 +117,71 @@ namespace Application.Services.ImportationOrderDetailServices
             if (order?.OrderState != OrderState.Abierta)
                 throw new InvalidOperationException("No se puede editar este producto porque la orden ya no está Abierta.");
 
-            if (dto.Quantity <= 0) throw new InvalidOperationException("La cantidad debe ser mayor a cero.");
-            if (dto.FOBUnitPrice <= 0) throw new InvalidOperationException("El precio FOB debe ser mayor a cero.");
+            if (dto.Quantity <= 0)
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "La cantidad debe ser mayor a cero.",
+                    TypeAlert = "error"
+                };
+            }
+            if (dto.FOBUnitPrice <= 0)
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "La precio FOB por unidad debe ser mayor a cero.",
+                    TypeAlert = "error"
+                };
             if (dto.ExpectedProfitMargin < 0 || dto.ExpectedProfitMargin >= 100)
-                throw new InvalidOperationException("El margen de ganancia debe ser mayor o igual a 0 y menor que 100.");
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "El Margen de ganancia esperado debe estar entre 0 y 100.",
+                    TypeAlert = "error"
+                };
 
             detail.Quantity = dto.Quantity;
             detail.FOBUnitPrice = dto.FOBUnitPrice;
             detail.ExpectedProfitMargin = dto.ExpectedProfitMargin;
 
-            await _detailRepository.UpdateAsync(detail); 
-            return true;
+            await _detailRepository.UpdateAsync(detail);
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "El producto fue editado correctamente.",
+                TypeAlert = "success" 
+            };
         }
 
-        public async Task<bool> RemoveProductFromOrderAsync(string orderDetailId)
+        public async Task<ServiceResult> RemoveProductFromOrderAsync(string orderDetailId)
         {
             var detail = await _detailRepository.GetByIdAsync(orderDetailId);
-            if (detail == null) return false;
+            if (detail == null)
+            {
+                return new ServiceResult { Success = false, Message = "El producto no fue encontrado.", TypeAlert = "error" };
+            }
 
             var order = await _orderRepository.GetEntityById(detail.OrderId);
+
             if (order?.OrderState != OrderState.Abierta)
-                throw new InvalidOperationException("No se puede eliminar este producto porque la orden ya no está Abierta.");
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "No se puede eliminar este producto porque la orden ya no está Abierta.",
+                    TypeAlert = "warning"
+                };
+            }
 
             await _detailRepository.DeleteAsync(orderDetailId);
-            return true;
+
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "Producto eliminado correctamente de la orden.",
+                TypeAlert = "success"
+            };
         }
     }
 }

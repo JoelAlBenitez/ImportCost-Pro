@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.LandedCost;
+using Application.Services.Result;
 using Microsoft.Identity.Client;
 using Persistence.Entities.Enums;
 using Persistence.Entities.FinancialCore;
@@ -27,31 +28,31 @@ public class LandedCostService
         _taxConfigRepository = taxConfigRepository;
     }
     public class ExpenseAllocation
-        {
-            public decimal AssignedFreight { get; set; } = 0m;
-            public decimal AssignedInsurance { get; set; } = 0m;
-            public decimal AssignedLocalExpenses { get; set; } = 0m;
-        }
-        public async Task<LandedCostSummaryDTO> CalculateLandedCostAsync(string orderId)
-        {
-            var order = await _orderRepository.GetEntityById(orderId);
-            if (order == null)
-                throw new Exception("La orden no existe.");
+    {
+        public decimal AssignedFreight { get; set; } = 0m;
+        public decimal AssignedInsurance { get; set; } = 0m;
+        public decimal AssignedLocalExpenses { get; set; } = 0m;
+    }
+    public async Task<LandedCostSummaryDTO> CalculateLandedCostAsync(string orderId)
+    {
+        var order = await _orderRepository.GetEntityById(orderId);
+        if (order == null)
+            throw new Exception("La orden no existe.");
 
-            //Validar el estado de la orden
-            if (order.OrderState != OrderState.Abierta)
-                throw new InvalidOperationException("Solo se pueden calcular órdenes en estado Abierta.");
+        //Validar el estado de la orden
+        if (order.OrderState != OrderState.Abierta)
+            throw new InvalidOperationException("Solo se pueden calcular órdenes en estado Abierta.");
 
-            //Validar que tenga productos
-            if (order.ImportationOrderDetails == null || !order.ImportationOrderDetails.Any())
-                throw new InvalidOperationException("La orden debe tener al menos un producto agregado.");
+        //Validar que tenga productos
+        if (order.ImportationOrderDetails == null || !order.ImportationOrderDetails.Any())
+            throw new InvalidOperationException("La orden debe tener al menos un producto agregado.");
 
-            //Validar que existan los gastos obligatorios (Flete y Seguro)
-            if (order.ImportationExpenses == null || !order.ImportationExpenses.Any(e => e.ExpenseType == ExpenseType.FleteInternacional))
-                throw new InvalidOperationException("La orden debe tener un gasto de tipo Flete internacional registrado.");
+        //Validar que existan los gastos obligatorios (Flete y Seguro)
+        if (order.ImportationExpenses == null || !order.ImportationExpenses.Any(e => e.ExpenseType == ExpenseType.FleteInternacional))
+            throw new InvalidOperationException("La orden debe tener un gasto de tipo Flete internacional registrado.");
 
-            if (!order.ImportationExpenses.Any(e => e.ExpenseType == ExpenseType.SeguroInternacional))
-                throw new InvalidOperationException("La orden debe tener un gasto de tipo Seguro internacional registrado.");
+        if (!order.ImportationExpenses.Any(e => e.ExpenseType == ExpenseType.SeguroInternacional))
+            throw new InvalidOperationException("La orden debe tener un gasto de tipo Seguro internacional registrado.");
 
         //// Nuevas Validaciones de dimensiones y peso para prorrateo (Prevención División por 0)
         if (order.ImportationExpenses.Any(e => e.DistributionMethod == DistributionMethod.PorVolumen))
@@ -65,7 +66,7 @@ public class LandedCostService
             if (order.ImportationOrderDetails.Any(d => (d.Product?.UnitWeight ?? 0m) <= 0))
                 throw new InvalidOperationException("Existen gastos distribuidos por peso, pero hay productos sin peso unitario válido configurado.");
         }
-        
+
 
         // Validar configuración de impuestos
         var taxConfig = await _taxConfigRepository.GetCurrentConfigAsync();
@@ -84,20 +85,20 @@ public class LandedCostService
                 item => item.Quantity * item.FOBUnitPrice
                 );
 
-            //Calcular FOB total
-            decimal totalFob = ProductFOB.Values.Sum();
+        //Calcular FOB total
+        decimal totalFob = ProductFOB.Values.Sum();
 
-            //Validacion
-            if (totalFob == 0)
-            {
-                throw new InvalidOperationException("El FOB total no puede ser cero.");
-            }
-            //Guardar tasa de cambio
-            decimal ExchangeRateValue;
-            if (order.CurrencyId == localCurrency.Key)
+        //Validacion
+        if (totalFob == 0)
         {
-                ExchangeRateValue = 1m;
-            }
+            throw new InvalidOperationException("El FOB total no puede ser cero.");
+        }
+        //Guardar tasa de cambio
+        decimal ExchangeRateValue;
+        if (order.CurrencyId == localCurrency.Key)
+        {
+            ExchangeRateValue = 1m;
+        }
         else
         {
             var exchangeRate = await _exchangeRateRepository.GetLatestRateAsync(order.CurrencyId, localCurrency.Key, order.OrderDate);
@@ -109,11 +110,11 @@ public class LandedCostService
 
         //FOB total en moneda local
         decimal TotalLocalFob = totalFob * ExchangeRateValue;
-            //FOB individual en moneda local
-            var LocalFobByProduct = ProductFOB.ToDictionary(
-                item => item.Key,
-                item => item.Value * ExchangeRateValue
-            );
+        //FOB individual en moneda local
+        var LocalFobByProduct = ProductFOB.ToDictionary(
+            item => item.Key,
+            item => item.Value * ExchangeRateValue
+        );
 
         //gastos a moneda local
         var LocalExpenses = new List<(ExpenseType Type, DistributionMethod Method, decimal LocalAmount)>();
@@ -161,76 +162,76 @@ public class LandedCostService
         //Peso total de la orden
         decimal TotalWeight = order.ImportationOrderDetails.Sum(item =>
                                   item.Quantity * (item.Product?.UnitWeight ?? 0m));
-            //Volumen total de la orden
-            decimal TotalVolume = order.ImportationOrderDetails.Sum(item =>
-                                  item.Quantity * ((item.Product?.Large ?? 0m) * (item.Product?.Broad ?? 0m) * (item.Product?.High ?? 0m)));
-            //Cantidad total de la orden
-            decimal TotalOrderQuantity = order.ImportationOrderDetails.Sum(item => item.Quantity);
+        //Volumen total de la orden
+        decimal TotalVolume = order.ImportationOrderDetails.Sum(item =>
+                              item.Quantity * ((item.Product?.Large ?? 0m) * (item.Product?.Broad ?? 0m) * (item.Product?.High ?? 0m)));
+        //Cantidad total de la orden
+        decimal TotalOrderQuantity = order.ImportationOrderDetails.Sum(item => item.Quantity);
 
-            var allocations = new Dictionary<int, ExpenseAllocation>();
+        var allocations = new Dictionary<int, ExpenseAllocation>();
+        foreach (var detail in order.ImportationOrderDetails)
+        {
+            if (!allocations.ContainsKey(detail.ProductId))
+            {
+                allocations[detail.ProductId] = new ExpenseAllocation();
+            }
+        }
+
+        foreach (var expense in LocalExpenses)
+        {
             foreach (var detail in order.ImportationOrderDetails)
             {
-                if (!allocations.ContainsKey(detail.ProductId))
+                decimal factor = 0m;
+                switch (expense.Method)
                 {
-                    allocations[detail.ProductId] = new ExpenseAllocation();
+                    case DistributionMethod.PorValorFOB:
+                        factor = TotalLocalFob > 0 ? (LocalFobByProduct[detail.ProductId] / TotalLocalFob) : 0m;
+                        break;
+
+                    case DistributionMethod.PorPeso:
+                        decimal itemWeight = detail.Quantity * (detail.Product?.UnitWeight ?? 0m);
+                        factor = TotalWeight > 0 ? (itemWeight / TotalWeight) : 0m;
+                        break;
+
+                    case DistributionMethod.PorVolumen:
+                        decimal itemVolume = detail.Quantity * ((detail.Product?.Large ?? 0m) * (detail.Product?.Broad ?? 0m) * (detail.Product?.High ?? 0m));
+                        factor = TotalVolume > 0 ? (itemVolume / TotalVolume) : 0m;
+                        break;
+
+                    case DistributionMethod.PorCantidad:
+                        factor = TotalOrderQuantity > 0 ? (detail.Quantity / TotalOrderQuantity) : 0m;
+                        break;
+                }
+
+                decimal assignedAmount = expense.LocalAmount * factor;
+
+                if (expense.Type == ExpenseType.FleteInternacional)
+                {
+                    allocations[detail.ProductId].AssignedFreight += assignedAmount;
+                }
+                else if (expense.Type == ExpenseType.SeguroInternacional)
+                {
+                    allocations[detail.ProductId].AssignedInsurance += assignedAmount;
+                }
+                else
+                {
+                    allocations[detail.ProductId].AssignedLocalExpenses += assignedAmount;
                 }
             }
+        }
 
-            foreach (var expense in LocalExpenses)
-            {
-                foreach (var detail in order.ImportationOrderDetails)
-                {
-                    decimal factor = 0m;
-                    switch (expense.Method)
-                    {
-                        case DistributionMethod.PorValorFOB:
-                            factor = TotalLocalFob > 0 ? (LocalFobByProduct[detail.ProductId] / TotalLocalFob) : 0m;
-                            break;
+        var productDetails = new List<LandedCostDetailDTO>();
+        decimal totalCifGeneral = 0m, totalArancelGeneral = 0m, totalSelectivoGeneral = 0m;
+        decimal totalServicioAduanalGeneral = 0m, totalItbisGeneral = 0m, totalImportationCostGeneral = 0m;
+        decimal totalFreightGeneral = 0m, totalInsuranceGeneral = 0m, totalLocalExpensesGeneral = 0m;
 
-                        case DistributionMethod.PorPeso:
-                            decimal itemWeight = detail.Quantity * (detail.Product?.UnitWeight ?? 0m);
-                            factor = TotalWeight > 0 ? (itemWeight / TotalWeight) : 0m;
-                            break;
+        foreach (var detail in order.ImportationOrderDetails)
+        {
+            var alloc = allocations[detail.ProductId];
+            decimal originalFob = detail.Quantity * detail.FOBUnitPrice;
+            decimal localFob = LocalFobByProduct[detail.ProductId];
 
-                        case DistributionMethod.PorVolumen:
-                            decimal itemVolume = detail.Quantity * ((detail.Product?.Large ?? 0m) * (detail.Product?.Broad ?? 0m) * (detail.Product?.High ?? 0m));
-                            factor = TotalVolume > 0 ? (itemVolume / TotalVolume) : 0m;
-                            break;
-
-                        case DistributionMethod.PorCantidad:
-                            factor = TotalOrderQuantity > 0 ? (detail.Quantity / TotalOrderQuantity) : 0m;
-                            break;
-                    }
-
-                    decimal assignedAmount = expense.LocalAmount * factor;
-
-                    if (expense.Type == ExpenseType.FleteInternacional)
-                    {
-                        allocations[detail.ProductId].AssignedFreight += assignedAmount;
-                    }
-                    else if (expense.Type == ExpenseType.SeguroInternacional)
-                    {
-                        allocations[detail.ProductId].AssignedInsurance += assignedAmount;
-                    }
-                    else
-                    {
-                        allocations[detail.ProductId].AssignedLocalExpenses += assignedAmount;
-                    }
-                }
-            }
-
-            var productDetails = new List<LandedCostDetailDTO>();
-            decimal totalCifGeneral = 0m, totalArancelGeneral = 0m, totalSelectivoGeneral = 0m;
-            decimal totalServicioAduanalGeneral = 0m, totalItbisGeneral = 0m, totalImportationCostGeneral = 0m;
-            decimal totalFreightGeneral = 0m, totalInsuranceGeneral = 0m, totalLocalExpensesGeneral = 0m;
-
-            foreach (var detail in order.ImportationOrderDetails)
-            {
-                var alloc = allocations[detail.ProductId];
-                decimal originalFob = detail.Quantity * detail.FOBUnitPrice;
-                decimal localFob = LocalFobByProduct[detail.ProductId];
-
-                decimal cif = localFob + alloc.AssignedFreight + alloc.AssignedInsurance;
+            decimal cif = localFob + alloc.AssignedFreight + alloc.AssignedInsurance;
 
             decimal porcentajeArancel = detail.Product?.tariffCategories?.PorcentageTariff ?? 0m;
             decimal arancel = cif * (porcentajeArancel / 100m);
@@ -248,142 +249,160 @@ public class LandedCostService
             decimal itbis = 0m;
             bool aplicaItbis = detail.Product?.tariffCategories?.ITBIS ?? false;
             if (aplicaItbis)
-                {
-                    decimal baseItbis = cif + arancel + impuestoSelectivo + tasaServicioAduanal;
-                    itbis = baseItbis * (taxConfig.GeneralItbisPercentage / 100m);
-                }
-
-                decimal costoTotalImportado = localFob + alloc.AssignedFreight + alloc.AssignedInsurance +
-                                  arancel + impuestoSelectivo + tasaServicioAduanal +
-                                  itbis + alloc.AssignedLocalExpenses;
-
-                decimal costoUnitarioImportado = detail.Quantity > 0 ? (costoTotalImportado / detail.Quantity) : 0m;
-
-                decimal precioSugerido = costoUnitarioImportado;
-                if (detail.ExpectedProfitMargin > 0 && detail.ExpectedProfitMargin < 100)
-                {
-                    precioSugerido = costoUnitarioImportado / (1m - (detail.ExpectedProfitMargin / 100m));
-                }
-
-                var detailDto = new LandedCostDetailDTO
-                {
-                    ProductId = detail.ProductId,
-                    Quantity = detail.Quantity,
-                    OriginalTotalFob = originalFob,
-                    LocalTotalFob = localFob,
-                    AssignedFreight = alloc.AssignedFreight,
-                    AssignedInsurance = alloc.AssignedInsurance,
-                    TotalCif = cif,
-                    TotalTariff = arancel,
-                    TotalSelectiveTax = impuestoSelectivo,
-                    TotalCustomsServiceFee = tasaServicioAduanal,
-                    TotalItbis = itbis,
-                    AssignedLocalExpenses = alloc.AssignedLocalExpenses,
-                    TotalImportedCost = costoTotalImportado,
-                    UnitImportedCost = costoUnitarioImportado,
-                    DesiredMargin = detail.ExpectedProfitMargin,
-                    SuggestedSalePrice = precioSugerido
-                };
-                productDetails.Add(detailDto);
-
-                totalCifGeneral += cif;
-                totalArancelGeneral += arancel;
-                totalSelectivoGeneral += impuestoSelectivo;
-                totalServicioAduanalGeneral += tasaServicioAduanal;
-                totalItbisGeneral += itbis;
-                totalImportationCostGeneral += costoTotalImportado;
-                totalFreightGeneral += alloc.AssignedFreight;
-                totalInsuranceGeneral += alloc.AssignedInsurance;
-                totalLocalExpensesGeneral += alloc.AssignedLocalExpenses;
+            {
+                decimal baseItbis = cif + arancel + impuestoSelectivo + tasaServicioAduanal;
+                itbis = baseItbis * (taxConfig.GeneralItbisPercentage / 100m);
             }
 
-            var summaryDto = new LandedCostSummaryDTO
-            {
-                // El LandedCostSummaryId y OrderId se asignarían al momento de guardar el cálculo final en BDD
-                OrderId = order.OrderId,
-                LocalCurrencyUsed = localCurrency.Key,
-                ExchangeRate = ExchangeRateValue,
-                OriginalTotalFob = totalFob,
-                LocalTotalFob = TotalLocalFob,
-                TotalFreight = totalFreightGeneral,
-                TotalInsurance = totalInsuranceGeneral,
-                TotalCif = totalCifGeneral,
-                TotalTariff = totalArancelGeneral,
-                TotalSelectiveTax = totalSelectivoGeneral,
-                TotalCustomsServiceFee = totalServicioAduanalGeneral,
-                TotalItbis = totalItbisGeneral,
-                TotalLocalExpenses = totalLocalExpensesGeneral,
-                TotalImportationCost = totalImportationCostGeneral,
-                TotalImportedQuantity = TotalOrderQuantity,
-                ProductDetails = productDetails
-            };
+            decimal costoTotalImportado = localFob + alloc.AssignedFreight + alloc.AssignedInsurance +
+                              arancel + impuestoSelectivo + tasaServicioAduanal +
+                              itbis + alloc.AssignedLocalExpenses;
 
-            return summaryDto;
+            decimal costoUnitarioImportado = detail.Quantity > 0 ? (costoTotalImportado / detail.Quantity) : 0m;
+
+            decimal precioSugerido = costoUnitarioImportado;
+            if (detail.ExpectedProfitMargin > 0 && detail.ExpectedProfitMargin < 100)
+            {
+                precioSugerido = costoUnitarioImportado / (1m - (detail.ExpectedProfitMargin / 100m));
+            }
+
+            var detailDto = new LandedCostDetailDTO
+            {
+                ProductId = detail.ProductId,
+                Quantity = detail.Quantity,
+                OriginalTotalFob = originalFob,
+                LocalTotalFob = localFob,
+                AssignedFreight = alloc.AssignedFreight,
+                AssignedInsurance = alloc.AssignedInsurance,
+                TotalCif = cif,
+                TotalTariff = arancel,
+                TotalSelectiveTax = impuestoSelectivo,
+                TotalCustomsServiceFee = tasaServicioAduanal,
+                TotalItbis = itbis,
+                AssignedLocalExpenses = alloc.AssignedLocalExpenses,
+                TotalImportedCost = costoTotalImportado,
+                UnitImportedCost = costoUnitarioImportado,
+                DesiredMargin = detail.ExpectedProfitMargin,
+                SuggestedSalePrice = precioSugerido
+            };
+            productDetails.Add(detailDto);
+
+            totalCifGeneral += cif;
+            totalArancelGeneral += arancel;
+            totalSelectivoGeneral += impuestoSelectivo;
+            totalServicioAduanalGeneral += tasaServicioAduanal;
+            totalItbisGeneral += itbis;
+            totalImportationCostGeneral += costoTotalImportado;
+            totalFreightGeneral += alloc.AssignedFreight;
+            totalInsuranceGeneral += alloc.AssignedInsurance;
+            totalLocalExpensesGeneral += alloc.AssignedLocalExpenses;
         }
 
-        public async Task<bool> SaveOfficialCalculationAsync(string orderId, LandedCostSummaryDTO calculationResult)
+        var summaryDto = new LandedCostSummaryDTO
         {
+            // El LandedCostSummaryId y OrderId se asignarían al momento de guardar el cálculo final en BDD
+            ImportationOrderId = order.OrderId,
+            LocalCurrencyUsed = localCurrency.Key,
+            ExchangeRate = ExchangeRateValue,
+            OriginalTotalFob = totalFob,
+            LocalTotalFob = TotalLocalFob,
+            TotalFreight = totalFreightGeneral,
+            TotalInsurance = totalInsuranceGeneral,
+            TotalCif = totalCifGeneral,
+            TotalTariff = totalArancelGeneral,
+            TotalSelectiveTax = totalSelectivoGeneral,
+            TotalCustomsServiceFee = totalServicioAduanalGeneral,
+            TotalItbis = totalItbisGeneral,
+            TotalLocalExpenses = totalLocalExpensesGeneral,
+            TotalImportationCost = totalImportationCostGeneral,
+            TotalImportedQuantity = TotalOrderQuantity,
+            ProductDetails = productDetails
+        };
 
-
-            //  Buscar la orden para validarla
-            var order = await _orderRepository.GetEntityById(orderId);
-            if (order == null)
-                throw new Exception("La orden no existe.");
-
-            // Validar que la orden esté Abierta y no tenga ya un cálculo previo
-            if (order.OrderState != OrderState.Abierta)
-                throw new InvalidOperationException("Solo se pueden guardar cálculos de órdenes en estado Abierta.");
-
-            // Mapear el DTO a la Entidad real de Base de Datos
-            string newSummaryId = Guid.NewGuid().ToString();
-            var summaryEntity = new LandedCostSummary
-            {
-                LandedCostSummaryId = newSummaryId,
-                OrderId = orderId,
-                LocalCurrencyId = calculationResult.LocalCurrencyUsed,
-                ExchangeRate = calculationResult.ExchangeRate,
-                OriginalTotalFob = calculationResult.OriginalTotalFob,
-                LocalTotalFob = calculationResult.LocalTotalFob,
-                TotalFreight = calculationResult.TotalFreight,
-                TotalInsurance = calculationResult.TotalInsurance,
-                TotalCif = calculationResult.TotalCif,
-                TotalTariff = calculationResult.TotalTariff,
-                TotalSelectiveTax = calculationResult.TotalSelectiveTax,
-                TotalCustomsServiceFee = calculationResult.TotalCustomsServiceFee,
-                TotalItbis = calculationResult.TotalItbis,
-                TotalLocalExpenses = calculationResult.TotalLocalExpenses,
-                TotalImportationCost = calculationResult.TotalImportationCost,
-                TotalImportedQuantity = calculationResult.TotalImportedQuantity,
-
-                // Mapear la lista de detalles
-                LandedCostDetails = calculationResult.ProductDetails.Select(d => new LandedCostDetail
-                {
-                    LandedCostDetailId = Guid.NewGuid().ToString(),
-                    LandedCostSummaryId = newSummaryId,
-                    ProductId = d.ProductId,
-                    Quantity = d.Quantity,
-                    OriginalFOB = d.OriginalTotalFob,
-                    LocalFob = d.LocalTotalFob,
-                    AssignedFreight = d.AssignedFreight,
-                    AssignedInsurance = d.AssignedInsurance,
-                    Cif = d.TotalCif,
-                    Tariff = d.TotalTariff,
-                    SelectiveTax = d.TotalSelectiveTax,
-                    CustomsServiceFee = d.TotalCustomsServiceFee,
-                    Itbis = d.TotalItbis,
-                    AssignedLocalExpenses = d.AssignedLocalExpenses,
-                    TotalImportedCost = d.TotalImportedCost,
-                    UnitImportedCost = d.UnitImportedCost,
-                    DesiredMargin = d.DesiredMargin,
-                    SuggestedSalePrice = d.SuggestedSalePrice
-                }).ToList()
-            };
-            // 4. Cambiar el estado de la orden a Calculada
-            order.OrderState = OrderState.Calculada;
-            // 5. Guardar en Base de Datos
-            order.LandedCostSummary = summaryEntity;
-            await _orderRepository.EditAsync(order);
-
-            return true;
-        }
+        return summaryDto;
     }
+
+    public async Task<ServiceResult> SaveOfficialCalculationAsync(string orderId, LandedCostSummaryDTO calculationResult)
+    {
+        // Buscar orden para validar
+        var order = await _orderRepository.GetEntityById(orderId);
+
+        if (order == null)
+        {
+            return new ServiceResult
+            {
+                Success = false,
+                Message = "La orden no existe.",
+                TypeAlert = "error"
+            };
+        }
+        if (order.OrderState != OrderState.Abierta)
+        {
+            return new ServiceResult
+            {
+                Success = false,
+                Message = "Solo se pueden guardar cálculos de órdenes en estado Abierta.",
+                TypeAlert = "warning"
+            };
+        }
+
+        // 3. Mapear el DTO
+        string newSummaryId = Guid.NewGuid().ToString();
+        var summaryEntity = new LandedCostSummary
+        {
+            LandedCostSummaryId = newSummaryId,
+            OrderId = orderId,
+            LocalCurrencyId = calculationResult.LocalCurrencyUsed,
+            ExchangeRate = calculationResult.ExchangeRate,
+            OriginalTotalFob = calculationResult.OriginalTotalFob,
+            LocalTotalFob = calculationResult.LocalTotalFob,
+            TotalFreight = calculationResult.TotalFreight,
+            TotalInsurance = calculationResult.TotalInsurance,
+            TotalCif = calculationResult.TotalCif,
+            TotalTariff = calculationResult.TotalTariff,
+            TotalSelectiveTax = calculationResult.TotalSelectiveTax,
+            TotalCustomsServiceFee = calculationResult.TotalCustomsServiceFee,
+            TotalItbis = calculationResult.TotalItbis,
+            TotalLocalExpenses = calculationResult.TotalLocalExpenses,
+            TotalImportationCost = calculationResult.TotalImportationCost,
+            TotalImportedQuantity = calculationResult.TotalImportedQuantity,
+
+            //Lista de detalles
+            LandedCostDetails = calculationResult.ProductDetails.Select(d => new LandedCostDetail
+            {
+                LandedCostDetailId = Guid.NewGuid().ToString(),
+                LandedCostSummaryId = newSummaryId,
+                ProductId = d.ProductId,
+                Quantity = d.Quantity,
+                OriginalFOB = d.OriginalTotalFob,
+                LocalFob = d.LocalTotalFob,
+                AssignedFreight = d.AssignedFreight,
+                AssignedInsurance = d.AssignedInsurance,
+                Cif = d.TotalCif,
+                Tariff = d.TotalTariff,
+                SelectiveTax = d.TotalSelectiveTax,
+                CustomsServiceFee = d.TotalCustomsServiceFee,
+                Itbis = d.TotalItbis,
+                AssignedLocalExpenses = d.AssignedLocalExpenses,
+                TotalImportedCost = d.TotalImportedCost,
+                UnitImportedCost = d.UnitImportedCost,
+                DesiredMargin = d.DesiredMargin,
+                SuggestedSalePrice = d.SuggestedSalePrice
+            }).ToList()
+        };
+
+        // 4. Cambiar el estado de la orden a Calculada
+        order.OrderState = OrderState.Calculada;
+
+        // Guardar en Base de Datos
+        order.LandedCostSummary = summaryEntity;
+        await _orderRepository.EditAsync(order);
+
+        return new ServiceResult
+        {
+            Success = true,
+            Message = "El Landed Cost ha sido calculado y guardado exitosamente. La orden está ahora Calculada.",
+            TypeAlert = "success"
+        };
+    }
+}

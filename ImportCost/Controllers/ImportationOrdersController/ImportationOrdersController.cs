@@ -81,22 +81,20 @@ namespace ImportCost.Controllers.ImportationOrdersController
                     TransportMode = viewModel.TransportMode
                 };
 
-                
-                var result = await _orderService.CreateOrderAsync(createDto);
 
-                
-                if (!result.Success)
-                {
-                    
-                    ModelState.AddModelError(string.Empty, result.Message);
-                    await LoadCatalogsAsync(viewModel);
-                    return View(viewModel);
-                }
+            var result = await _orderService.CreateOrderAsync(createDto);
 
-                
-                TempData["SuccessMessage"] = result.Message;
-                return RedirectToAction(nameof(Index));
-            } 
+            TempData["Message"] = result.Message;
+            TempData["TypeMessage"] = result.TypeAlert;
+
+            if (!result.Success)
+            {
+                await LoadCatalogsAsync(viewModel);
+                return View(viewModel);
+            }
+
+            return RedirectToAction(nameof(Index));
+        } 
 
        
         //Cargar los catálogos 

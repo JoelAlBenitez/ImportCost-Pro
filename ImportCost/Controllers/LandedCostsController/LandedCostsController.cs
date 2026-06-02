@@ -2,7 +2,7 @@
 using Application.DTOs.LandedCost;
 using System;
 using System.Threading.Tasks;
- 
+
 
 namespace ImportCost.Controllers
 {
@@ -33,17 +33,18 @@ namespace ImportCost.Controllers
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
-                return RedirectToAction("Index", "ImportationOrders"); 
+                return RedirectToAction("Index", "ImportationOrders");
             }
         }
 
         //Guarda el cálculo oficial y cierra la orden
-        [HttpPost] 
+        [HttpPost]
         public async Task<IActionResult> Save(string orderId)
         {
             if (string.IsNullOrWhiteSpace(orderId))
             {
-                TempData["ErrorMessage"] = "Debes seleccionar una orden válida.";
+                TempData["Message"] = "Debes seleccionar una orden válida.";
+                TempData["TypeMessage"] = "warning";
                 return RedirectToAction("Index", "ImportationOrders");
             }
 
@@ -51,23 +52,17 @@ namespace ImportCost.Controllers
             {
                 var summary = await _landedCostService.CalculateLandedCostAsync(orderId);
 
-                var success = await _landedCostService.SaveOfficialCalculationAsync(orderId, summary);
+                var result = await _landedCostService.SaveOfficialCalculationAsync(orderId, summary);
 
-                if (success)
-                {
-                    TempData["SuccessMessage"] = "El Landed Cost ha sido calculado y la orden ha sido Cerrada exitosamente.";
-                }
-                else
-                {
-                    TempData["ErrorMessage"] = "Ocurrió un error al intentar guardar el cálculo en la base de datos.";
-                }
+                TempData["Message"] = result.Message;
+                TempData["TypeMessage"] = result.TypeAlert;
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
+                TempData["Message"] = "Ocurrió un error al procesar el costo: " + ex.Message;
+                TempData["TypeMessage"] = "error";
             }
 
-            // Después de calcular y cerrar, devolvemos al usuario al maestro de órdenes
             return RedirectToAction("Index", "ImportationOrders");
         }
     }

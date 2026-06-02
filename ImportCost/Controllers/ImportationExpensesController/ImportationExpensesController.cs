@@ -4,12 +4,10 @@ using Application.Services.ImportationExpenseServices;
 using ImportCost.ViewModels.ImportationExpenses;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace ImportCost.Controllers
 {
     public class ImportationExpensesController : Controller
     {
-        // 1. DEPENDENCIAS
         private readonly ImportationExpenseService _expenseService;
         private readonly CurrencyService _currenciesService;
 
@@ -21,7 +19,6 @@ namespace ImportCost.Controllers
             _currenciesService = currenciesService;
         }
 
-        //Lista de gastos de una orden
         [HttpGet]
         public async Task<IActionResult> Index(string orderId)
         {
@@ -33,7 +30,6 @@ namespace ImportCost.Controllers
 
             var expensesList = await _expenseService.GetExpensesByOrderIdAsync(orderId);
 
-           
             var viewModelList = expensesList.Select(e => new ExpenseViewModel
             {
                 ImportationExpenseId = e.ImportationExpenseId,
@@ -45,12 +41,9 @@ namespace ImportCost.Controllers
             }).ToList();
 
             ViewBag.CurrentOrderId = orderId;
-
             return View(viewModelList);
         }
 
-
-        //  CREATE (GET)
         [HttpGet]
         public async Task<IActionResult> Create(string orderId)
         {
@@ -60,14 +53,13 @@ namespace ImportCost.Controllers
             var viewModel = new ExpenseCreateViewModel
             {
                 OrderId = orderId,
-                ExpenseDate = DateTime.Today // UX: Fecha por defecto
+                ExpenseDate = DateTime.Today
             };
 
             await LoadCatalogsAsync(viewModel);
             return View(viewModel);
         }
 
-        // CREATE (POST)
         [HttpPost]
         public async Task<IActionResult> Create(ExpenseCreateViewModel viewModel)
         {
@@ -77,6 +69,7 @@ namespace ImportCost.Controllers
                 return View(viewModel);
             }
 
+            // Mapeo
             var dto = new ImportationExpenseCreateDTO
             {
                 OrderId = viewModel.OrderId,
@@ -89,20 +82,20 @@ namespace ImportCost.Controllers
 
             var result = await _expenseService.AddExpenseToOrderAsync(dto);
 
+            TempData["Message"] = result.Message;
+            TempData["TypeMessage"] = result.TypeAlert;
+
             if (!result.Success)
             {
-                ModelState.AddModelError(string.Empty, result.Message);
                 await LoadCatalogsAsync(viewModel);
                 return View(viewModel);
             }
 
-            TempData["SuccessMessage"] = result.Message;
             return RedirectToAction(nameof(Index), new { orderId = viewModel.OrderId });
         }
 
-        // EDIT (GET)
         [HttpGet]
-        public async Task<IActionResult> Edit(string id) 
+        public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
                 return RedirectToAction("Index", "ImportationOrders");
@@ -129,7 +122,7 @@ namespace ImportCost.Controllers
             await LoadCatalogsAsync(viewModel);
             return View(viewModel);
         }
-        //EDIT (POST)
+
         [HttpPost]
         public async Task<IActionResult> Edit(ExpenseEditViewModel viewModel)
         {
@@ -139,6 +132,7 @@ namespace ImportCost.Controllers
                 return View(viewModel);
             }
 
+            // Mapeo
             var dto = new ImportationExpenseUpdateDTO
             {
                 ImportationExpenseId = viewModel.ImportationExpenseId,
@@ -151,40 +145,55 @@ namespace ImportCost.Controllers
 
             try
             {
-                await _expenseService.EditExpenseAsync(dto);
-                TempData["SuccessMessage"] = "Gasto actualizado correctamente.";
+                var result = await _expenseService.EditExpenseAsync(dto);
+
+                TempData["Message"] = result.Message;
+                TempData["TypeMessage"] = result.TypeAlert;
+
+                if (!result.Success)
+                {
+                    await LoadCatalogsAsync(viewModel);
+                    return View(viewModel);
+                }
+
                 return RedirectToAction(nameof(Index), new { orderId = viewModel.OrderId });
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, ex.Message);
+                TempData["Message"] = "Ocurrió un error inesperado: " + ex.Message;
+                TempData["TypeMessage"] = "error";
                 await LoadCatalogsAsync(viewModel);
                 return View(viewModel);
             }
         }
-        // DELETE POST
+
         [HttpPost]
         public async Task<IActionResult> Delete(string id, string orderId)
         {
             try
             {
                 var result = await _expenseService.RemoveExpenseAsync(id);
-                if (result)
-                    TempData["SuccessMessage"] = "Gasto eliminado.";
-                else
-                    TempData["ErrorMessage"] = "No se pudo eliminar el gasto.";
+
+                TempData["Message"] = result.Message;
+                TempData["TypeMessage"] = result.TypeAlert;
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
+                TempData["Message"] = "Ocurrió un error inesperado en el servidor: " + ex.Message;
+                TempData["TypeMessage"] = "error";
             }
 
             return RedirectToAction(nameof(Index), new { orderId = orderId });
         }
+
         private async Task LoadCatalogsAsync(dynamic viewModel)
         {
             var currencies = await _currenciesService.GetAllAsync();
-            viewModel.CurrenciesList = currencies.Select(x => x.Name).ToList();
+            viewModel.CurrenciesList = currencies?.Select(c => new Application.ViewModel.Select.ViewModelSelectCurrency
+            {
+                Id = c.Key,
+                NameCurrency = c.Name
+            }).ToList() ?? new List<Application.ViewModel.Select.ViewModelSelectCurrency>();
         }
     }
 }

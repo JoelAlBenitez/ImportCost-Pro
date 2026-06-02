@@ -84,16 +84,17 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             var result = await _importationOrderDetailService.AddProductToOrderAsync(viewModel.OrderId, dto);
 
+            TempData["Message"] = result.Message;
+            TempData["TypeMessage"] = result.TypeAlert;
+
             if (!result.Success)
             {
-                // Si falla (ej. el producto ya estaba en la orden, o la cantidad es 0)
-                ModelState.AddModelError(string.Empty, result.Message);
                 await LoadProductsCatalogAsync(viewModel);
                 return View(viewModel);
             }
-
-            TempData["SuccessMessage"] = result.Message;
             return RedirectToAction(nameof(Index), new { orderId = viewModel.OrderId });
+
+
         }
 
 
@@ -139,13 +140,10 @@ namespace ImportCost.Controllers.OrderDetailsController
         }
 
         // EDIT: Guarda las modificaciones
-        [HttpPost] 
+        [HttpPost]
         public async Task<IActionResult> Edit(OrderDetailEditViewModel viewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(viewModel); 
-            }
+            if (!ModelState.IsValid) return View(viewModel);
 
             var dto = new OrderDetailUpdateDTO
             {
@@ -156,15 +154,19 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             try
             {
-                
-                await _importationOrderDetailService.EditProductInOrderAsync(viewModel.OrderDetailId, dto);
+                var result = await _importationOrderDetailService.EditProductInOrderAsync(viewModel.OrderDetailId, dto);
 
-                TempData["SuccessMessage"] = "Producto actualizado correctamente.";
+                TempData["Message"] = result.Message;
+                TempData["TypeMessage"] = result.TypeAlert;
+
+                if (!result.Success) return View(viewModel);
+
                 return RedirectToAction(nameof(Index), new { orderId = viewModel.OrderId });
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, ex.Message);
+                TempData["Message"] = "Ocurrió un error inesperado: " + ex.Message;
+                TempData["TypeMessage"] = "error";
                 return View(viewModel);
             }
         }
@@ -177,14 +179,14 @@ namespace ImportCost.Controllers.OrderDetailsController
             {
                 var result = await _importationOrderDetailService.RemoveProductFromOrderAsync(id);
 
-                if (result)
-                    TempData["SuccessMessage"] = "Producto eliminado de la orden.";
-                else
-                    TempData["ErrorMessage"] = "No se pudo eliminar el producto.";
+                TempData["Message"] = result.Message;
+
+                TempData["TypeMessage"] = result.TypeAlert;
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
+                TempData["Message"] = "Ocurrió un error inesperado: " + ex.Message;
+                TempData["TypeMessage"] = "error";
             }
             return RedirectToAction(nameof(Index), new { orderId = orderId });
         }

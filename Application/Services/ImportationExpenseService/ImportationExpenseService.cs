@@ -13,7 +13,7 @@ namespace Application.Services.ImportationExpenseServices
     public class ImportationExpenseService
     {
         private readonly ImportationOrderRepository _orderRepository;
-        private readonly ImportationExpenseRepository _expenseRepository; 
+        private readonly ImportationExpenseRepository _expenseRepository;
 
         public ImportationExpenseService(
             ImportationOrderRepository orderRepository,
@@ -34,7 +34,7 @@ namespace Application.Services.ImportationExpenseServices
             return order.ImportationExpenses.Select(e => new ImportationExpenseResponseDTO
             {
                 ImportationExpenseId = e.ImportationExpenseId,
-                OrderId = e.OrderId,
+                OrderId = e.ImportationOrderId,
                 ExpenseType = e.ExpenseType,
                 ExpenseAmount = e.ExpenseAmount,
                 CurrencyId = e.CurrencyId,
@@ -53,7 +53,7 @@ namespace Application.Services.ImportationExpenseServices
             return new ImportationExpenseResponseDTO
             {
                 ImportationExpenseId = expense.ImportationExpenseId,
-                OrderId = expense.OrderId,
+                OrderId = expense.ImportationOrderId,
                 ExpenseType = expense.ExpenseType,
                 ExpenseAmount = expense.ExpenseAmount,
                 CurrencyId = expense.CurrencyId,
@@ -81,7 +81,7 @@ namespace Application.Services.ImportationExpenseServices
             var newExpense = new ImportationExpense
             {
                 ImportationExpenseId = Guid.NewGuid().ToString(),
-                OrderId = dto.OrderId,
+                ImportationOrderId = dto.OrderId,
                 ExpenseType = dto.ExpenseType,
                 ExpenseAmount = dto.ExpenseAmount,
                 CurrencyId = dto.CurrencyId,
@@ -98,17 +98,30 @@ namespace Application.Services.ImportationExpenseServices
         }
 
         //EDITAR UN GASTO UPDATE
-        public async Task<bool> EditExpenseAsync(ImportationExpenseUpdateDTO dto)
+        public async Task<ServiceResult> EditExpenseAsync(ImportationExpenseUpdateDTO dto)
         {
             var expense = await _expenseRepository.GetEntityById(dto.ImportationExpenseId);
-            if (expense == null) throw new Exception("El gasto no existe.");
 
-            var order = await _orderRepository.GetEntityById(expense.OrderId);
+            if (expense == null)
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "El gasto no fue encontrado.",
+                    TypeAlert = "error"
+                };
+            }
+
+            var order = await _orderRepository.GetEntityById(expense.ImportationOrderId);
             if (order?.OrderState != OrderState.Abierta)
-                throw new InvalidOperationException("No se puede editar este gasto porque la orden ya no está Abierta.");
-
-            if (dto.ExpenseAmount <= 0)
-                throw new InvalidOperationException("El monto debe ser mayor a cero.");
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "No se puede editar este gasto porque la orden ya no está Abierta.",
+                    TypeAlert = "warning"
+                };
+            }
 
             // Actualizamos los campos
             expense.ExpenseType = dto.ExpenseType;
@@ -118,21 +131,47 @@ namespace Application.Services.ImportationExpenseServices
             expense.ExpenseDate = dto.ExpenseDate;
 
             await _expenseRepository.EditAsync(expense);
-            return true;
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "Gasto actualizado correctamente.",
+                TypeAlert = "success"
+            };
         }
-      // ELIMINAR UN GASTO DELETE
+        // ELIMINAR UN GASTO DELETE
 
-        public async Task<bool> RemoveExpenseAsync(string expenseId)
+        public async Task<ServiceResult> RemoveExpenseAsync(string expenseId)
         {
             var expense = await _expenseRepository.GetEntityById(expenseId);
-            if (expense == null) return false;
+            if (expense == null)
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "El gasto de importación no fue encontrado.",
+                    TypeAlert = "error"
+                };
+            }
+            var order = await _orderRepository.GetEntityById(expense.ImportationOrderId);
 
-            var order = await _orderRepository.GetEntityById(expense.OrderId);
             if (order?.OrderState != OrderState.Abierta)
-                throw new InvalidOperationException("No se puede eliminar este gasto porque la orden ya no está Abierta.");
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "No se puede eliminar este gasto porque la orden ya no está Abierta.",
+                    TypeAlert = "warning"
+                };
+            }
 
             await _expenseRepository.DeleteAsync(expenseId);
-            return true;
+
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "El gasto ha sido eliminado correctamente de la orden.",
+                TypeAlert = "success"
+            };
         }
     }
 }

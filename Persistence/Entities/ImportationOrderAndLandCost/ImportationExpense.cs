@@ -9,7 +9,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
     {
         public required string ImportationExpenseId { get; set; }
 
-        public required string OrderId { get; set; }
+        public required string ImportationOrderId { get; set; }
 
         public required ExpenseType ExpenseType { get; set; }
 
@@ -23,9 +23,9 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         //navigation properties
 
-        public required ImportationOrder ImportationOrder { get; set; }
+        public ImportationOrder? ImportationOrder { get; set; }
 
-        public required Currency Currency { get; set; }
+        public Currency? Currency { get; set; }
         public DateTime ExpenseDate { get; set; }
     }
 }

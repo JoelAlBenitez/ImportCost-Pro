@@ -120,79 +120,125 @@ namespace Application.Services.ImportationOrderServices
             return response;
         }
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<ServiceResult> DeleteAsync(string id)
         {
             var order = await _orderRepository.GetEntityById(id);
-            if (order == null) return false;
-
-            if (order.OrderState == OrderState.Calculada)
+            if (order == null)
             {
-                throw new InvalidOperationException("No se puede eliminar esta orden porque ya tiene un cálculo oficial de landed cost.");
+                return new ServiceResult { Success = false, Message = "La orden no fue encontrada.", TypeAlert = "error" };
             }
 
-            var result = await _orderRepository.DeleteAsync(order);
-            return result;
+            if (order.OrderState == OrderState.Calculada)
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "No se puede eliminar esta Orden porque ya esta calculada",
+                    TypeAlert = "warning"
+                };
+
+            await _orderRepository.DeleteAsync(order);
+
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "La orden fue eliminada correctamente.",
+                TypeAlert = "success"
+            };
+
+
+
         }
 
-        public async Task<ImportationOrderResponseDTO> EditAsync(string id, ImportationOrderUpdateDTO orderUpdateDTO)
+        public async Task<ServiceResult> EditAsync(string id, ImportationOrderUpdateDTO orderUpdateDTO)
         {
             var existingOrder = await _orderRepository.GetEntityById(id);
-            if (existingOrder == null) return null;
+            if (existingOrder == null)
+            {
+                return new ServiceResult { Success = false, Message = "La orden de importación no fue encontrada.", TypeAlert = "error" };
+            }
 
             if (existingOrder.OrderState == OrderState.Cerrada || existingOrder.OrderState == OrderState.Cancelada)
             {
-                throw new InvalidOperationException("No se puede editar esta orden porque está cerrada o cancelada.");
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "No se puede editar esta orden porque está cerrada o cancelada.",
+                    TypeAlert = "warning"
+                };
+
             }
+                existingOrder.ImporterId = orderUpdateDTO.ImporterId;
+                existingOrder.SupplierId = orderUpdateDTO.SupplierId;
+                existingOrder.OriginCountryId = orderUpdateDTO.OriginCountryId;
+                existingOrder.CurrencyId = orderUpdateDTO.CurrencyId;
+                existingOrder.TransportMode = orderUpdateDTO.TransportMode;
 
-            existingOrder.ImporterId = orderUpdateDTO.ImporterId;
-            existingOrder.SupplierId = orderUpdateDTO.SupplierId;
-            existingOrder.OriginCountryId = orderUpdateDTO.OriginCountryId;
-            existingOrder.CurrencyId = orderUpdateDTO.CurrencyId;
-            existingOrder.TransportMode = orderUpdateDTO.TransportMode;
+                await _orderRepository.EditAsync(existingOrder);
 
-            await _orderRepository.EditAsync(existingOrder);
+                var response = new ImportationOrderResponseDTO
+                {
+                    OrderId = existingOrder.OrderId,
+                    ImporterId = existingOrder.ImporterId,
+                    SupplierId = existingOrder.SupplierId,
+                    OriginCountryId = existingOrder.OriginCountryId,
+                    CurrencyId = existingOrder.CurrencyId,
+                    OrderDate = existingOrder.OrderDate,
+                    TransportMode = existingOrder.TransportMode,
+                    OrderState = existingOrder.OrderState,
 
-            var response = new ImportationOrderResponseDTO
-            {
-                OrderId = existingOrder.OrderId,
-                ImporterId = existingOrder.ImporterId,
-                SupplierId = existingOrder.SupplierId,
-                OriginCountryId = existingOrder.OriginCountryId,
-                CurrencyId = existingOrder.CurrencyId,
-                OrderDate = existingOrder.OrderDate,
-                TransportMode = existingOrder.TransportMode,
-                OrderState = existingOrder.OrderState,
-
-                TotalFOB = existingOrder.ImportationOrderDetails != null
+                    TotalFOB = existingOrder.ImportationOrderDetails != null
                     ? existingOrder.ImportationOrderDetails.Sum(d => d.Quantity * d.FOBUnitPrice)
                     : 0,
 
-                TotalImportationExpected =
+                    TotalImportationExpected =
                     (existingOrder.ImportationOrderDetails != null ? existingOrder.ImportationOrderDetails.Sum(d => d.Quantity * d.FOBUnitPrice) : 0) +
                     (existingOrder.ImportationExpenses != null ? existingOrder.ImportationExpenses.Sum(e => e.ExpenseAmount) : 0)
-            };
+                };
 
-            return response;
-        }
+                return new ServiceResult
+                {
+                    Success = true,
+                    Message = "La orden de importación fue editada correctamente.",
+                    TypeAlert = "success"
+                };
+            }
 
-        public async Task<bool> CloseOrderAsync(string id)
+        public async Task<ServiceResult> CloseOrderAsync(string id)
         {
             var order = await _orderRepository.GetEntityById(id);
-            if (order == null) return false;
+            if (order == null)
+            {
+                return new ServiceResult { Success = false, Message = "La orden de importación no fue encontrada.", TypeAlert = "error" };
+            }
 
             if (order.OrderState != OrderState.Calculada)
             {
-                throw new InvalidOperationException("Solo se pueden cerrar órdenes que estén en estado 'Calculada'.");
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Solo se pueden cerrar órdenes que estén en estado 'Calculada'.",
+                    TypeAlert = "warning"
+                };
             }
 
             if (order.LandedCostSummary == null)
             {
-                throw new InvalidOperationException("No se puede cerrar esta orden porque no tiene un resumen de landed cost asociado.");
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "No se puede cerrar esta orden porque no tiene un resumen de landed cost asociado.",
+                    TypeAlert = "warning"
+                };
             }
 
             order.OrderState = OrderState.Cerrada;
             await _orderRepository.EditAsync(order);
-            return true;
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "La orden ha sido cerrada exitosamente. Ya no podrá ser modificada.",
+                TypeAlert = "success"
+            };
         }
     }
 }

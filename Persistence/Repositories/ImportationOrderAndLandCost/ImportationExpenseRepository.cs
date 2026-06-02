@@ -55,7 +55,7 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
         {
             return await _context.ImportationExpenses
                                  .AsNoTracking()
-                                 .Where(e => e.OrderId == orderId)
+                                 .Where(e => e.ImportationOrderId == orderId)
                                  .ToListAsync();
         }
     }

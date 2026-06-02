@@ -11,7 +11,7 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
         {
             builder.HasKey(x => x.ImportationExpenseId);
             builder.Property(x => x.ImportationExpenseId).HasMaxLength(50);
-            builder.Property(x => x.OrderId).HasMaxLength(30);
+            builder.Property(x => x.ImportationOrderId).HasMaxLength(30);
 
 
             builder.ToTable("ImportationExpenses", t =>
@@ -21,7 +21,7 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
 
             #region Property Configurations
 
-            builder.HasOne(x => x.ImportationOrder).WithMany(y => y.ImportationExpenses).HasForeignKey(x => x.OrderId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.ImportationOrder).WithMany(y => y.ImportationExpenses).HasForeignKey(x => x.ImportationOrderId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.Currency).WithMany().HasForeignKey(x => x.CurrencyId).OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(x => x.ExpenseType).IsRequired().HasConversion<string>();

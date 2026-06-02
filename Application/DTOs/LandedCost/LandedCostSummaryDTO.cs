@@ -7,7 +7,7 @@ public class LandedCostSummaryDTO
 {
     public string LandedCostSummaryId { get; set; }  
 
-    public required string OrderId { get; set; }
+    public required string ImportationOrderId { get; set; }
 
     public int LocalCurrencyUsed { get; set; }
 
