@@ -5,7 +5,7 @@ namespace ImportCost.ViewModels.LandedCosts
     public class LandedCostDetailViewModel
     {
         [Display(Name = "Producto")]
-        public string ProductName { get; set; } = string.Empty;
+        public string? ProductName { get; set; }
 
         [Display(Name = "Cantidad")]
         [DisplayFormat(DataFormatString = "{0:N2}")]

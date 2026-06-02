@@ -6,10 +6,10 @@ namespace ImportCost.ViewModels.OrderDetails
     {
         //IDs  ocultos para saber qué registro exacto estamos actualizando
         [Required]
-        public string OrderDetailId { get; set; } = string.Empty;
+        public string? OrderDetailId { get; set; }
 
         [Required]
-        public string OrderId { get; set; } = string.Empty;
+        public string? OrderId { get; set; } 
 
         [Required]
         public int ProductId { get; set; }
@@ -17,7 +17,7 @@ namespace ImportCost.ViewModels.OrderDetails
         // Propiedad de Solo Lectura para la Vista
 
         [Display(Name = "Producto")]
-        public string ProductName { get; set; } = string.Empty;
+        public string? ProductName { get; set; } 
 
         // Campos editables con sus validaciones estrictas
         [Required(ErrorMessage = "La cantidad es obligatoria.")]

@@ -5,10 +5,10 @@ namespace ImportCost.ViewModels.OrderDetails
     public class OrderDetailViewModel
     {
         
-        public string OrderDetailId { get; set; } = string.Empty;
+        public string? OrderDetailId { get; set; }
 
         [Display(Name = "Producto")]
-        public string ProductName { get; set; } = string.Empty;
+        public string? ProductName { get; set; }
 
         [Display(Name = "Cantidad")]
         [DisplayFormat(DataFormatString = "{0:N2}")]

@@ -4,10 +4,10 @@ namespace ImportCost.ViewModels.LandedCosts
 {
     public class LandedCostSummaryViewModel
     {
-        public string OrderId { get; set; } = string.Empty;
+        public string? OrderId { get; set; } 
 
         [Display(Name = "Moneda Local Usada")]
-        public string LocalCurrencyUsed { get; set; } = string.Empty;
+        public string? LocalCurrencyUsed { get; set; } 
 
         [Display(Name = "Tasa de Cambio Usada para la Orden")]
         [DisplayFormat(DataFormatString = "{0:N2}")]

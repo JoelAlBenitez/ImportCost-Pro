@@ -8,12 +8,12 @@ namespace ImportCost.ViewModels.ImportationOrders
     {
         //Campo oculto Para saber cuál era el ID antes de que el usuario lo edite y poder buscarlo
         [Required]
-        public string OriginalOrderId { get; set; } = string.Empty;
+        public string? OriginalOrderId { get; set; }
 
         [Required(ErrorMessage = "El número de orden es obligatorio.")]
         [MaxLength(30, ErrorMessage = "El número de orden no puede superar los 30 caracteres.")]
         [Display(Name = "Número de Orden")]
-        public string OrderId { get; set; } = string.Empty;
+        public string? OrderId { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar un importador.")]
         [Display(Name = "Importador")]
@@ -48,7 +48,7 @@ namespace ImportCost.ViewModels.ImportationOrders
         // Si esto es true, la vista HTML pondrá los menús desplegables en disabled
         public bool IsCalculated { get; set; }
 
-        // Diccionarios para Selects (Menús Desplegables)
+        // Listas para llenar los DropDownList de la vista
         public List<ViewModelSelectImporters>? ImportersList { get; set; }
         public List<ViewModelSelectSuppliers>? SuppliersList { get; set; }
         public List<ViewModelSelectCountries>? CountriesList { get; set; }
