@@ -1,4 +1,4 @@
-﻿using Application.Dto.Base;
+﻿using Application.DTOs.Base;
 namespace Application.Dto.Importers
 {
     public class ImporterDto : DtoBase<int>
