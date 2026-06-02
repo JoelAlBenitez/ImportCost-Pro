@@ -1,4 +1,5 @@
-﻿using Persistence.Entities.Enums;
+﻿using Application.ViewModel.Select;
+using Persistence.Entities.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ImportCost.ViewModels.ImportationOrders
@@ -36,9 +37,11 @@ namespace ImportCost.ViewModels.ImportationOrders
         public TransportMode TransportMode { get; set; }
 
         //Llenar los DropDownLists / Selects
-        public Dictionary<int, string>? ImportersList { get; set; }
-        public Dictionary<int, string>? SuppliersList { get; set; }
-        public Dictionary<int, string>? CountriesList { get; set; }
-        public Dictionary<int, string>? CurrenciesList { get; set; }
+        public List<ViewModelSelectImporters>? ImportersList { get; set; }
+        public List<ViewModelSelectSuppliers>? SuppliersList { get; set; }
+        public List<ViewModelSelectCountries>? CountriesList { get; set; }
+        public List<ViewModelSelectCurrency>? CurrenciesList { get; set; }
+
+        
     }
 }

@@ -1,7 +1,6 @@
-﻿using Persistence.Entities.Enums;
+﻿using Application.ViewModel.Select;
+using Persistence.Entities.Enums;
 using System.ComponentModel.DataAnnotations;
-// IMPORTANTE: Asegúrate de tener los using de tus Enums
-// using Persistence.Entities.Enums; 
 
 namespace ImportCost.ViewModels.ImportationOrders
 {
@@ -41,18 +40,18 @@ namespace ImportCost.ViewModels.ImportationOrders
         [Display(Name = "Modalidad de Transporte")]
         public TransportMode TransportMode { get; set; }
 
-        // El estado se envía a la vista solo para mostrarlo en una etiqueta
+        // El estado se envía a la vista solo para mostrarlo
         [Display(Name = "Estado Actual")]
         public OrderState OrderState { get; set; }
 
 
-        // Si esto es "true", la vista HTML pondrá los menús desplegables en "disabled"
+        // Si esto es true, la vista HTML pondrá los menús desplegables en disabled
         public bool IsCalculated { get; set; }
 
         // Diccionarios para Selects (Menús Desplegables)
-        public Dictionary<int, string>? ImportersList { get; set; }
-        public Dictionary<int, string>? SuppliersList { get; set; }
-        public Dictionary<int, string>? CountriesList { get; set; }
-        public Dictionary<int, string>? CurrenciesList { get; set; }
+        public List<ViewModelSelectImporters>? ImportersList { get; set; }
+        public List<ViewModelSelectSuppliers>? SuppliersList { get; set; }
+        public List<ViewModelSelectCountries>? CountriesList { get; set; }
+        public List<ViewModelSelectCurrency>? CurrenciesList { get; set; }
     }
 }

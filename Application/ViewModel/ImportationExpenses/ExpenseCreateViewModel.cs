@@ -1,4 +1,5 @@
-﻿using Persistence.Entities.Enums;
+﻿using Application.ViewModel.Select;
+using Persistence.Entities.Enums;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -32,8 +33,8 @@ namespace ImportCost.ViewModels.ImportationExpenses
         [Display(Name = "Fecha del Gasto")]
         public DateTime ImportationExpenseDate { get; set; } = DateTime.Today;
 
-        // Diccionario para el Select de Monedas
-        public Dictionary<int, string>? CurrenciesList { get; set; }
+        // Lista de monedas para el dropdown
+        public List<ViewModelSelectCurrency> CurrenciesList { get; set; } = new();
         public DateTime ExpenseDate { get; set; }
     }
 }

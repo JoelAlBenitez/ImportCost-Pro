@@ -60,7 +60,6 @@ namespace ImportCost.Controllers.ImportationOrdersController
             return View(viewModelList);
         }
             [HttpPost]
-            [ValidateAntiForgeryToken]
             public async Task<IActionResult> Create(ImportationOrderCreateViewModel viewModel)
             {
                 
@@ -106,17 +105,32 @@ namespace ImportCost.Controllers.ImportationOrdersController
         {
   
             var importers = await _importersService.GetAllAsync();
-            viewModel.ImportersList = importers?.ToDictionary(i => i.Key, i => i.Name) ?? new Dictionary<int, string>();
+            viewModel.ImportersList = importers.Select(i => new Application.ViewModel.Select.ViewModelSelectImporters
+            {
+                ImporterId = i.Key,
+                ImporterName = i.Name
+            }).ToList();
 
             var countries = await _countryService.GetAllAsync();
-            viewModel.CountriesList = countries?.ToDictionary(c => c.Key, c => c.Name) ?? new Dictionary<int, string>();
+            viewModel.CountriesList = countries.Select(c => new Application.ViewModel.Select.ViewModelSelectCountries
+            {
+                CountryId = c.Key,
+                CountryName = c.Name
+            }).ToList();
 
-     
+
             var suppliers = await _suppliersService.GetAllAsync();
-            viewModel.SuppliersList = suppliers?.ToDictionary(s => s.Key, s => s.Name) ?? new Dictionary<int, string>();
+            viewModel.SuppliersList = suppliers.Select(s => new Application.ViewModel.Select.ViewModelSelectSuppliers
+            {
+                SupplierId = s.Key,
+                SupplierName = s.Name
+            }).ToList();
 
             var currencies = await _currenciesService.GetAllAsync();
-            viewModel.CurrenciesList = currencies?.ToDictionary(c => c.Key, c => c.IsoCode ?? c.Name) ?? new Dictionary<int, string>();
+            viewModel.CurrenciesList = currencies.Select(c => new Application.ViewModel.Select.ViewModelSelectCurrency{
+                Id = c.Key,
+                NameCurrency = c.Name
+            }).ToList();
         }
     }
 }

@@ -38,8 +38,7 @@ namespace ImportCost.Controllers
         }
 
         //Guarda el cálculo oficial y cierra la orden
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost] 
         public async Task<IActionResult> Save(string orderId)
         {
             if (string.IsNullOrWhiteSpace(orderId))

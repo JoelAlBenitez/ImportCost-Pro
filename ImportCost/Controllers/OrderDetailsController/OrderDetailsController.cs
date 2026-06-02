@@ -66,8 +66,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             return View(viewModel);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost] 
         public async Task<IActionResult> Create(OrderDetailCreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -102,14 +101,17 @@ namespace ImportCost.Controllers.OrderDetailsController
         {
             
             var products = await _productsService.GetAllAsync();
-
-            
-            viewModel.ProductsList = products?.ToDictionary(p => p.Key, p => p.Name) ?? new Dictionary<int, string>();
+  
+            viewModel.ProductsList = products.Select(p => new Application.ViewModel.Select.ViewModelSelectProducts
+            {
+                CodeReference = p.Key,
+                ProductName = p.Name
+            }).ToList();
         }
 
         // EDIT Muestra el formulario con los datos actuales
         [HttpGet]
-        public async Task<IActionResult> Edit(string id) // Este 'id' es el OrderDetailId
+        public async Task<IActionResult> Edit(string id) //es el OrderDetailId
         {
             if (string.IsNullOrWhiteSpace(id))
                 return RedirectToAction("Index", "ImportationOrders");
@@ -137,8 +139,7 @@ namespace ImportCost.Controllers.OrderDetailsController
         }
 
         // EDIT: Guarda las modificaciones
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost] 
         public async Task<IActionResult> Edit(OrderDetailEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -169,8 +170,7 @@ namespace ImportCost.Controllers.OrderDetailsController
         }
 
         //DELETE Elimina un producto de la orden
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost] 
         public async Task<IActionResult> Delete(string id, string orderId)
         {
             try

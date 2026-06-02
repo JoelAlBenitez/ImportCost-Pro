@@ -69,7 +69,6 @@ namespace ImportCost.Controllers
 
         // CREATE (POST)
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ExpenseCreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -132,7 +131,6 @@ namespace ImportCost.Controllers
         }
         //EDIT (POST)
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ExpenseEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -164,12 +162,8 @@ namespace ImportCost.Controllers
                 return View(viewModel);
             }
         }
-
-        // -------------------------------------------------------------------
-        // 6. DELETE (POST)
-        // -------------------------------------------------------------------
+        // DELETE POST
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id, string orderId)
         {
             try
@@ -187,17 +181,10 @@ namespace ImportCost.Controllers
 
             return RedirectToAction(nameof(Index), new { orderId = orderId });
         }
-
-        // -------------------------------------------------------------------
-        // 7. HELPER METHOD: Carga el catálogo de Monedas
-        // -------------------------------------------------------------------
-        // Como este helper se usa tanto en Create como en Edit, lo ideal es recibir 
-        // una interfaz genérica o sobrecargarlo, pero por simplicidad puedes usar 'dynamic'
-        // o crear dos helpers. Aquí lo usamos con dynamic para que acepte ambos ViewModels.
         private async Task LoadCatalogsAsync(dynamic viewModel)
         {
             var currencies = await _currenciesService.GetAllAsync();
-            viewModel.CurrenciesList = currencies?.ToDictionary(c => c.Key, c => c.IsoCode ?? c.Name) ?? new Dictionary<int, string>();
+            viewModel.CurrenciesList = currencies.Select(x => x.Name).ToList();
         }
     }
 }

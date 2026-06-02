@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Application.ViewModel.Select;
+using System.ComponentModel.DataAnnotations;
 
 namespace ImportCost.ViewModels.OrderDetails
 {
@@ -27,8 +28,7 @@ namespace ImportCost.ViewModels.OrderDetails
         [Display(Name = "Margen de Ganancia Esperado (%)")]
         public decimal ExpectedProfitMargin { get; set; }
 
-        // Diccionario para el Select
-        
-        public Dictionary<int, string>? ProductsList { get; set; }
+        // Lista para llenar el DropDownList de productos
+        public List<ViewModelSelectProducts>? ProductsList { get; set; }
     }
 }
