@@ -27,7 +27,7 @@
 
         paginationInfo.textContent = totalItems > 0
             ? `Mostrando ${startIndex + 1} de ${Math.min(endIndex, totalItems)} - ${totalItems}`
-            : "No se encontraron registros";
+            : "No hay registros extras";
 
         renderPaginationButtons(totalPages);
     }

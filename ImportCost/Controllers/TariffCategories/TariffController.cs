@@ -38,7 +38,7 @@ namespace ImportCost.Controllers.TariffCategories
         public async Task<IActionResult> Edit(string id)
         {
             var t = await _tarriffCategories.GetKeyAsync(id);
-            if (t == null) return RedirectToRoute(new { controller = "Tariff", action = "Index" });
+            if (t == null) return RedirectToAction(nameof(Index));
 
             ViewModelTarriffCategoriesSave tarriffCategoriesSave = new() { 
                TarriffCode = t.Key,
@@ -49,26 +49,26 @@ namespace ImportCost.Controllers.TariffCategories
                 SelectiveTaxApplies = t.SelectiveTaxApplies,
                 PorcentageTaxSelective = t.PorcentageTaxSelective ?? 0,
             };
-            return View(tarriffCategoriesSave);
+            return View("Edit", tarriffCategoriesSave);
         }
 
         public async Task<IActionResult> Delete(string id) {
 
             var t = await _tarriffCategories.GetKeyAsync(id);
-            if (t == null) return RedirectToRoute(new {controller = "Tariff", action ="Index"});
-            return View(new ViewModelTarriffCategoriesDelete { TarriffCode = t.Key, Name = t.Name});
+            if (t == null) return RedirectToAction(nameof(Index));
+            return View("Delete", new ViewModelTarriffCategoriesDelete { TarriffCode = t.Key, Name = t.Name});
         
         }
         
         public async Task<IActionResult> Create()
         {
-            return View("Save", new ViewModelTarriffCategories { 
-                    key = "",
+            return View("Save", new ViewModelTarriffCategoriesSave {
+                    TarriffCode = "",
                     Name = "",
                     State = true,
                     ITBIS = false,
                     SelectiveTaxApplies = false,
-                    PorcentageTariff = 0,
+                    TarriffPorcetage = 0,
                     PorcentageTaxSelective = 0
             });
         }
@@ -76,7 +76,7 @@ namespace ImportCost.Controllers.TariffCategories
         [HttpPost]
         public async Task<IActionResult> Edit(ViewModelTarriffCategoriesSave vt)
         {
-            if (!ModelState.IsValid) return View("Save", vt);
+            if (!ModelState.IsValid) return View("Edit", vt);
 
             TariffCategoriesDto tDto = new()
             {
@@ -90,10 +90,10 @@ namespace ImportCost.Controllers.TariffCategories
             };
 
             var result = await _tarriffCategories.EditAsync(tDto);
-            if (!result.Success) return RedirectToRoute(new { controller = "Tariff", action = "Edit" });
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            return RedirectToRoute(new { controller = "Tariff", action = "Index" });
+            if (!result.Success) return RedirectToAction(nameof(Index));
+            return View("Index");
 
         }
 
@@ -103,10 +103,11 @@ namespace ImportCost.Controllers.TariffCategories
 
             if (!ModelState.IsValid) return View("Delete", vt);
             var tariff = await _tarriffCategories.DeleteAsync(vt.TarriffCode);
-            if (!tariff.Success) return RedirectToRoute(new { controller = "Tariff", action = "Delete" });
             TempData["Message"] = tariff.Message;
             TempData["TypeAlert"] = tariff.TypeAlert;
-            return RedirectToRoute(new {controller = "Tariff", action = "Index"});
+            if (!tariff.Success) return RedirectToAction(nameof(Index));
+           
+            return RedirectToAction(nameof(Index));
 
         }
 
@@ -126,10 +127,11 @@ namespace ImportCost.Controllers.TariffCategories
             };
 
             var result = await _tarriffCategories.CreateAsync(tariffCategoriesDto);
-            if (!result.Success) return RedirectToRoute(new {controller ="Tariff", action = "Save"});
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            return RedirectToRoute(new { controller = "Tariff", action = "Index" });
+            if (!result.Success) return RedirectToAction(nameof(Index));
+          
+            return RedirectToAction(nameof(Index));
         }
     }
 

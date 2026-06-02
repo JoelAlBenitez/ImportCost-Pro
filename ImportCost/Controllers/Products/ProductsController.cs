@@ -131,9 +131,9 @@ namespace ImportCost.Controllers.Products
                 unitMesaurement = (UnitMesaurement)vp.unit
             };
             var result = await _productsServices.CreateAsync(p);
-            if (!result.Success) return RedirectToAction(nameof(Create));
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
+            if (!result.Success) return RedirectToAction(nameof(Create));
             return RedirectToAction(nameof(Index));
         }
 
@@ -188,17 +188,17 @@ namespace ImportCost.Controllers.Products
             };
 
             var result = await _productsServices.EditAsync(productsDto);
-            if (!result.Success) return RedirectToRoute(new { controller = "Products", action = "Index" });
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            return View("Edit", vp);
+            if (!result.Success) return RedirectToAction(nameof(Index)); ;
+            return RedirectToAction(nameof(Index));
            
         }
 
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _productsServices.GetKeyAsync(id);
-            if (product == null) return RedirectToRoute(new { controller = "Products", action = "Index" });
+            if (product == null) return RedirectToAction(nameof(Index)); ;
             var listCategories = await GetCategories(product.TarriffCategoriesId);
             ViewModelProductsSave vp = new()
             {
@@ -225,12 +225,15 @@ namespace ImportCost.Controllers.Products
         [HttpPost]
         public async Task<IActionResult> Delete(ViewModelProductsDelete vp)
         {
-            if (!ModelState.IsValid) return View("Delete", vp);
+            if (!ModelState.IsValid)  {
+                return View("Delete", vp);
+            }
+
             var result = await _productsServices.DeleteAsync(vp.Key);
-            if (!result.Success) return RedirectToRoute(new {controller = "Products", action = "Delete"});
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            return new RedirectToRouteResult(new { controller = "Products", action = "Index" });
+            if (!result.Success) return RedirectToAction(nameof(Index)); ;
+            return   RedirectToAction(nameof(Index)); ;
         }
       
         public async Task<IActionResult> Delete(int id)

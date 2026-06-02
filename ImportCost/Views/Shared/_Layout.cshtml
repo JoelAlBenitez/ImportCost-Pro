@@ -34,6 +34,13 @@
                         <span>Productos</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tariff" ? "active" : "")"
+                       asp-area="" asp-controller="Tariff" asp-action="Index">
+                        <i class="bi bi-tags"></i>
+                        <span>Categorías Arancelarias</span>
+                    </a>
+                </li>
               
                 @*metan sus opciones aqui  pongalo asi como los de arriba para el efecto de cambio de item*@
             </ul>

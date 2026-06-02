@@ -5,16 +5,16 @@
     ViewData["Title"] = "Gestión de Productos";
 }
 
-@*mensaje que retorna el controller segun lo que haya pasado*@
-@if (TempData["Message"] != null)
-{
-    <div class="alert @TempData["TypeAlert"] w-auto h-25 position-fixed top-50 start-50 translate-middle">
-        @TempData["Message"]
-    </div>
-}
+
 <div class="container-fluid py-4">
     
-  
+    @*mensaje que retorna el controller segun lo que haya pasado*@
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["TypeAlert"] w-auto h-25 alert-dismissible fade show shadow-sm border-0" role="alert" ">
+            @TempData["Message"]
+        </div>
+    }
     <div class="row mb-4 align-items-center">
         <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
             <div class="input-group shadow-sm rounded-3 overflow-hidden bg-white">
@@ -45,9 +45,6 @@
                     ¿Necesitas Ayuda? <i class="bi bi-info-circle-fill"></i>
                 </a>
             </div>
-            <div class="col-md-4 d-none d-md-block text-end pe-4">
-                <img width="200" height="200" src="/img/productsBanner.jpg" alt="Banner de productos" class="img-fluid rounded-3 opacity-75" style="object-fit: cover; border-radius: 50%;" />
-            </div>
         </div>
     </div>
 
@@ -73,13 +70,18 @@
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0" id="productsTable">
-                        <thead class="table-light text-secondary text-uppercase" style="font-size: 0.85rem;">
+                        <thead class="table-light text-secondary text-uppercase" style="font-size: 0.67rem;">
                             <tr>
                                 <th class="py-3 ps-4 fw-semibold">Cód/Ref</th>
                                 <th class="py-3 fw-semibold">Nombre</th>
                                 <th class="py-3 fw-semibold">Categoría</th>
                                 <th class="py-3 fw-semibold">País</th>
-                                <th class="py-3 fw-semibold">Medidas</th>
+                                <th class="py-3 fw-semibold">Medida</th>
+                                <th class="py-3 fw-semibold">Peso Unitario"</th>
+                                <th class="py-3 fw-semibold">Estado</th>
+                                <th class="py-3 fw-semibold">Largo</th>
+                                <th class="py-3 fw-semibold">Ancho</th>
+                                <th class="py-3 fw-semibold">Alto</th>
                                 <th class="py-3 text-end pe-4 fw-semibold">Acciones</th>
                             </tr>
                         </thead>
@@ -97,9 +99,23 @@
                                         <td class="text-secondary small">@item.CountryName</td>
                                        
                                         <td class="text-secondary small">
-                                            @item.UnitWeight <span class="text-muted">@item.unitMesaurement</span>
+                                           @item.unitMesaurement
                                         </td>
-
+                                        <td class="text-secondary small">@item.UnitWeight</td>
+                                        <td class="text-secondary small">
+                                            <span class="badge @(item.State ? "bg-primary" : "bg-danger") bg-opacity-10 @(item.State ? "text-primary" : "text-danger") px-2 py-1 rounded-2 fw-normal border @(item.State ? "border-primary" : "border-danger") border-opacity-25">
+                                                @(item.State ? "Activo" : "Inactivo")
+                                            </span>
+                                        </td>
+                                        <td class="text-secondary small">
+                                            @(item.Large != 0 ? item.Large : "0")
+                                        </td>
+                                        <td class="text-secondary small">
+                                            @(item.Broad != 0 ? item.Large : "0")
+                                        </td>
+                                        <td class="text-secondary small">
+                                            @(item.High != 0 ? item.Large : "0")
+                                        </td>
                                         <td class="text-end pe-4">
                                             <div class="btn-group shadow-sm rounded-3">
                                                 <a data-modal="true" asp-controller="Products" asp-action="Edit" asp-route-id="@item.key" class="btn btn-sm btn-light text-success border-end" title="Editar">

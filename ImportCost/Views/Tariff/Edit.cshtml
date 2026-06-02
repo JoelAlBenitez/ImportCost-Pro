@@ -1,0 +1,64 @@
+﻿@using Application.ViewModel.TarriffCategories
+@model ViewModelTarriffCategoriesSave
+
+<div class="card border-0 shadow-sm rounded-4 p-4">
+    <div class="card-header bg-white border-0 p-0 mb-4">
+        <h5 class="fw-bold text-dark">Editar Categoría Arancelaria</h5>
+    </div>
+
+    <form asp-controller="Tariff" asp-action="Edit" method="POST">
+
+        <input type="hidden" asp-for="TarriffCode" />
+
+        <div class="row g-3">
+
+            <div class="col-12">
+                <label asp-for="Name" class="form-label fw-semibold small text-muted">Nombre/Descripción</label>
+                <input asp-for="Name" class="form-control rounded-3" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="TarriffPorcetage" class="form-label fw-semibold small text-muted">Porcentaje Arancel (%)</label>
+                <input asp-for="TarriffPorcetage" type="number"  class="form-control rounded-3" />
+                <span asp-validation-for="TarriffPorcetage" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="PorcentageTaxSelective" class="form-label fw-semibold small text-muted">Impuesto Selectivo (%)</label>
+                <input asp-for="PorcentageTaxSelective" type="number"  class="form-control rounded-3" />
+                <span asp-validation-for="PorcentageTaxSelective" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12 mt-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check form-switch">
+                            <input asp-for="ITBIS" class="form-check-input" type="checkbox" id="itbisCheck">
+                            <label class="form-check-label fw-semibold text-muted" for="itbisCheck">Aplicar ITBIS</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check form-switch">
+                            <input asp-for="SelectiveTaxApplies" class="form-check-input" type="checkbox" id="iscCheck">
+                            <label class="form-check-label fw-semibold text-muted" for="iscCheck">Aplicar Impuesto Selectivo</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mt-3">
+                <div class="form-check form-switch">
+                    <input asp-for="State" class="form-check-input" type="checkbox" id="stateSwitchEdit">
+                    <label class="form-check-label fw-semibold text-muted" for="stateSwitchEdit">Categoría Activa</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer mt-4 border-0 pt-3">
+            <a asp-controller="Tariff" asp-action="Index" class="btn btn-light rounded-3 px-4">Volver Atrás</a>
+            <button type="submit" class="btn btn-success rounded-3 px-4 shadow-sm ms-2">Actualizar Categoría</button>
+        </div>
+    </form>
+</div>
+

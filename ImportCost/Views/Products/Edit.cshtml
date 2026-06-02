@@ -1,13 +1,15 @@
-@using Application.ViewModel.Products
+﻿@using Application.ViewModel.Products
 @model ViewModelProductsSave
 
-<div class="card-header" >
-    <h5>Crear Nuevo Producto</h5>
+<div class="card-header border-0 bg-transparent pb-0">
+    <h5 class="fw-bold text-dark mb-0">Editar Producto</h5>
 </div>
 
-<form asp-controller="Products" asp-action="Create" method="POST">
-   
-        <div class="row g-3">
+<form asp-controller="Products" asp-action="Edit" method="POST">
+
+    <input type="hidden" asp-for="Key" />
+
+    <div class="row g-3 p-3">
         <div class="col-12">
             <label asp-for="Name" class="form-label fw-semibold small text-muted">Nombre del Producto</label>
             <input asp-for="Name" class="form-control rounded-3" placeholder="Ej: Importación Acero" />
@@ -34,6 +36,7 @@
                     <option value="@cat.CodeCategories">@cat.NameCategory</option>
                 }
             </select>
+            <span asp-validation-for="TariffCategoriesId" class="text-danger small"></span>
         </div>
 
         <div class="col-md-4">
@@ -44,6 +47,7 @@
                     <option value="@u.Id">@u.Name</option>
                 }
             </select>
+            <span asp-validation-for="unit" class="text-danger small"></span>
         </div>
 
         <div class="col-md-4">
@@ -54,38 +58,41 @@
                     <option value="@c.CountryId">@c.CountryName</option>
                 }
             </select>
+            <span asp-validation-for="CountryId" class="text-danger small"></span>
         </div>
 
-        <div class="col-12 mt-3">
+        <div class="col-12 mt-4">
             <h6 class="text-uppercase small fw-bold text-secondary mb-2">Dimensiones (Opcional)</h6>
             <div class="row g-2">
                 <div class="col-4">
-                    <input asp-for="Large" class="form-control form-control-sm" placeholder="Largo" />
+                    <input asp-for="Large" class="form-control form-control-sm rounded-3" placeholder="Largo" />
                 </div>
                 <div class="col-4">
-                    <input asp-for="Broad" class="form-control form-control-sm" placeholder="Ancho" />
+                    <input asp-for="Broad" class="form-control form-control-sm rounded-3" placeholder="Ancho" />
                 </div>
                 <div class="col-4">
-                    <input asp-for="High" class="form-control form-control-sm" placeholder="Alto" />
+                    <input asp-for="High" class="form-control form-control-sm rounded-3" placeholder="Alto" />
                 </div>
             </div>
             <span class="text-danger small" asp-validation-for="Large"></span>
         </div>
 
-        <div class="col-12">
+        <div class="col-12 mt-3">
             <label asp-for="Description" class="form-label fw-semibold small text-muted">Descripción</label>
             <textarea asp-for="Description" class="form-control rounded-3" rows="2"></textarea>
+            <span asp-validation-for="Description" class="text-danger small"></span>
         </div>
 
-        <div class="col-12">
+        <div class="col-12 mt-3">
             <div class="form-check form-switch">
-                <input asp-for="State" class="form-check-input" type="checkbox" id="stateSwitch">
-                <label class="form-check-label" for="stateSwitch">Producto Activo</label>
+                <input asp-for="State" class="form-check-input" type="checkbox" id="stateSwitchEdit">
+                <label class="form-check-label fw-semibold small text-muted" for="stateSwitchEdit">Producto Activo</label>
             </div>
         </div>
     </div>
-    <div class="modal-footer mt-4 border-0">
-        <a  asp-controller="Products" asp-action="Index" class="btn btn-light rounded-3 px-4">Volver Atras</a>
-        <button type="submit" class="btn btn-primary rounded-3 px-4 shadow-sm">Guardar Producto</button>
+
+    <div class="modal-footer mt-2 border-0 pt-0">
+        <a asp-controller="Products" asp-action="Index" class="btn btn-light rounded-3 px-4">Volver Atras</a>
+        <button type="submit" class="btn btn-success rounded-3 px-4 shadow-sm">Actualizar Producto</button>
     </div>
 </form>

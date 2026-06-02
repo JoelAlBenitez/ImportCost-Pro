@@ -61,7 +61,6 @@ namespace Application.Services.ProductsServices
                 if (exit) return new ServiceResult { Success = false, Message = "Ya existe un producto con este código de referencia", TypeAlert = "danger" };
                 bool create = await _productsRepository.CreateAsync(products);
 
-                //agregar validacion de pais activo o no activo
                 
                 if (create) return new ServiceResult { Success = true, Message = "Producto creado éxitosamente", TypeAlert = "success" };
                 return new ServiceResult { Success = false, Message = "Ha ocurrido un error al crear el producto", TypeAlert = "danger" };
