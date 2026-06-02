@@ -1,8 +1,8 @@
 using Application.DTOs.Base;
 
-namespace Application.DTOs.FinancialCore
+namespace Application.DTOs.Countries
 {
-    public class CountryDto : DtoBase
+    public class CountryDto : DtoBase<int>
     {
         public required string IsoCode { get; set; }
     }

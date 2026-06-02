@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModel.Select
+namespace Application.ViewModel.Select
 {
     public class ViewModelSelectCategories
     {

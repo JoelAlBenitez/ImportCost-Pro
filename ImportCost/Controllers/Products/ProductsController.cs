@@ -1,24 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Application.ViewModel.Products;
 using Application.Services.ProductsServices;
 using Application.Services.TarriffCategories;
 using Application.ViewModel.Select;
-using Application.Dto.Products;
+using Application.DTOs.Products;
+using Persistence.Entities.Enums;
+using Application.Services.Countries;
+
 
 namespace ImportCost.Controllers.Products
 {
     public class ProductsController : Controller
     {
 
-        //agregar validaciones en el servicio que validen que si se agregar un largo... deben tener valores los tres
         private readonly ProductsServices _productsServices;
         private readonly TarriffCategoriesServices _tarriffCategoriesServices;
+        private readonly CountryService _countriesService;
 
-        public ProductsController(ProductsServices productsServices, TarriffCategoriesServices tarriffCategoriesServices)
+        public ProductsController(ProductsServices productsServices, TarriffCategoriesServices tarriffCategoriesServices, CountryService countriesService)
         {
             _productsServices = productsServices;
             _tarriffCategoriesServices = tarriffCategoriesServices;
-            //note: add services countries to load the countries. 
+            _countriesService = countriesService;
+            
         }
 
         public async Task<IActionResult> Index()
@@ -48,14 +52,14 @@ namespace ImportCost.Controllers.Products
             }
             return View(listViewProducts);
         }
-       
-        private  async Task<List<ViewModelSelectCategories>> GetCategories()
+
+        private  async Task<List<ViewModelSelectCategories>> GetCategories(string? categorieId = null)
         {
             var categories = await _tarriffCategoriesServices.GetAllAsync();
             var list = new List<ViewModelSelectCategories>();
             foreach (var item in categories!)
             {
-                if (item.State)
+                if (item.State || (categorieId != null && categorieId == item.Key))
                 {
                     ViewModelSelectCategories selectCategories = new()
                     {
@@ -68,7 +72,85 @@ namespace ImportCost.Controllers.Products
             }
             return list;
         }
-       
+        
+        private List<ViewModelSelectUnit> GetUnitMeasurements()
+        {
+            return Enum.GetValues(typeof(UnitMeasurement))
+                .Cast<UnitMeasurement>()
+                .Select(e => new ViewModelSelectUnit
+                { Id = (int)e, Name = e.ToString() })
+                .ToList();
+        }
+
+        private async Task<List<ViewModelSelectCountries>> GetCountries(int key = 0)
+        {
+            var list = new List<ViewModelSelectCountries>();
+            var countries = await _countriesService.GetAllAsync();
+            foreach (var item in countries)
+            {
+                if (item.State || key != 0 && item.Key != key)
+                {
+                    ViewModelSelectCountries viewModelSelectCountries = new()
+                    {
+                        CountryId = item.Key,
+                        CountryName = item.Name
+                    };
+                    list.Add(viewModelSelectCountries);
+                }
+            }
+            return list;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(ViewModelProductsSave vp)
+        {
+            if (!ModelState.IsValid) return RedirectToRoute(new {controller="Products",action ="Save"});
+            
+            ProductsDto p = new() { 
+              Key = 0,
+              Name = vp.Name,
+              State = vp.State,
+              CodeReference = vp.CodeReference,
+              TarriffCategoriesId = vp.CategoriesId,
+              UnitWeight = vp.UnitWeight,
+              Large =  vp.Large ?? 0,
+              Broad = vp.Broad ?? 0,
+              High = vp.High ?? 0,
+              Description = vp.Description,
+              CountrysId = vp.CountryId,
+              unitMesaurement = (UnitMesaurement)vp.unit
+            };
+            var result = await _productsServices.CreateAsync(p);
+            if (!result.Success) return RedirectToRoute(new { controller = "Products", action = "Save" });
+            TempData["Message"] = result.Message;
+            TempData["TypeAlert"] = result.TypeAlert;
+            return RedirectToRoute(new { controller = "Products", action = "Index" });
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            var list = await GetCategories();
+            
+            return View("Save", new ViewModelProductsSave
+            {
+                Key = 0,
+                Name = "",
+                State = true,
+                CodeReference = "",
+                UnitWeight = 0,
+                Categories = list,
+                Large = 0,
+                High = 0,
+                Broad = 0,
+                unit = 0,
+                Description = "",
+                CategoriesId = "",
+                CountryId = 0,
+                Units = GetUnitMeasurements(),
+                countries = await GetCountries()
+            });
+        }
+
         [HttpPost]
         public async Task<IActionResult> Edit(ViewModelProductsSave vp)
         {
@@ -85,7 +167,7 @@ namespace ImportCost.Controllers.Products
                  Broad = vp.Broad,
                  High = vp.High,
                  Description = vp.Description,
-                 unitMesaurement = vp.unit,
+                 unitMesaurement = (UnitMesaurement)vp.unit,
                  CountrysId = vp.CountryId
             };
 
@@ -95,6 +177,33 @@ namespace ImportCost.Controllers.Products
             TempData["TypeAlert"] = result.TypeAlert;
             return View("Edit", vp);
            
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var product = await _productsServices.GetKeyAsync(id);
+            if (product == null) return RedirectToRoute(new { controller = "Products", action = "Index" });
+            var listCategories = await GetCategories(product.TarriffCategoriesId);
+            ViewModelProductsSave vp = new()
+            {
+                Key = product.Key,
+                Name = product.Name,
+                State = product.State,
+                CodeReference = product.CodeReference,
+                CategoriesId = product.TarriffCategoriesId,
+                unit = ((int)product.unitMesaurement),
+                UnitWeight = product.UnitWeight,
+                Categories = listCategories,
+                Large = product.Large,
+                Broad = product.Broad,
+                High = product.High,
+                Description = product.Description,
+                CountryId = product.CountrysId,
+                Units = GetUnitMeasurements(),
+                countries = await GetCountries()
+
+            };
+            return View("Edit", vp);
         }
 
         [HttpPost]
@@ -115,51 +224,6 @@ namespace ImportCost.Controllers.Products
             return View("Delete", new ViewModelProductsDelete { Key = product.Key , Name = product.Name});
         }
 
-        public async Task<IActionResult> Edit(int id)
-        {
-            var product = await _productsServices.GetKeyAsync(id);
-            if (product == null) return RedirectToRoute(new { controller = "Products", action = "Index" });
-            var listCategories = await GetCategories();
-            ViewModelProductsSave vp = new()
-            {
-                Key = product.Key,
-                Name = product.Name,
-                State = product.State,
-                CodeReference = product.CodeReference,
-                CategoriesId = product.TarriffCategoriesId,
-                unit = product.unitMesaurement,
-                UnitWeight = product.UnitWeight,
-                Categories = listCategories,
-                Large = product.Large,
-                Broad = product.Broad,
-                High = product.High,
-                Description = product.Description,
-                CountryId = product.CountrysId
-                //agregar el elemento de paises cuando se descomente
-            };
-            return View("Edit", vp);
-        }
-
-        public async Task<IActionResult> Create()
-        {
-            var list = await GetCategories();
-            //agregar categorias de paises cuando se bajen los cambios y unidad cambiar por listado.
-
-            return View("Save", new ViewModelProductsSave { 
-                    Key = 0,
-                    Name = "",
-                    State = true,
-                    CodeReference = "",
-                    UnitWeight = 0,
-                    Categories = list,
-                    Large = 0,
-                    High = 0,
-                    Broad = 0,
-                    unit = Persistence.Entities.Enums.UnitMesaurement.Unit,
-                    Description = "",
-                    CategoriesId = "",
-                    CountryId = 0,
-            });
-        }
+      
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Application.Services.BaseServices;
-using Application.Dto.TarriffCategories;
 using Persistence.Repositories.OperationalCommercial;
 using Persistence.Entities.OperationalCommercial;
 using Application.Services.Result;
+using Application.DTOs.TarriffCategories;
 namespace Application.Services.TarriffCategories
 {
     public class TarriffCategoriesServices : IServicesBase<TariffCategoriesDto, string>
@@ -31,8 +31,9 @@ namespace Application.Services.TarriffCategories
         {
             try
             {
-                var t = await GetKeyAsync(dto.Key);
-                if (t != null) return new ServiceResult() {Success = false, Message =" Ya existe una categoria arancelaria con este codigo", TypeAlert = "danger"};
+                bool t = await _tarriffCategoriesRepository.ExistTariffCode(dto.Key);
+                if (t) return new ServiceResult() {Success = false, Message =" Ya existe una categoría arancelaria con este código", TypeAlert = "danger"};
+                
                 TariffCategories tariffCategories = new (){
                     Key = dto.Key.Trim(),
                     Name = dto.Name,
@@ -43,13 +44,15 @@ namespace Application.Services.TarriffCategories
                     PorcentageTaxSelective = dto.PorcentageTaxSelective
                 };
 
+                bool InvalidTax = tariffCategories.SelectiveTaxApplies && tariffCategories.PorcentageTaxSelective <= 0;
+                if (InvalidTax) return new ServiceResult {Success =false,Message="Si el impuesto selectivo esta marcado como valido el procentaje deber ser mayor a 0", TypeAlert="danger"};
+
                 bool create =  await _tarriffCategoriesRepository.CreateAsync(tariffCategories);
-                if (create) return new ServiceResult { Success = true, Message = "Categoria creada con exito", TypeAlert = "success" };
-                 
-               return new ServiceResult { Success = false, Message = "Ha ocurrido un error en la creacion de la categoria", TypeAlert = "danger" };
+                if (create) return new ServiceResult { Success = true, Message = "categoría creada con éxito", TypeAlert = "success" };
+                return new ServiceResult { Success = false, Message = "Ha ocurrido un error en la creación de la categoría", TypeAlert = "danger" };
             }
             catch (Exception ex) {
-                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion del servicio {ex.Message}", TypeAlert = "danger"};
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicación del servicio {ex.Message}", TypeAlert = "danger"};
             }
         }
 
@@ -62,17 +65,17 @@ namespace Application.Services.TarriffCategories
                 {
                     Success = false,
                     Message = 
-                    "Esta categoria tiene productos asociados por lo que no se puede eliminar, pero puede editar su estado en el apartado de edicion", 
+                    "Esta categoría tiene productos asociados por lo que no se puede eliminar, pero puede editar su estado en el apartado de edición", 
                     TypeAlert = "danger"
                 };
 
                 bool delete = await _tarriffCategoriesRepository.DeleteAsync(key);
-                if (delete) return new ServiceResult() { Success = true, Message = "Categoria arancelaria eliminada con exito", TypeAlert = "success"};
-                return new ServiceResult() { Success = false, Message = " Ha ocurrido un error en la eliminacion de la categoria", TypeAlert = "danger" };
+                if (delete) return new ServiceResult() { Success = true, Message = "categoría arancelaria eliminada con éxito", TypeAlert = "success"};
+                return new ServiceResult() { Success = false, Message = " Ha ocurrido un error en la eliminacion de la categoría", TypeAlert = "danger" };
             }
             catch (Exception ex)
             {
-                return new ServiceResult() { Success = false, Message = $"Ha ocurrido un error en la comunicacion del servicio {ex.Message}", TypeAlert = "danger"} ;
+                return new ServiceResult() { Success = false, Message = $"Ha ocurrido un error en la comunicación del servicio {ex.Message}", TypeAlert = "danger"} ;
             }
         }
         public async Task<ServiceResult> EditAsync(TariffCategoriesDto dto)
@@ -104,8 +107,8 @@ namespace Application.Services.TarriffCategories
                         ) return new ServiceResult
                         {
                             Success = false,
-                            Message = "The category has associated products, so the ITBIS, Category Reference Code, " +
-                            "Tariff Percentage, whether selective tax applies, or the selective tax percentage cannot be modified.",
+                            Message = "La categoría tiene productos asociados, por lo que el ITBIS, Código de Referencia de Categoría, " +
+                            "Porcentaje Arancelario, si se aplica el impuesto selectivo, o si el porcentaje del impuesto selectivo no se puede modificar.",
                             TypeAlert = "danger"
 
                         };
@@ -113,12 +116,12 @@ namespace Application.Services.TarriffCategories
                 }
                 
                 bool edit = await _tarriffCategoriesRepository.EditAsync(tariff);
-                if (edit) return new ServiceResult { Success = true, Message = "Categoria arancelaria modificada con extio", TypeAlert = "success" };
-                return new ServiceResult() { Success = false, Message = "Ha ocurrido un error al procesar la modificacion", TypeAlert = "danger" };
+                if (edit) return new ServiceResult { Success = true, Message = "categoría arancelaria modificada con éxito", TypeAlert = "success" };
+                return new ServiceResult() { Success = false, Message = "Ha ocurrido un error al procesar la modificación", TypeAlert = "danger" };
             }
             catch (Exception ex)
             {
-                return new ServiceResult() { Success = false, Message = $"Error en la comunicacion con el servicio {ex.Message} ", TypeAlert = "danger" };
+                return new ServiceResult() { Success = false, Message = $"Error en la comunicación con el servicio {ex.Message} ", TypeAlert = "danger" };
             }
         }
 

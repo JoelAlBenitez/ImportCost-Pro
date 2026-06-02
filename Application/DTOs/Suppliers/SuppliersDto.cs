@@ -1,6 +1,5 @@
-﻿using Application.Dto.Base;
-
-namespace Application.Dto.Suppliers
+﻿using Application.DTOs.Base;
+namespace Application.DTOs.Suppliers
 {
     public class SuppliersDto : DtoBase<int>
     {

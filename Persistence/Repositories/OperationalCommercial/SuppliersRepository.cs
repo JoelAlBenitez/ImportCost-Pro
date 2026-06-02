@@ -59,20 +59,24 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             return await _context.Suppliers
                 .AsNoTracking()
-                .FirstAsync(s => s.Key == key); 
+                .FirstAsync(s => s.Key == key);
         }
 
         public async Task<bool> ExistName(string name)
         {
-             var s = await _context.Suppliers
-                .AsNoTracking()
-                .FirstAsync(s => s.Name.Trim() == name.Trim());
+            var s = await _context.Suppliers
+               .AsNoTracking()
+               .FirstAsync(s => s.Name.Trim() == name.Trim());
             return s != null;
         }
 
         public async Task<bool> HasSuppliersByCountryId(int countryId)
         {
             return await _context.Suppliers.AnyAsync(s => s.countryId == countryId);
+        }
+        public async Task<bool> AssociateImportationOrderBySupplier(int key)
+        {
+            return await _context.ImportationOrders.AnyAsync(s => s.SupplierId == key);
         }
     }
 }

@@ -1,8 +1,6 @@
-﻿using Application.Dto.Products;
+﻿using Application.DTOs.Products;
 using Application.Services.BaseServices;
 using Application.Services.Result;
-using Persistence.Entities.Enums;
-using Persistence.Entities.FinancialCore;
 using Persistence.Entities.OperationalCommercial;
 using Persistence.Repositories.OperationalCommercial;
 
@@ -34,7 +32,6 @@ namespace Application.Services.ProductsServices
         {
             try
             {
-            
                 Products products = new()
                 {
                     Name = dto.Name,
@@ -51,16 +48,27 @@ namespace Application.Services.ProductsServices
                 };
                 bool exit = await ExistProduct(dto.CodeReference);
 
-                if (exit) return new ServiceResult { Success = false, Message = "Ya existe un producto con este codigo de referencia", TypeAlert = "danger" };
+                int field = 0;
+                if (products.Large.HasValue && products.Large > 0) field++;
+                if (products.High.HasValue && products.High > 0) field++;
+                if (products.Broad.HasValue && products.Broad > 0) field++;
+                if (field > 1 && field != 3) return new ServiceResult { 
+                    Success = false, 
+                    Message = "Ha ocurrido un error en el procesamiento de los datos, se ha intentando colocar " +
+                    "valores no validos en largo, ancho y alto", TypeAlert="danger" };
+
+
+                if (exit) return new ServiceResult { Success = false, Message = "Ya existe un producto con este código de referencia", TypeAlert = "danger" };
                 bool create = await _productsRepository.CreateAsync(products);
+
                 //agregar validacion de pais activo o no activo
-                //agregar validacion de largo, ancho y algo por si uno de los tres tiene valores y los otros no
-                if (create) return new ServiceResult { Success = false, Message = "Producto creado exitosamente", TypeAlert = "success" };
+
+                if (create) return new ServiceResult { Success = false, Message = "Producto creado éxitosamente", TypeAlert = "success" };
                 return new ServiceResult { Success = false, Message = "Ha ocurrido un error al crear el producto", TypeAlert = "danger" };
             }
             catch (Exception ex)
             {
-                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion con el servicio {ex.Message}", TypeAlert = "danger" };
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicación con el servicio {ex.Message}", TypeAlert = "danger" };
             }
         }
 
@@ -68,14 +76,21 @@ namespace Application.Services.ProductsServices
         {
             try
             {
-                //agregar validacion de no eliminacion si el producto esta asociado a ordenes de importacion
+                bool AssociateImportationOrderByProducts = await _productsRepository.AssociateImportationOrderDetailsByProducts(key);
+                if (AssociateImportationOrderByProducts) return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Este producto esta asociado a ordenes de importaciones por lo queno se puede eliminar, " +
+                    "si quiere desactivarlo cambie el estado en el módulo de edición",
+                    TypeAlert = "danger"
+                };
                 bool delete =  await _productsRepository.DeleteAsync(key);
-                if (delete) return new ServiceResult { Success = true, Message = "Producto eliminado con exito", TypeAlert = "success" };
+                if (delete) return new ServiceResult { Success = true, Message = "Producto eliminado con éxito", TypeAlert = "success" };
                 return new ServiceResult { Success = false, Message = "Ha ocurrido un error al intentar eliminar el producto", TypeAlert = "danger" };
             }
             catch (Exception ex)
             {
-                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion del servicio {ex.Message}", TypeAlert = "danger"};
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicación del servicio {ex.Message}", TypeAlert = "danger"};
             }
         }
 
@@ -102,17 +117,17 @@ namespace Application.Services.ProductsServices
 
                 bool exitsMoreProductsWithSameCode = (await _productsRepository.GetAllAsync())
                         .Any(t => t.CodeRefence == products.CodeRefence && t.CodeRefence != products.CodeRefence);
-                if (exitsMoreProductsWithSameCode) return new ServiceResult {Success = false, Message = "Ya existe otro producto asociado a este codigo de referencia" , TypeAlert = "danger"};
+                if (exitsMoreProductsWithSameCode) return new ServiceResult {Success = false, Message = "Ya existe otro producto asociado a este código de referencia" , TypeAlert = "danger"};
                     
                 bool edit = await _productsRepository.EditAsync(products);
 
-                if (edit) return new ServiceResult { Success = true, Message = "Producto editado exitosamente", TypeAlert = "success" };
-                return new ServiceResult { Success = false, Message = "Ha ocurrido un error en al edicion del producto", TypeAlert = "danger" };
+                if (edit) return new ServiceResult { Success = true, Message = "Producto editado éxitosamente", TypeAlert = "success" };
+                return new ServiceResult { Success = false, Message = "Ha ocurrido un error en al edición del producto", TypeAlert = "danger" };
 
             }
             catch (Exception ex)
             {
-                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en al comunicacion del servicio {ex.Message}", TypeAlert = "danger"};
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en al comunicación del servicio {ex.Message}", TypeAlert = "danger"};
             }
         }
 
@@ -194,5 +209,7 @@ namespace Application.Services.ProductsServices
                 return null!;
             }
         }
+
+        
     }
 }

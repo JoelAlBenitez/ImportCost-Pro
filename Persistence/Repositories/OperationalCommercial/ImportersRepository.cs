@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿﻿using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Entities.OperationalCommercial;
 using Persistence.Repositories.Base;
@@ -59,17 +59,22 @@ namespace Persistence.Repositories.OperationalCommercial
                 .AsNoTracking()
                 .FirstAsync(i => i.Key == key); 
         }
-public async Task<bool> ExistImportersByRnc(string rnc)
-{
-    return await _context.Importers.FirstAsync(i => i.Identification == rnc) != null; 
-}
+        public async Task<bool> ExistImportersByRnc(string rnc)
+        {
+            return await _context.Importers.FirstAsync(i => i.Identification == rnc) != null; 
+        }
 
-public async Task<bool> HasImportersByCountryId(int countryId)
-{
-    return await _context.Importers.AnyAsync(i => i.countryId == countryId);
-}
-}
+        public async Task<bool> HasImportersByCountryId(int countryId)
+        {
+            return await _context.Importers.AnyAsync(i => i.countryId == countryId);
+        }
+
+        public async Task<bool> AssociatedImportationOrderByImporters(int key)
+        {
+            return await _context.ImportationOrders.AnyAsync(i => i.ImporterId == key);
+        }
+    }
+
 }
       
     
-

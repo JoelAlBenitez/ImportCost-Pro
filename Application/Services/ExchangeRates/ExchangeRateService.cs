@@ -1,10 +1,11 @@
-using Application.DTOs.FinancialCore;
-using Application.Interfaces.FinancialCore;
+using Application.DTOs.ExchangeRates;
+using Application.Services.BaseServices;
+using Application.Services.Result;
 using Persistence.Repositories.FinancialCore;
 
 namespace Application.Services.ExchangeRates
 {
-    public class ExchangeRateService : IExchangeRateService
+    public class ExchangeRateService : IServicesBase<ExchangeRateDto, int>
     {
         private readonly ExchangeRateRepository _repository;
 
@@ -18,22 +19,22 @@ namespace Application.Services.ExchangeRates
             throw new NotImplementedException();
         }
 
-        public Task<ExchangeRateDto?> GetByIdAsync(int id)
+        public Task<ExchangeRateDto> GetKeyAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> CreateAsync(ExchangeRateDto dto)
+        public Task<ServiceResult> CreateAsync(ExchangeRateDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateAsync(ExchangeRateDto dto)
+        public Task<ServiceResult> EditAsync(ExchangeRateDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public Task<ServiceResult> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }

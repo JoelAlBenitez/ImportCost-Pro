@@ -1,4 +1,4 @@
-﻿using Application.Services.Result;
+using Application.Services.Result;
 
 namespace Application.Services.BaseServices
 {

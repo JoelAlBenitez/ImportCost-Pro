@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModel.TarriffCategories
+namespace Application.ViewModel.TarriffCategories
 {
     public class ViewModelTarriffCategoriesDelete
     {
