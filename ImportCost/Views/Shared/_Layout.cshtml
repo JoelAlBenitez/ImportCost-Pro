@@ -48,6 +48,13 @@
                         <span>Importadores</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Supploers" ? "active" : "")"
+                       asp-area="" asp-controller="Suppliers" asp-action="Index">
+                       <i class="bi bi-truck"></i>
+                        <span>Proveedores</span>
+                    </a>
+                </li>
               
                 @*metan sus opciones aqui  pongalo asi como los de arriba para el efecto de cambio de item*@
             </ul>

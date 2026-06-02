@@ -85,8 +85,6 @@ namespace ImportCost.Controllers.Suppliers
             return list;
         }
 
-
-
         public async Task<IActionResult> Create() { 
             return View("Save", new ViewModelSuppliersSave {
                 Name = "",
@@ -99,44 +97,55 @@ namespace ImportCost.Controllers.Suppliers
                 CurrencyId = 0 
             });
         }
-        public async Task<IActionResult> Edit(int key)
+        public async Task<IActionResult> Edit(int id)
         {
-            var s = await _suppliersServices.GetKeyAsync(key);
-            if (s == null) return RedirectToRoute(new {controller ="Suppliers", action="Edit"});
+            var s = await _suppliersServices.GetKeyAsync(id);
+            if (s == null) { 
+                RedirectToAction(nameof(Edit));
+            }
+            
             ViewModelSuppliersSave vs = new() { 
                 Key = s.Key,
                 Name = s.Name,
                 CountryId = s.CountryId, 
                 State = s.State,
-                Email = s.Email  ?? "NA",
-                Phone = s.PhoneNumber ?? "-",
+                Email = s.Email!,
+                Phone = s.PhoneNumber!,
                 Countries = await GetCountries(),
                 CurrencyId = s.CurrencyId, 
                 Currencies = await GetCurrencies(s.CurrencyId)
             };
-            return View(vs);
+            return View("Edit", vs);
         }
-        public async Task<IActionResult> Delete(int key)
+        public async Task<IActionResult> Delete(int id)
         {
-            var s = await _suppliersServices.GetKeyAsync(key);
-            if (s == null) return RedirectToRoute(new {controller = "Suppliers", action ="Delete"});
+            var s = await _suppliersServices.GetKeyAsync(id);
+            if (s == null) return RedirectToAction(nameof(Delete));
             return View("Delete", new ViewModelSuppliersDelete { Key = s.Key, NameSupplier = s.Name});
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(ViewModelSuppliersDelete vs)
         {
-            if (!ModelState.IsValid) return RedirectToRoute(new {controller = "Suppliers", action  = "Delete"});
+            if (!ModelState.IsValid) return View("Delete", vs);
+            
+            
             var result = await _suppliersServices.DeleteAsync(vs.Key);
-            if (!result.Success) return RedirectToRoute(new { controller = "Suppliers", action ="Delete"});
+            if (!result.Success) return RedirectToAction(nameof(Delete));
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            return RedirectToRoute(new { controller = "Suppliers", action = "Index" });
+            return RedirectToAction(nameof(Index));
         }
         [HttpPost]
         public async Task<IActionResult> Edit(ViewModelSuppliersSave vs)
         {
-            if (!ModelState.IsValid) return RedirectToRoute(new {controller = "Suppliers", action ="Edit"});
+            if (!ModelState.IsValid) {
+
+                vs.Currencies = await GetCurrencies();
+                vs.Countries = await GetCountries();
+                View("Edit", vs);
+            }
+            
             SuppliersDto sup = new() { 
                 Key = vs.Key,
                 Name = vs.Name,
@@ -147,14 +156,20 @@ namespace ImportCost.Controllers.Suppliers
                 CurrencyId = vs.CurrencyId
             };
             var result = await _suppliersServices.EditAsync(sup);
-            if (!result.Success) return RedirectToRoute(new { controller="Suppliers", action="Edit"});
+            if (!result.Success) return RedirectToAction(nameof(Edit));
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            return RedirectToRoute(new {controller ="Suppliers",action="Index" });
+            return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Create(ViewModelSuppliersSave vs)
         {
-            if (!ModelState.IsValid) return RedirectToRoute(new { controller = "Suppliers", action = "Save" });
+            if (!ModelState.IsValid) {
+
+                vs.Currencies = await GetCurrencies();
+                vs.Countries = await GetCountries();
+                View("Save", vs);
+            }
+            
             SuppliersDto sp = new() { 
                 Key = vs.Key,
                 Name = vs.Name,
@@ -165,10 +180,10 @@ namespace ImportCost.Controllers.Suppliers
                 CurrencyId = vs.CurrencyId
             };
             var result = await _suppliersServices.CreateAsync(sp);
-            if (!result.Success) return RedirectToRoute(new {controller="Suppliers", action="Save"});
+            if (!result.Success) return RedirectToAction(nameof(Create));
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
-            return RedirectToRoute(new {controller ="Suppliers",  action="Index"});
+            return RedirectToAction(nameof(Index));
         }
     }
 }

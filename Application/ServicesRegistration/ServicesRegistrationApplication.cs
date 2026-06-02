@@ -1,4 +1,5 @@
 ﻿using Application.Services.Countries;
+using Application.Services.Currencies;
 using Application.Services.Importers;
 using Application.Services.ProductsServices;
 using Application.Services.SuppliersServices;
@@ -16,6 +17,7 @@ namespace Application.ServicesRegistration
             services.AddScoped<SuppliersServices>();
             services.AddScoped<ImportersServices>();
             services.AddScoped<CountryService>();
+            services.AddScoped<CurrencyService>();
 
             //agreguen sus dependencias aqui
             return services;

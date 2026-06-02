@@ -1,0 +1,61 @@
+﻿@using Application.ViewModel.Suppliers;
+@model ViewModelSuppliersSave;
+
+<div class="card-header bg-white border-0 p-0 mb-4">
+    <h5 class="fw-bold text-dark">Registrar Nuevo Suplidor </h5>
+</div>
+
+<form asp-controller="Suppliers" asp-action="Create" method="POST">
+
+    <div class="row g-3">
+        <div class="col-12">
+            <label asp-for="Name" class="form-label fw-semibold small text-muted">Nombre del Suplidor</label>
+            <input asp-for="Name" class="form-control rounded-3" placeholder="Ej: Juan Perez" />
+            <span asp-validation-for="Name" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Phone" class="form-label fw-semibold small text-muted">Número telefónico</label>
+            <input asp-for="Phone" class="form-control rounded-3" />
+            <span asp-validation-for="Phone" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Email" class="form-label fw-semibold small text-muted">Correo Electrónico</label>
+            <input asp-for="Email" type="number" step="0.01" class="form-control rounded-3" />
+            <span asp-validation-for="Email" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="CurrencyId" class="form-label fw-semibold small text-muted">Monedas</label>
+            <select asp-for="CurrencyId" class="form-select rounded-3">
+                @foreach (var cat in Model.Currencies!)
+                {
+                    <option value="@cat.Id">@cat.NameCurrency</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="CountryId" class="form-label fw-semibold small text-muted">Países</label>
+            <select asp-for="CountryId" class="form-select rounded-3">
+                @foreach (var u in Model.Countries!)
+                {
+                    <option value="@u.CountryId">@u.CountryName</option>
+                }
+            </select>
+        </div>
+
+     
+        <div class="col-12">
+            <div class="form-check form-switch">
+                <input asp-for="State" class="form-check-input" type="checkbox" id="stateSwitch">
+                <label class="form-check-label" for="stateSwitch">Proveedor Activo</label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer mt-4 border-0">
+        <a asp-controller="Products" asp-action="Index" class="btn btn-light rounded-3 px-4">Volver Atras</a>
+        <button type="submit" class="btn btn-primary rounded-3 px-4 shadow-sm">Guardar Proveedor</button>
+    </div>
+</form>
