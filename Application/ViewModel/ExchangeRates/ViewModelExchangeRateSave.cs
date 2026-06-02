@@ -13,7 +13,7 @@ namespace Application.ViewModel.ExchangeRates
         [Required(ErrorMessage = "Debe seleccionar una moneda de destino.")]
         public int DestinationCurrencyId { get; set; }
 
-        // Propiedades para llenar los <select> en la vista
+      
         public List<ViewModelSelectCurrency>? Currencies { get; set; }
 
         [Required(ErrorMessage = "El valor de la tasa es obligatorio.")]
