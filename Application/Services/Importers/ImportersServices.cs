@@ -106,10 +106,12 @@ namespace Application.Services.Importers
                 var importers = await _importersRepository.GetAllAsync();
                 var imp = new List<ImporterDto>();
 
-                if (importers != null)
+                if (importers.Any())
                 {
+                    
                     foreach (var item in importers)
                     {
+                       
                         ImporterDto importerDto = new()
                         {
                             Key = item.Key,
@@ -123,12 +125,14 @@ namespace Application.Services.Importers
                             CountryName = item.country!.Name
 
                         };
+                       
                         imp.Add(importerDto);
 
                     }
                     return imp;
 
-                }return null!;
+                }
+                return null!;
             }
             catch(Exception )
             {

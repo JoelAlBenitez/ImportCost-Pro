@@ -75,10 +75,13 @@ namespace ImportCost.Controllers.Importers
         [HttpPost]
         public async Task<IActionResult> Create(ViewModelImporterSave vp)
         {
+
+           
             if (!ModelState.IsValid)
             { 
                 vp.Countries = await GetCountries();
-                return RedirectToAction(nameof(Create)); }
+                return View("Save", vp);
+            }
 
             ImporterDto importerDto = new (){ 
                 Key = 0,
@@ -94,7 +97,7 @@ namespace ImportCost.Controllers.Importers
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
             if (!result.Success) return RedirectToAction(nameof(Index));
-          
+ 
             return RedirectToAction(nameof(Index));
         }
 
@@ -116,13 +119,14 @@ namespace ImportCost.Controllers.Importers
             };
             return View("Edit", viewModelImporterSave);
         }
+
         [HttpPost]
         public async Task<IActionResult> Edit (ViewModelImporterSave viewModelImporterSave) {
 
             if (!ModelState.IsValid) { 
                 
                 viewModelImporterSave.Countries = await GetCountries();
-                return RedirectToAction(nameof(Index));
+                return View("Edit", viewModelImporterSave);
             }
             ImporterDto importerDto = new () { 
                 Key = viewModelImporterSave.Key,
@@ -153,9 +157,10 @@ namespace ImportCost.Controllers.Importers
 
             return  RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> Delete( int key)
+
+        public async Task<IActionResult> Delete(int id)
         {
-            var import = await _importersServices.GetKeyAsync(key);
+            var import = await _importersServices.GetKeyAsync(id);           
             if (import == null) return RedirectToAction(nameof(Index));
             return View("Delete", new ViewModelImportDelete { Key = import.Key, Name = import.Name});
         }

@@ -50,6 +50,7 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             return await _context.Importers.Where(i => i.State == true)
                 .AsNoTracking()
+                .Include(i => i.country)
                 .ToListAsync();
         }
 
@@ -57,7 +58,8 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             return await _context.Importers
                 .AsNoTracking()
-                .FirstAsync(i => i.Key == key); 
+                .Include(i => i.country)
+                .FirstOrDefaultAsync(i => i.Key == key); 
         }
         public async Task<bool> ExistImportersByRnc(string rnc)
         {

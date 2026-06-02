@@ -41,6 +41,13 @@
                         <span>Categorías Arancelarias</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Importers" ? "active" : "")"
+                       asp-area="" asp-controller="Importers" asp-action="Index">
+                        <i class="bi bi-box-arrow-in-down"></i>
+                        <span>Importadores</span>
+                    </a>
+                </li>
               
                 @*metan sus opciones aqui  pongalo asi como los de arriba para el efecto de cambio de item*@
             </ul>
