@@ -1,0 +1,157 @@
+﻿@using Application.ViewModel.Products;
+@model List<ViewModelProducts>;
+
+@{
+    ViewData["Title"] = "Gestión de Productos";
+}
+
+
+<div class="container-fluid py-4">
+    
+    @*mensaje que retorna el controller segun lo que haya pasado*@
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["TypeAlert"] w-auto h-25 alert-dismissible fade show shadow-sm border-0" role="alert" >
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <div class="row mb-4 align-items-center">
+        <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
+            <div class="input-group shadow-sm rounded-3 overflow-hidden bg-white">
+                <span class="input-group-text bg-white border-0 text-muted ps-3">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" id="liveSearch" class="form-control border-0 shadow-none py-2" placeholder="Buscar producto..." maxlength="15" />
+            </div>
+        </div>
+        
+        <div class="col-12 col-md-6 text-md-end"> 
+            <a  asp-controller="Products" asp-action="Create"
+            class="btn btn-primary px-4 py-2 fw-semibold rounded-3 shadow-sm d-inline-flex align-items-center gap-2">
+                <i class="bi bi-box-seam"></i>
+                Agregar Nuevo
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-light">
+        <div class="row g-0 align-items-center">
+            <div class="col-md-8 p-4 p-md-5">
+                <h2 class="h4 fw-bold text-dark mb-2">Catálogo de Sistema</h2>
+                <p class="text-secondary mb-3 text-wrap">
+                    Gestiona los diversos productos del sistema con un solo clic. Agrega, edita o elimina inventario de manera eficiente.
+                </p>
+                <a href="#" class="text-decoration-none fw-semibold d-inline-flex align-items-center gap-1 text-primary">
+                    ¿Necesitas Ayuda? <i class="bi bi-info-circle-fill"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row gap-4 gap-lg-0">
+        
+        <div class="col-12 col-lg-2">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="list-group list-group-flush rounded-3">
+                    <a class="list-group-item list-group-item-action active fw-semibold border-0 py-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-box-seam"></i> Productos
+                    </a>
+                    <a asp-controller="Countrys" asp-action="Index" class="list-group-item list-group-item-action border-0 py-3 text-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-globe-americas"></i> Países
+                    </a>
+                    <a asp-controller="Tariff" asp-action="Index" class="list-group-item list-group-item-action border-0 py-3 text-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-tags"></i> Categorías Arancelarias
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-10">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="productsTable">
+                        <thead class="table-light text-secondary text-uppercase" style="font-size: 0.67rem;">
+                            <tr>
+                                <th class="py-3 ps-4 fw-semibold">Cód/Ref</th>
+                                <th class="py-3 fw-semibold">Nombre</th>
+                                <th class="py-3 fw-semibold">Categoría</th>
+                                <th class="py-3 fw-semibold">País</th>
+                                <th class="py-3 fw-semibold">Medida</th>
+                                <th class="py-3 fw-semibold">Peso Unitario"</th>
+                                <th class="py-3 fw-semibold">Estado</th>
+                                <th class="py-3 fw-semibold">Largo</th>
+                                <th class="py-3 fw-semibold">Ancho</th>
+                                <th class="py-3 fw-semibold">Alto</th>
+                                <th class="py-3 text-end pe-4 fw-semibold">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="border-top-0" id="tableBody">
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr class="paginationTable" >
+                                        <td class="ps-4 text-muted font-monospace small">@item.CodeReference</td>
+                                        <td class="fw-semibold text-dark">@item.Name</td>
+                                        <td>
+                                            <span class="badge bg-light text-dark border px-2 py-1 rounded-2 fw-normal">@item.TarffCategoriesName</span>
+                                        </td>
+                                        <td class="text-secondary small">@item.CountryName</td>
+                                       
+                                        <td class="text-secondary small">
+                                           @item.unitMesaurement
+                                        </td>
+                                        <td class="text-secondary small">@item.UnitWeight</td>
+                                        <td class="text-secondary small">
+                                            <span class="badge @(item.State ? "bg-primary" : "bg-danger") bg-opacity-10 @(item.State ? "text-primary" : "text-danger") px-2 py-1 rounded-2 fw-normal border @(item.State ? "border-primary" : "border-danger") border-opacity-25">
+                                                @(item.State ? "Activo" : "Inactivo")
+                                            </span>
+                                        </td>
+                                        <td class="text-secondary small">
+                                            @(item.Large != 0 ? item.Large : "0")
+                                        </td>
+                                        <td class="text-secondary small">
+                                            @(item.Broad != 0 ? item.Large : "0")
+                                        </td>
+                                        <td class="text-secondary small">
+                                            @(item.High != 0 ? item.Large : "0")
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <div class="btn-group shadow-sm rounded-3">
+                                                <a data-modal="true" asp-controller="Products" asp-action="Edit" asp-route-id="@item.key" class="btn btn-sm btn-light text-success border-end" title="Editar">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <a  data-modal="true" asp-controller="Products" asp-action="Delete"  asp-route-id="@item.key" class="btn btn-sm btn-light text-danger" title="Eliminar">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr id="noDataRow">
+                                    <td colspan="6" class="text-center py-5 text-muted">
+                                        <i class="bi bi-inbox fs-2 d-block mb-2 opacity-50"></i>
+                                        No hay productos registrados.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card-footer bg-white border-top-0 p-3 d-flex justify-content-between align-items-center">
+                    <span class="text-muted small" id="paginationInfo">Mostrando  @(Model?.Count ?? 0) productos</span>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                            </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

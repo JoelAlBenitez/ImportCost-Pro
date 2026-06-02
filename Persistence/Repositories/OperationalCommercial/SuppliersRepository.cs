@@ -52,6 +52,8 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             return await _context.Suppliers
                 .AsNoTracking()
+                .Include(s => s.MainCurrency)
+                .Include(s => s.Country)
                 .ToListAsync();
         }
 
@@ -59,14 +61,16 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             return await _context.Suppliers
                 .AsNoTracking()
-                .FirstAsync(s => s.Key == key);
+                 .Include(s => s.MainCurrency)
+                .Include(s => s.Country)
+                .FirstOrDefaultAsync(s => s.Key == key);
         }
 
         public async Task<bool> ExistName(string name)
         {
             var s = await _context.Suppliers
                .AsNoTracking()
-               .FirstAsync(s => s.Name.Trim() == name.Trim());
+               .FirstOrDefaultAsync(s => s.Name.Trim() == name.Trim());
             return s != null;
         }
 

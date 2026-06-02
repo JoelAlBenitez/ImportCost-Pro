@@ -14,8 +14,7 @@ namespace Application.ViewModel.TarriffCategories
         [StringLength(150)]
         public required string Name { get; set; }
 
-        [Required(ErrorMessage = "Ingrese un porcentaje de arancel válido, debe estar entre 0 y 100.")]
-        [Range(0, 100)]
+        [Range(0, 100, ErrorMessage = "El porcentaje de arancel debe tener un valor entre 0 y 100")]
         public required decimal TarriffPorcetage { get; set; }
 
         [Required(ErrorMessage = "Debe indicar una opción válida para la aplicación o no aplicación del ITBIS.")]
@@ -30,19 +29,22 @@ namespace Application.ViewModel.TarriffCategories
         [Required(ErrorMessage = "La categoría de arancel debe tener un estado válido.")]
         public required bool State { get; set; }
 
+        public string? OldTariffCode { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (SelectiveTaxApplies && PorcentageTaxSelective <= 0)
+            if (SelectiveTaxApplies && PorcentageTaxSelective <= 0  )
             {
                 yield return new ValidationResult(
                     "Si el impuesto selectivo esta marcado como verdadero, el porcentaje del impuesto selectivo debe ser mayor a 0",
                     new[] { nameof(PorcentageTaxSelective) }
                     );
             }
+
             if(!SelectiveTaxApplies && PorcentageTaxSelective != 0)
             {
                 yield return new ValidationResult(
-                   "Si el impuestose selectivo no aplica, el porcentaje delimpuesto selectivo debe ser 0.",
+                   "Si el impuestose selectivo no aplica, el porcentaje del impuesto selectivo debe ser 0.",
                    new[] { nameof(PorcentageTaxSelective) }
                    );
             }            
