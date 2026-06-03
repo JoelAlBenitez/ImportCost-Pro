@@ -125,7 +125,8 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             if (detail == null)
             {
-                TempData["ErrorMessage"] = "No se encontró el producto solicitado.";
+                TempData["Message"] = "No se encontró el gasto solicitado.";
+                TempData["TypeMessage"] = "danger"; 
                 return RedirectToAction("Index", "ImportationOrders");
             }
 
@@ -169,7 +170,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             catch (Exception ex)
             {
                 TempData["Message"] = "Ocurrió un error inesperado: " + ex.Message;
-                TempData["TypeMessage"] = "error";
+                TempData["TypeMessage"] = "danger";
                 return View(viewModel);
             }
         }
@@ -189,7 +190,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             catch (Exception ex)
             {
                 TempData["Message"] = "Ocurrió un error inesperado: " + ex.Message;
-                TempData["TypeMessage"] = "error";
+                TempData["TypeMessage"] = "danger";
             }
             return RedirectToAction(nameof(Index), new { orderId = orderId });
         }
