@@ -31,8 +31,10 @@ namespace ImportCost.ViewModels.ImportationExpenses
         [Required(ErrorMessage = "La fecha del gasto es obligatoria.")]
         [DataType(DataType.Date)]
         [Display(Name = "Fecha del Gasto")]
-        public DateTime ImportationExpenseDate { get; set; } = DateTime.Today;
         public List<ViewModelSelectCurrency> CurrenciesList { get; set; } = new();
-        public DateTime ExpenseDate { get; set; }
+        [Required(ErrorMessage = "La fecha es obligatoria.")]
+        [DataType(DataType.Date)]
+        [Display(Name = "Fecha del Gasto")]
+        public DateTime ExpenseDate { get; set; } = DateTime.Today;
     }
 }

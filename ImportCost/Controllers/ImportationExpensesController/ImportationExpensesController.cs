@@ -1,6 +1,7 @@
-﻿using Application.DTOs.Expenses;
+﻿    using Application.DTOs.Expenses;
 using Application.Services.Currencies;
 using Application.Services.ImportationExpenseServices;
+using Application.Services.ImportationOrderServices;
 using ImportCost.ViewModels.ImportationExpenses;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,13 +11,16 @@ namespace ImportCost.Controllers
     {
         private readonly ImportationExpenseService _expenseService;
         private readonly CurrencyService _currenciesService;
+        private readonly ImportationOrderService _orderService; 
 
         public ImportationExpensesController(
             ImportationExpenseService expenseService,
-            CurrencyService currenciesService)
+            CurrencyService currenciesService,
+            ImportationOrderService orderService)
         {
             _expenseService = expenseService;
             _currenciesService = currenciesService;
+            _orderService = orderService;
         }
 
         [HttpGet]
@@ -65,6 +69,14 @@ namespace ImportCost.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ExpenseCreateViewModel viewModel)
         {
+
+            if (!await IsOrderEditable(viewModel.OrderId))
+            {
+                TempData["Message"] = "Acción prohibida: Esta orden no permite modificaciones.";
+                TempData["TypeAlert"] = "danger";
+                return RedirectToAction("Index", "ImportationOrders");
+            }
+
             if (!ModelState.IsValid)
             {
                 await LoadCatalogsAsync(viewModel);
@@ -127,6 +139,14 @@ namespace ImportCost.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(ExpenseEditViewModel viewModel)
         {
+
+            if (!await IsOrderEditable(viewModel.OrderId))
+            {
+                TempData["Message"] = "Acción prohibida: Esta orden no permite modificaciones.";
+                TempData["TypeAlert"] = "danger";
+                return RedirectToAction("Index", "ImportationOrders");
+            }
+
             if (!ModelState.IsValid)
             {
                 await LoadCatalogsAsync(viewModel, viewModel.CurrencyId);
@@ -170,6 +190,13 @@ namespace ImportCost.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id, string orderId)
         {
+            if (!await IsOrderEditable(orderId))
+            {
+                TempData["Message"] = "Acción prohibida: Esta orden no permite modificaciones.";
+                TempData["TypeAlert"] = "danger";
+                return RedirectToAction("Index", "ImportationOrders");
+            }
+
             try
             {
                 var result = await _expenseService.RemoveExpenseAsync(id);
@@ -196,6 +223,12 @@ namespace ImportCost.Controllers
                     Id = c.Key,
                     NameCurrency = c.Name
                 }).ToList();
+        }
+
+        private async Task<bool> IsOrderEditable(string orderId)
+        {
+            var order = await _orderService.GetEntityById(orderId);
+            return order != null && order.OrderState == Persistence.Entities.Enums.OrderState.Abierta;
         }
     }
 }

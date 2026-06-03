@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.OrderDetails;
 using Application.Services.ImportationOrderDetailServices;
+using Application.Services.ImportationOrderServices;
 using Application.Services.Importers;
 using Application.Services.ProductsServices;
 using ImportCost.ViewModels.OrderDetails;
@@ -13,33 +14,35 @@ namespace ImportCost.Controllers.OrderDetailsController
     {
         private readonly ImportationOrderDetailService _importationOrderDetailService;
         private readonly ProductsServices _productsService;
+        private readonly ImportationOrderService _orderService;
 
-        public OrderDetailsController(ImportationOrderDetailService detailService, ProductsServices productsService)
+        public OrderDetailsController(ImportationOrderDetailService detailService, ProductsServices productsService, ImportationOrderService orderService)
         {
             _importationOrderDetailService = detailService;
             _productsService = productsService;
+            _orderService = orderService;
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> Index(string orderId) 
+        public async Task<IActionResult> Index(string orderId)
         {
             if (string.IsNullOrWhiteSpace(orderId))
             {
                 TempData["ErrorMessage"] = "Debes seleccionar una orden para ver sus detalles.";
-                return RedirectToAction("Index", "ImportationOrders"); 
+                return RedirectToAction("Index", "ImportationOrders");
             }
 
             var detailsList = await _importationOrderDetailService.GetDetailsByOrderIdAsync(orderId);
 
             var viewModelList = detailsList.Select(detail => new OrderDetailEditViewModel
             {
-                OrderDetailId = detail.OrderDetailId,  
-                OrderId = detail.OrderDetailId,
+                OrderDetailId = detail.OrderDetailId,
+                OrderId = detail.OrderId,
                 ProductName = detail.ProductName,
                 Quantity = detail.Quantity,
                 FOBUnitPrice = detail.FOBUnitPrice,
-                TotalFOB = detail.Quantity * detail.FOBUnitPrice  
+                TotalFOB = detail.Quantity * detail.FOBUnitPrice
             }).ToList();
 
             ViewBag.CurrentOrderId = orderId;
@@ -57,7 +60,7 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             var viewModel = new OrderDetailCreateViewModel
             {
-                OrderId = orderId  
+                OrderId = orderId
             };
 
             await LoadProductsCatalogAsync(viewModel);
@@ -65,9 +68,16 @@ namespace ImportCost.Controllers.OrderDetailsController
             return View("Create", viewModel);
         }
 
-        [HttpPost] 
+        [HttpPost]
         public async Task<IActionResult> Create(OrderDetailCreateViewModel viewModel)
         {
+            if (!await IsOrderEditable(viewModel.OrderId))
+            {
+                TempData["Message"] = "Acción prohibida: Esta orden no permite modificaciones.";
+                TempData["TypeAlert"] = "danger";
+                return RedirectToAction("Index", "ImportationOrders");
+            }
+
             if (!ModelState.IsValid)
             {
                 await LoadProductsCatalogAsync(viewModel);
@@ -99,31 +109,31 @@ namespace ImportCost.Controllers.OrderDetailsController
 
         private async Task LoadProductsCatalogAsync(OrderDetailCreateViewModel viewModel)
         {
-            
+
             var products = await _productsService.GetAllAsync();
-  
+
             viewModel.ProductsList = products
                 .Where(p => p.State == true)
                 .Select(p => new Application.ViewModel.Select.ViewModelSelectProducts
-            {
-                CodeReference = p.Key,
-                ProductName = p.Name
-            }).ToList();
+                {
+                    CodeReference = p.Key,
+                    ProductName = p.Name
+                }).ToList();
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(string id)  
+        public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
                 return RedirectToAction("Index", "ImportationOrders");
 
-          
+
             var detail = await _importationOrderDetailService.GetDetailByIdAsync(id);
 
             if (detail == null)
             {
                 TempData["Message"] = "No se encontró el gasto solicitado.";
-                TempData["TypeMessage"] = "danger"; 
+                TempData["TypeMessage"] = "danger";
                 return RedirectToAction("Index", "ImportationOrders");
             }
 
@@ -139,11 +149,19 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             return View("Edit", viewModel);
         }
- 
+
         [HttpPost]
         public async Task<IActionResult> Edit(OrderDetailEditViewModel viewModel)
         {
+
             if (!ModelState.IsValid) return View("Edit", viewModel);
+
+            if (!await IsOrderEditable(viewModel.OrderId))
+            {
+                TempData["Message"] = "Acción prohibida: Esta orden no permite modificaciones.";
+                TempData["TypeAlert"] = "danger";
+                return RedirectToAction("Index", "ImportationOrders");
+            }
 
             var dto = new OrderDetailUpdateDTO
             {
@@ -170,9 +188,16 @@ namespace ImportCost.Controllers.OrderDetailsController
                 return View("Edit", viewModel);
             }
         }
-        [HttpPost] 
+        [HttpPost]
         public async Task<IActionResult> Delete(string id, string orderId)
         {
+            if (!await IsOrderEditable(orderId))
+            {
+                TempData["Message"] = "Acción prohibida: Esta orden no permite modificaciones.";
+                TempData["TypeAlert"] = "danger";
+                return RedirectToAction("Index", "ImportationOrders");
+            }
+
             try
             {
                 var result = await _importationOrderDetailService.RemoveProductFromOrderAsync(id);
@@ -186,7 +211,19 @@ namespace ImportCost.Controllers.OrderDetailsController
                 TempData["Message"] = "Ocurrió un error inesperado: " + ex.Message;
                 TempData["TypeMessage"] = "danger";
             }
+
+
+
             return RedirectToAction(nameof(Index), new { orderId = orderId });
+
+
+        }
+
+
+        private async Task<bool> IsOrderEditable(string orderId)
+        {
+            var order = await _orderService.GetEntityById(orderId);
+            return order != null && order.OrderState == Persistence.Entities.Enums.OrderState.Abierta;
         }
     }
 }
