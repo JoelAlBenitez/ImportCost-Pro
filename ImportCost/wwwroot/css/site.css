@@ -1,31 +1,168 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+:root {
+    --sidebar-width: 260px;
+    --md-surface: #f8f9fa;
+    --md-primary: #0d6efd; 
+    --md-hover: rgba(13, 110, 253, 0.08);
+    --md-active: rgba(13, 110, 253, 0.15);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: #f4f6f9;
+    overflow-x: hidden;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+#sidebar {
+    min-width: var(--sidebar-width);
+    max-width: var(--sidebar-width);
+    background-color: #ffffff;
+    color: #333;
+    transition: var(--transition-smooth);
+    z-index: 99;
+    box-shadow: 1px 0 10px rgba(0,0,0,0.03);
+}
+
+    #sidebar .nav-link {
+        padding: 0.75rem 1.25rem;
+        color: #5f6368;
+        font-weight: 500;
+        border-radius: 0 25px 25px 0; 
+        margin-right: 15px;
+        transition: var(--transition-smooth);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        #sidebar .nav-link i {
+            font-size: 1.2rem;
+            transition: var(--transition-smooth);
+        }
+
+        #sidebar .nav-link:hover {
+            background-color: var(--md-hover);
+            color: var(--md-primary);
+        }
+
+        #sidebar .nav-link.active {
+            background-color: var(--md-active);
+            color: var(--md-primary);
+            font-weight: 600;
+        }
+
+#content {
+    width: 100%;
+    min-height: 100vh;
+    transition: var(--transition-smooth);
+}
+
+.top-navbar {
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: calc(-1 * var(--sidebar-width));
+        position: fixed;
+        height: 100vh;
+    }
+
+        #sidebar.active {
+            margin-left: 0;
+        }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 98;
+        opacity: 0;
+        transition: var(--transition-smooth);
+    }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+}
+.transition-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+    .transition-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+    }
+
+.bg-success-light {
+    background-color: rgba(25, 135, 84, 0.1);
+}
+
+.text-success {
+    color: #198754;
+}
+
+.bg-primary-light {
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+.text-primary {
+    color: #0d6efd;
+}
+
+.bg-danger-light {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.text-danger {
+    color: #dc3545;
+}
+
+.bg-warning-light {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.text-warning {
+    color: #ffc107;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.card {
+    border-radius: 0.75rem;
+}
+
+.card-header {
+    border-radius: 0.75rem 0.75rem 0 0;
+}
+
+.btn-outline-primary {
+    border-color: #0d6efd;
+    color: #0d6efd;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 1rem !important;
+    }
 }

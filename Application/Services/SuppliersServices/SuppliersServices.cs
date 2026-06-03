@@ -58,7 +58,7 @@ namespace Application.Services.SuppliersServices
 
                 bool delete = await _suppliersRepository.DeleteAsync(key);
                 if (delete) return new ServiceResult{Success = true, Message = "Suplidor eliminado con exito", TypeAlert ="success"};
-                return new ServiceResult { Success=false, Message ="Ha ocurrido  un error al intentar eliminar al suplidor", TypeAlert="danger" };
+                return new ServiceResult { Success= false, Message = "Ha ocurrido  un error al intentar eliminar al suplidor", TypeAlert="danger" };
 
             }catch(Exception ex)
             {
@@ -69,18 +69,21 @@ namespace Application.Services.SuppliersServices
 
         private async Task<ServiceResult> ValidateExistOtherSupplierWithData(SuppliersDto s)
         {
-            bool exitsOtherSupplierName = (await _suppliersRepository.GetAllAsync())
-                        .Any(su => su.Name.Trim() == s.Name.Trim() && su.Name.Trim() != s.Name.Trim());
-            if (exitsOtherSupplierName) return new ServiceResult { Success = false, Message = "Ya existe otro suplidor con este nombre, favor verificar este dato", TypeAlert = "danger" };
+            if (s != null)
+            {
+                bool exitsOtherSupplierName = (await _suppliersRepository.GetAllAsync())
+                            .Any(su => su.Name.Trim() == s.Name.Trim() && su.Name.Trim() != s.Name.Trim());
+                if (exitsOtherSupplierName) return new ServiceResult { Success = false, Message = "Ya existe otro suplidor con este nombre, favor verificar este dato", TypeAlert = "danger" };
 
-            bool exitsOtherSupplierEmail = (await _suppliersRepository.GetAllAsync())
-                       .Any(su => su.Email!.Trim() == s.Email!.Trim() && su.Email.Trim() != s.Email.Trim());
-            if (exitsOtherSupplierName) return new ServiceResult { Success = false, Message = "Ya existe otro suplidor con este email, favor verificar este dato", TypeAlert = "danger" };
+                bool exitsOtherSupplierEmail = (await _suppliersRepository.GetAllAsync())
+                           .Any(su => su.Email!.Trim() == s.Email!.Trim() && su.Email.Trim() != s.Email.Trim());
+                if (exitsOtherSupplierName) return new ServiceResult { Success = false, Message = "Ya existe otro suplidor con este email, favor verificar este dato", TypeAlert = "danger" };
 
-            bool exitsOtherSupplierPhone = (await _suppliersRepository.GetAllAsync())
-                       .Any(su => su.Phone!.Trim() == s.PhoneNumber!.Trim() && su.Phone!.Trim() != s.PhoneNumber!.Trim());
-            if (exitsOtherSupplierName) return new ServiceResult { Success = false, Message = "Ya existe otro suplidor con este número telefonico, favor verificar este dato", TypeAlert = "danger" };
+                bool exitsOtherSupplierPhone = (await _suppliersRepository.GetAllAsync())
+                           .Any(su => su.Phone!.Trim() == s.PhoneNumber!.Trim() && su.Phone!.Trim() != s.PhoneNumber!.Trim());
+                if (exitsOtherSupplierName) return new ServiceResult { Success = false, Message = "Ya existe otro suplidor con este número telefonico, favor verificar este dato", TypeAlert = "danger" };
 
+            }
             return null!;
         }
         public async Task<ServiceResult> EditAsync(SuppliersDto dto)

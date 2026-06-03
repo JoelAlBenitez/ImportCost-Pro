@@ -1,17 +1,23 @@
 using Application.Services.Currencies;
 using Application.Services.ImportationExpenseServices;
 using Application.Services.ImportationOrderServices;
+using Application.ServicesRegistration;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Repositories.ImportationOrderAndLandCost;
 
+using Persistence.ServiceRegistration;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSession();
 
 builder.Services.AddDbContext<ContextImportCost>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+builder.Services.AddApplicationRegistration();
+builder.Services.AddPersistenceRegistration(builder.Configuration);
 
 builder.Environment.IsDevelopment();
 
@@ -44,6 +50,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();

@@ -1,50 +1,94 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ImportCost</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ImportCost.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ImportCost</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+    </head>
+    <body>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="wrapper">
+        <nav id="sidebar" class="d-flex flex-column pt-3">
+            <div class="px-4 py-2 mb-4 d-flex align-items-center gap-2 border-bottom pb-4">
+                <i class="bi bi-amd text-primary" style="font-size: 1.8rem;"></i>
+                <span class="fs-5 fw-bold text-dark tracking-tight">ImportCost</span>
             </div>
+
+            <ul class="nav flex-column w-100 placeholder-ready">
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")" 
+                       asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-house-door"></i>
+                        <span>Inicio</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Products" ? "active" : "")" 
+                       asp-area="" asp-controller="Products" asp-action="Index">
+                        <i class="bi bi-box-seam"></i>
+                        <span>Productos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tariff" ? "active" : "")"
+                       asp-area="" asp-controller="Tariff" asp-action="Index">
+                        <i class="bi bi-tags"></i>
+                        <span>Categorías Arancelarias</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Importers" ? "active" : "")"
+                       asp-area="" asp-controller="Importers" asp-action="Index">
+                        <i class="bi bi-box-arrow-in-down"></i>
+                        <span>Importadores</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Supploers" ? "active" : "")"
+                       asp-area="" asp-controller="Suppliers" asp-action="Index">
+                       <i class="bi bi-truck"></i>
+                        <span>Proveedores</span>
+                    </a>
+                </li>
+              
+                @*metan sus opciones aqui  pongalo asi como los de arriba para el efecto de cambio de item*@
+            </ul>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+        <div id="content" class="d-flex flex-column">
+            
+            <header class="navbar navbar-expand top-navbar px-4 py-3 sticky-top">
+                <div class="container-fluid p-0">
+                    <div class="ms-auto d-flex align-items-center gap-3">
+                        <small class="text-muted d-none d-sm-inline">Bienvenido al sistema</small>
+                        <i class="bi bi-person-circle fs-4 text-secondary"></i>
+                    </div>
+                </div>
+            </header>
+
+            <main role="main" class="container-fluid p-4 p-md-5">
+                <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius: 12px;">
+                    @RenderBody()
+                </div>
+            </main>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - ImportCost - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js"></script>
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('show');
+        }
+    </script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

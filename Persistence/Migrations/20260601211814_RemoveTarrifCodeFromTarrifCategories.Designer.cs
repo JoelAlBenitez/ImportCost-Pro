@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Context;
 
@@ -11,9 +12,11 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ContextImportCost))]
-    partial class ContextImportCostModelSnapshot : ModelSnapshot
+    [Migration("20260601211814_RemoveTarrifCodeFromTarrifCategories")]
+    partial class RemoveTarrifCodeFromTarrifCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,9 +183,6 @@ namespace Persistence.Migrations
                     b.Property<decimal>("ExpenseAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("ExpenseDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("ExpenseType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -190,7 +190,7 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("ImportationExpenseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ImportationOrderId")
+                    b.Property<string>("OrderId")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
@@ -199,7 +199,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("ImportationOrderId");
+                    b.HasIndex("OrderId");
 
                     b.ToTable("ImportationExpenses", null, t =>
                         {
@@ -259,7 +259,6 @@ namespace Persistence.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("FOBUnitPrice")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("OrderId")
@@ -371,7 +370,7 @@ namespace Persistence.Migrations
                     b.Property<decimal>("ExchangeRate")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<int>("LocalCurrencyId")
+                    b.Property<int>("LocalCurrencyUsed")
                         .HasColumnType("int");
 
                     b.Property<decimal>("LocalTotalFob")
@@ -635,7 +634,7 @@ namespace Persistence.Migrations
 
                     b.HasOne("Persistence.Entities.ImportationOrderAndLandCost.ImportationOrder", "ImportationOrder")
                         .WithMany("ImportationExpenses")
-                        .HasForeignKey("ImportationOrderId")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -658,7 +657,7 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Persistence.Entities.FinancialCore.Country", "Country")
+                    b.HasOne("Persistence.Entities.FinancialCore.Country", "OriginCountry")
                         .WithMany()
                         .HasForeignKey("OriginCountryId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -670,11 +669,11 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Country");
-
                     b.Navigation("Currency");
 
                     b.Navigation("Importer");
+
+                    b.Navigation("OriginCountry");
 
                     b.Navigation("Supplier");
                 });

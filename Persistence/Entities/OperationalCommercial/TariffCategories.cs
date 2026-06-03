@@ -9,6 +9,5 @@ namespace Persistence.Entities.OperationalCommercial
         public required bool SelectiveTaxApplies { get; set; }
         public  decimal? PorcentageTaxSelective {  get; set; }
         public ICollection<Products>? Products { get; set; }
-        public  string? TariffCode { get; internal set; }
     }
 }
