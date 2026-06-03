@@ -45,7 +45,7 @@ namespace ImportCost.ViewModels.ImportationOrders
         public OrderState OrderState { get; set; }
 
 
-        // Si esto es true, la vista HTML pondrá los menús desplegables en disabled
+        // true = HTML pondrá los menús desplegables en disabled
         public bool IsCalculated { get; set; }
 
         // Listas para llenar los DropDownList de la vista

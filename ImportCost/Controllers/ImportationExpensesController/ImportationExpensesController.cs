@@ -25,7 +25,7 @@ namespace ImportCost.Controllers
             if (string.IsNullOrWhiteSpace(orderId))
             {
                 TempData["Message"] = "Debes seleccionar una orden válida para ver sus gastos.";
-                TempData["TypeMessage"] = "danger"; // Usamos "danger" en lugar de "error" (Punto 2.1)
+                TempData["TypeMessage"] = "danger";
 
                 return RedirectToAction("Index", "ImportationOrders");
             }

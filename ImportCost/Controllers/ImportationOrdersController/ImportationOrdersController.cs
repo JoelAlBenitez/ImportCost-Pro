@@ -140,8 +140,6 @@ namespace ImportCost.Controllers.ImportationOrdersController
                     NameCurrency = c.Name
                 }).ToList();
         }
-
-        [HttpGet]
         
 
         [HttpGet]

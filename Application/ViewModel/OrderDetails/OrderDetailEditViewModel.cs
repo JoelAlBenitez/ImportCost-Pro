@@ -19,7 +19,7 @@ namespace ImportCost.ViewModels.OrderDetails
         [Display(Name = "Producto")]
         public string? ProductName { get; set; } 
 
-        // Campos editables con sus validaciones estrictas
+        // Campos editables con validaciones  
         [Required(ErrorMessage = "La cantidad es obligatoria.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "La cantidad debe ser mayor que 0.")]
         [Display(Name = "Cantidad a Importar")]

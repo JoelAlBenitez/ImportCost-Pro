@@ -36,12 +36,12 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             var viewModelList = detailsList.Select(detail => new OrderDetailEditViewModel
             {
-                OrderDetailId = detail.OrderDetailId, // Tu Primary Key del detalle
+                OrderDetailId = detail.OrderDetailId,  
                 OrderId = detail.OrderDetailId,
                 ProductName = detail.ProductName,
                 Quantity = detail.Quantity,
                 FOBUnitPrice = detail.FOBUnitPrice,
-                TotalFOB = detail.Quantity * detail.FOBUnitPrice // O si tu DTO ya lo trae calculado, pones ese
+                TotalFOB = detail.Quantity * detail.FOBUnitPrice  
             }).ToList();
 
             ViewBag.CurrentOrderId = orderId;
@@ -59,7 +59,7 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             var viewModel = new OrderDetailCreateViewModel
             {
-                OrderId = orderId // Precargamos el ID de la orden oculta en el formulario
+                OrderId = orderId  
             };
 
             await LoadProductsCatalogAsync(viewModel);
