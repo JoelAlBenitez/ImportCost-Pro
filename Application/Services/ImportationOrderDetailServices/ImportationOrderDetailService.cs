@@ -111,11 +111,26 @@ namespace Application.Services.ImportationOrderDetailServices
         public async Task<ServiceResult> EditProductInOrderAsync(string orderDetailId, OrderDetailUpdateDTO dto)
         {
             var detail = await _detailRepository.GetByIdAsync(orderDetailId);
-            if (detail == null) throw new Exception("El detalle del producto no existe.");
+            if (detail == null)
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "El detalle del Producto no Existe",
+                    TypeAlert = "warning"
+                };
+            }
 
             var order = await _orderRepository.GetEntityById(detail.OrderId);
             if (order?.OrderState != OrderState.Abierta)
-                throw new InvalidOperationException("No se puede editar este producto porque la orden ya no está Abierta.");
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "No se puede editar este producto porque la orden ya no está Abierta.",
+                    TypeAlert = "warning"
+                };
+            }
 
             if (dto.Quantity <= 0)
             {

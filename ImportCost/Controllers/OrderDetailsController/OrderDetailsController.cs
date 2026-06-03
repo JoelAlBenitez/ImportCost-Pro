@@ -15,9 +15,10 @@ namespace ImportCost.Controllers.OrderDetailsController
         private readonly ImportationOrderDetailService _importationOrderDetailService;
         private readonly ProductsServices _productsService;
 
-        public OrderDetailsController(ImportationOrderDetailService detailService)
+        public OrderDetailsController(ImportationOrderDetailService detailService, ProductsServices productsService)
         {
             _importationOrderDetailService = detailService;
+            _productsService = productsService;
         }
 
         //Index
@@ -103,7 +104,9 @@ namespace ImportCost.Controllers.OrderDetailsController
             
             var products = await _productsService.GetAllAsync();
   
-            viewModel.ProductsList = products.Select(p => new Application.ViewModel.Select.ViewModelSelectProducts
+            viewModel.ProductsList = products
+                .Where(p => p.State == true) // Solo productos activos
+                .Select(p => new Application.ViewModel.Select.ViewModelSelectProducts
             {
                 CodeReference = p.Key,
                 ProductName = p.Name

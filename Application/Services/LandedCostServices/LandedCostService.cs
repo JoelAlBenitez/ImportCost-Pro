@@ -54,7 +54,7 @@ public class LandedCostService
         if (!order.ImportationExpenses.Any(e => e.ExpenseType == ExpenseType.SeguroInternacional))
             throw new InvalidOperationException("La orden debe tener un gasto de tipo Seguro internacional registrado.");
 
-        //// Nuevas Validaciones de dimensiones y peso para prorrateo (Prevención División por 0)
+        //(Prevención División por 0)
         if (order.ImportationExpenses.Any(e => e.DistributionMethod == DistributionMethod.PorVolumen))
         {
             if (order.ImportationOrderDetails.Any(d => (d.Product?.Large ?? 0m) <= 0 || (d.Product?.Broad ?? 0m) <= 0 || (d.Product?.High ?? 0m) <= 0))
@@ -109,11 +109,11 @@ public class LandedCostService
         }
 
         //FOB total en moneda local
-        decimal TotalLocalFob = totalFob * ExchangeRateValue;
+        decimal TotalLocalFob = Math.Round(totalFob * ExchangeRateValue, 2, MidpointRounding.AwayFromZero);
         //FOB individual en moneda local
         var LocalFobByProduct = ProductFOB.ToDictionary(
             item => item.Key,
-            item => item.Value * ExchangeRateValue
+            item => Math.Round(item.Value * ExchangeRateValue, 2, MidpointRounding.AwayFromZero)
         );
 
         //gastos a moneda local
@@ -153,7 +153,7 @@ public class LandedCostService
                     expenseRateValue = diccionarioTasas[key];
                 }
 
-                decimal localAmount = expense.ExpenseAmount * expenseRateValue;
+                decimal localAmount = Math.Round(expense.ExpenseAmount * expenseRateValue, 2, MidpointRounding.AwayFromZero);
                 LocalExpenses.Add((expense.ExpenseType, expense.DistributionMethod, localAmount));
             }
         }
@@ -203,7 +203,7 @@ public class LandedCostService
                         break;
                 }
 
-                decimal assignedAmount = expense.LocalAmount * factor;
+                decimal assignedAmount = Math.Round(expense.LocalAmount * factor, 2, MidpointRounding.AwayFromZero);
 
                 if (expense.Type == ExpenseType.FleteInternacional)
                 {
@@ -231,39 +231,39 @@ public class LandedCostService
             decimal originalFob = detail.Quantity * detail.FOBUnitPrice;
             decimal localFob = LocalFobByProduct[detail.ProductId];
 
-            decimal cif = localFob + alloc.AssignedFreight + alloc.AssignedInsurance;
+            decimal cif = Math.Round(localFob + alloc.AssignedFreight + alloc.AssignedInsurance, 2, MidpointRounding.AwayFromZero);
 
             decimal porcentajeArancel = detail.Product?.tariffCategories?.PorcentageTariff ?? 0m;
-            decimal arancel = cif * (porcentajeArancel / 100m);
+            decimal arancel = Math.Round(cif * (porcentajeArancel / 100m), 2, MidpointRounding.AwayFromZero);
 
             decimal impuestoSelectivo = 0m;
             bool aplicaSelectivo = detail.Product?.tariffCategories?.SelectiveTaxApplies ?? false;
             if (aplicaSelectivo)
             {
                 decimal porcentajeSelectivo = detail.Product?.tariffCategories?.PorcentageTaxSelective ?? 0m;
-                impuestoSelectivo = cif * (porcentajeSelectivo / 100m);
+                impuestoSelectivo = Math.Round(cif * (porcentajeSelectivo / 100m), 2, MidpointRounding.AwayFromZero);
             }
 
-            decimal tasaServicioAduanal = cif * (taxConfig.CustomsServiceRatePercentage / 100m);
+            decimal tasaServicioAduanal = Math.Round(cif * (taxConfig.CustomsServiceRatePercentage / 100m), 2, MidpointRounding.AwayFromZero);
 
             decimal itbis = 0m;
             bool aplicaItbis = detail.Product?.tariffCategories?.ITBIS ?? false;
             if (aplicaItbis)
             {
                 decimal baseItbis = cif + arancel + impuestoSelectivo + tasaServicioAduanal;
-                itbis = baseItbis * (taxConfig.GeneralItbisPercentage / 100m);
+                itbis = Math.Round(baseItbis * (taxConfig.GeneralItbisPercentage / 100m), 2, MidpointRounding.AwayFromZero);
             }
 
-            decimal costoTotalImportado = localFob + alloc.AssignedFreight + alloc.AssignedInsurance +
-                              arancel + impuestoSelectivo + tasaServicioAduanal +
-                              itbis + alloc.AssignedLocalExpenses;
+            decimal costoTotalImportado = Math.Round(localFob + alloc.AssignedFreight + alloc.AssignedInsurance +
+                               arancel + impuestoSelectivo + tasaServicioAduanal +
+                               itbis + alloc.AssignedLocalExpenses, 2, MidpointRounding.AwayFromZero);
 
-            decimal costoUnitarioImportado = detail.Quantity > 0 ? (costoTotalImportado / detail.Quantity) : 0m;
+            decimal costoUnitarioImportado = detail.Quantity > 0 ? Math.Round(costoTotalImportado / detail.Quantity, 2, MidpointRounding.AwayFromZero) : 0m;
 
             decimal precioSugerido = costoUnitarioImportado;
             if (detail.ExpectedProfitMargin > 0 && detail.ExpectedProfitMargin < 100)
             {
-                precioSugerido = costoUnitarioImportado / (1m - (detail.ExpectedProfitMargin / 100m));
+                precioSugerido = Math.Round(costoUnitarioImportado / (1m - (detail.ExpectedProfitMargin / 100m)), 2, MidpointRounding.AwayFromZero);
             }
 
             var detailDto = new LandedCostDetailDTO

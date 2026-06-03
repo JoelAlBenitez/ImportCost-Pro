@@ -128,7 +128,7 @@ namespace ImportCost.Controllers
         {
             if (!ModelState.IsValid)
             {
-                await LoadCatalogsAsync(viewModel);
+                await LoadCatalogsAsync(viewModel, viewModel.CurrencyId);
                 return View(viewModel);
             }
 
@@ -186,14 +186,16 @@ namespace ImportCost.Controllers
             return RedirectToAction(nameof(Index), new { orderId = orderId });
         }
 
-        private async Task LoadCatalogsAsync(dynamic viewModel)
+        private async Task LoadCatalogsAsync(dynamic viewModel, int? currentCurrencyId = null)
         {
             var currencies = await _currenciesService.GetAllAsync();
-            viewModel.CurrenciesList = currencies?.Select(c => new Application.ViewModel.Select.ViewModelSelectCurrency
-            {
-                Id = c.Key,
-                NameCurrency = c.Name
-            }).ToList() ?? new List<Application.ViewModel.Select.ViewModelSelectCurrency>();
+            viewModel.CurrenciesList = currencies
+                .Where(c => c.State == true || c.Key == currentCurrencyId)
+                .Select(c => new Application.ViewModel.Select.ViewModelSelectCurrency
+                {
+                    Id = c.Key,
+                    NameCurrency = c.Name
+                }).ToList();
         }
     }
 }
