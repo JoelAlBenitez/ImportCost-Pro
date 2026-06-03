@@ -4,7 +4,7 @@ namespace Application.ViewModel.Countries
 {
     public class ViewModelCountrySave
     {
-        public int Key { get; set; }
+        public required int Key { get; set; }
 
         [Required(ErrorMessage = "El nombre del país es obligatorio.")]
         [StringLength(150, ErrorMessage = "El nombre no puede exceder los 150 caracteres.")]

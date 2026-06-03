@@ -1,10 +1,10 @@
+using Application.ViewModel.Base;
+
 namespace Application.ViewModel.TaxConfigurations
 {
-    public class ViewModelTaxConfiguration
+    public class ViewModelTaxConfiguration : BaseViewModel<int, string>
     {
-        public int Key { get; set; }
-        public decimal GeneralItbisPercentage { get; set; }
-        public decimal CustomsServiceRatePercentage { get; set; }
-        public bool State { get; set; }
+        public required decimal GeneralItbisPercentage { get; set; }
+        public required decimal CustomsServiceRatePercentage { get; set; }
     }
 }

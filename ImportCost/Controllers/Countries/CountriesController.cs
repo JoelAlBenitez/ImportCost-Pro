@@ -23,7 +23,7 @@ namespace ImportCost.Controllers.Countries
             {
                 listView.Add(new ViewModelCountry
                 {
-                    Key = item.Key,
+                    key = item.Key,
                     Name = item.Name,
                     IsoCode = item.IsoCode,
                     State = item.State
@@ -62,15 +62,14 @@ namespace ImportCost.Controllers.Countries
 
             var result = await _countryService.CreateAsync(dto);
 
+            TempData["Message"] = result.Message;
+            TempData["TypeAlert"] = result.TypeAlert;
+
             if (!result.Success)
             {
-                TempData["Message"] = result.Message;
-                TempData["TypeAlert"] = result.TypeAlert;
                 return View("Save", vm);
             }
 
-            TempData["Message"] = result.Message;
-            TempData["TypeAlert"] = result.TypeAlert;
             return RedirectToAction(nameof(Index));
         }
 
@@ -112,15 +111,14 @@ namespace ImportCost.Controllers.Countries
 
             var result = await _countryService.EditAsync(dto);
 
+            TempData["Message"] = result.Message;
+            TempData["TypeAlert"] = result.TypeAlert;
+
             if (!result.Success)
             {
-                TempData["Message"] = result.Message;
-                TempData["TypeAlert"] = result.TypeAlert;
                 return View("Edit", vm);
             }
 
-            TempData["Message"] = result.Message;
-            TempData["TypeAlert"] = result.TypeAlert;
             return RedirectToAction(nameof(Index));
         }
 

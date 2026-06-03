@@ -23,7 +23,7 @@ namespace ImportCost.Controllers.Currencies
             {
                 listView.Add(new ViewModelCurrency
                 {
-                    Key = item.Key,
+                    key = item.Key,
                     Name = item.Name,
                     IsoCode = item.IsoCode,
                     Symbol = item.Symbol,
@@ -68,15 +68,14 @@ namespace ImportCost.Controllers.Currencies
 
             var result = await _currencyService.CreateAsync(dto);
 
+            TempData["Message"] = result.Message;
+            TempData["TypeAlert"] = result.TypeAlert;
+
             if (!result.Success)
             {
-                TempData["Message"] = result.Message;
-                TempData["TypeAlert"] = result.TypeAlert;
                 return View("Save", vm);
             }
 
-            TempData["Message"] = result.Message;
-            TempData["TypeAlert"] = result.TypeAlert;
             return RedirectToAction(nameof(Index));
         }
 
@@ -122,15 +121,14 @@ namespace ImportCost.Controllers.Currencies
 
             var result = await _currencyService.EditAsync(dto);
 
+            TempData["Message"] = result.Message;
+            TempData["TypeAlert"] = result.TypeAlert;
+
             if (!result.Success)
             {
-                TempData["Message"] = result.Message;
-                TempData["TypeAlert"] = result.TypeAlert;
                 return View("Edit", vm);
             }
 
-            TempData["Message"] = result.Message;
-            TempData["TypeAlert"] = result.TypeAlert;
             return RedirectToAction(nameof(Index));
         }
 

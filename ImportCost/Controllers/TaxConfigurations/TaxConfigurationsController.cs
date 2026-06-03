@@ -23,7 +23,8 @@ namespace ImportCost.Controllers.TaxConfigurations
             {
                 ViewModelTaxConfiguration viewModel = new()
                 {
-                    Key = item.Key,
+                    key = item.Key,
+                    Name = "Configuración de Impuestos",
                     GeneralItbisPercentage = item.GeneralItbisPercentage,
                     CustomsServiceRatePercentage = item.CustomsServiceRatePercentage,
                     State = item.State

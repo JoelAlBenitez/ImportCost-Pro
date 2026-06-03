@@ -1,12 +1,12 @@
+using Application.ViewModel.Base;
+
 namespace Application.ViewModel.ExchangeRates
 {
-    public class ViewModelExchangeRate
+    public class ViewModelExchangeRate : BaseViewModel<int, string>
     {
-        public int Key { get; set; }
-        public string SourceCurrencyName { get; set; } = null!;
-        public string DestinationCurrencyName { get; set; } = null!;
-        public decimal RateValue { get; set; }
-        public DateTime EffectiveDate { get; set; }
-        public bool State { get; set; }
+        public required string SourceCurrencyName { get; set; }
+        public required string DestinationCurrencyName { get; set; }
+        public required decimal RateValue { get; set; }
+        public required DateTime EffectiveDate { get; set; }
     }
 }

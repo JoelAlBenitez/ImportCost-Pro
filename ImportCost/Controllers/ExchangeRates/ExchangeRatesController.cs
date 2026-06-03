@@ -27,7 +27,8 @@ namespace ImportCost.Controllers.ExchangeRates
             {
                 listView.Add(new ViewModelExchangeRate
                 {
-                    Key = item.Key,
+                    key = item.Key,
+                    Name = $"{item.SourceCurrencyName} -> {item.DestinationCurrencyName}",
                     SourceCurrencyName = item.SourceCurrencyName ?? "N/A",
                     DestinationCurrencyName = item.DestinationCurrencyName ?? "N/A",
                     RateValue = item.RateValue,
@@ -92,16 +93,15 @@ namespace ImportCost.Controllers.ExchangeRates
 
             var result = await _exchangeRateService.CreateAsync(dto);
 
+            TempData["Message"] = result.Message;
+            TempData["TypeAlert"] = result.TypeAlert;
+
             if (!result.Success)
             {
-                TempData["Message"] = result.Message;
-                TempData["TypeAlert"] = result.TypeAlert;
                 vm.Currencies = await GetCurrencies();
                 return View("Save", vm);
             }
 
-            TempData["Message"] = result.Message;
-            TempData["TypeAlert"] = result.TypeAlert;
             return RedirectToAction(nameof(Index));
         }
 
@@ -149,16 +149,15 @@ namespace ImportCost.Controllers.ExchangeRates
 
             var result = await _exchangeRateService.EditAsync(dto);
 
+            TempData["Message"] = result.Message;
+            TempData["TypeAlert"] = result.TypeAlert;
+
             if (!result.Success)
             {
-                TempData["Message"] = result.Message;
-                TempData["TypeAlert"] = result.TypeAlert;
                 vm.Currencies = await GetCurrencies();
                 return View("Edit", vm);
             }
 
-            TempData["Message"] = result.Message;
-            TempData["TypeAlert"] = result.TypeAlert;
             return RedirectToAction(nameof(Index));
         }
 

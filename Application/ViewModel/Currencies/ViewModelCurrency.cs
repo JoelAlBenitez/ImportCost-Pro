@@ -1,12 +1,11 @@
+using Application.ViewModel.Base;
+
 namespace Application.ViewModel.Currencies
 {
-    public class ViewModelCurrency
+    public class ViewModelCurrency : BaseViewModel<int, string>
     {
-        public int Key { get; set; }
-        public string Name { get; set; } = null!;
-        public string IsoCode { get; set; } = null!;
-        public string Symbol { get; set; } = null!;
-        public bool IsLocalCurrency { get; set; }
-        public bool State { get; set; }
+        public required string IsoCode { get; set; }
+        public required string Symbol { get; set; }
+        public required bool IsLocalCurrency { get; set; }
     }
 }

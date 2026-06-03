@@ -16,7 +16,7 @@ namespace Persistence.Entities.FinancialCore
 
 
 
-        public required Currency SourceCurrency { get; set; }
-        public required Currency DestinationCurrency { get; set; }
+        public Currency? SourceCurrency { get; set; }
+        public Currency? DestinationCurrency { get; set; }
     }
 }
