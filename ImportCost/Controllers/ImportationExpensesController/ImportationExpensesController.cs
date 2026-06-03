@@ -42,6 +42,7 @@ namespace ImportCost.Controllers
                 OrderId = e.OrderId,
                 ExpenseType = e.ExpenseType.ToString(),
                 ExpenseAmount = e.ExpenseAmount,
+                CurrencyCode = e.CurrencyCode ?? "N/A",
                 DistributionMethod = e.DistributionMethod.ToString(),
                 ExpenseDate = e.ExpenseDate
             }).ToList();

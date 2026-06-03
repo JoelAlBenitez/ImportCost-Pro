@@ -13,4 +13,6 @@ public class ImportationExpenseResponseDTO
     public int CurrencyId { get; set; }
     public DistributionMethod DistributionMethod { get; set; }
     public DateTime ExpenseDate { get; set; }
+
+    public string? CurrencyCode { get; set; }
 }

@@ -36,6 +36,7 @@ namespace Application.Services.ImportationExpenseServices
                 ExpenseType = e.ExpenseType,
                 ExpenseAmount = e.ExpenseAmount,
                 CurrencyId = e.CurrencyId,
+                CurrencyCode = e.Currency?.IsoCode,
                 DistributionMethod = e.DistributionMethod,
                 ExpenseDate = e.ImportationExpenseDate
             }).ToList();
