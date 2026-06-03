@@ -1,0 +1,47 @@
+@using Application.ViewModel.Countries
+@model ViewModelCountrySave
+
+@{
+    ViewData["Title"] = "Registrar País";
+}
+
+<div class="card-header bg-white border-0 p-0 mb-4">
+    <h5 class="fw-bold text-dark">Registrar Nuevo País</h5>
+</div>
+
+@* Mensaje de alerta *@
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-@TempData["TypeAlert"] w-auto alert-dismissible fade show shadow-sm border-0" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<form asp-controller="Countries" asp-action="Create" method="POST">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Name" class="form-label fw-semibold small text-muted">Nombre del País</label>
+            <input asp-for="Name" class="form-control rounded-3" placeholder="Ej: República Dominicana" />
+            <span asp-validation-for="Name" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="IsoCode" class="form-label fw-semibold small text-muted">Código ISO (2-3 caracteres)</label>
+            <input asp-for="IsoCode" class="form-control rounded-3" placeholder="Ej: DO" maxlength="3" />
+            <span asp-validation-for="IsoCode" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12 mt-3">
+            <div class="form-check form-switch">
+                <input asp-for="State" class="form-check-input" type="checkbox" id="stateSwitch">
+                <label class="form-check-label fw-semibold text-muted" for="stateSwitch">País Activo</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer mt-4 border-0 pt-3">
+        <a asp-controller="Countries" asp-action="Index" class="btn btn-light rounded-3 px-4">Volver Atrás</a>
+        <button type="submit" class="btn btn-primary rounded-3 px-4 shadow-sm ms-2">Guardar País</button>
+    </div>
+</form>

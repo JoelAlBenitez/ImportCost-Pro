@@ -1,0 +1,63 @@
+@using Application.ViewModel.Currencies
+@model ViewModelCurrencySave
+
+@{
+    ViewData["Title"] = "Editar Moneda";
+}
+
+<div class="card-header bg-white border-0 p-0 mb-4">
+    <h5 class="fw-bold text-dark">Editar Moneda</h5>
+</div>
+
+@* Mensaje de alerta *@
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-@TempData["TypeAlert"] w-auto alert-dismissible fade show shadow-sm border-0" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<form asp-controller="Currencies" asp-action="Edit" method="POST">
+    <input type="hidden" asp-for="Key" />
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Name" class="form-label fw-semibold small text-muted">Nombre de la Moneda</label>
+            <input asp-for="Name" class="form-control rounded-3" placeholder="Ej: Peso Dominicano" />
+            <span asp-validation-for="Name" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="IsoCode" class="form-label fw-semibold small text-muted">Código ISO (3 letras)</label>
+            <input asp-for="IsoCode" class="form-control rounded-3" placeholder="Ej: DOP" maxlength="3" />
+            <span asp-validation-for="IsoCode" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="Symbol" class="form-label fw-semibold small text-muted">Símbolo</label>
+            <input asp-for="Symbol" class="form-control rounded-3" placeholder="Ej: RD$" />
+            <span asp-validation-for="Symbol" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6 mt-4">
+            <div class="form-check form-switch">
+                <input asp-for="IsLocalCurrency" class="form-check-input" type="checkbox" id="localCurrencySwitch">
+                <label class="form-check-label fw-semibold text-muted" for="localCurrencySwitch">Es Moneda Local Principal</label>
+            </div>
+            <small class="text-muted d-block mt-1">Solo puede existir una moneda local activa en el sistema.</small>
+        </div>
+
+        <div class="col-md-6 mt-4">
+            <div class="form-check form-switch">
+                <input asp-for="State" class="form-check-input" type="checkbox" id="stateSwitch">
+                <label class="form-check-label fw-semibold text-muted" for="stateSwitch">Moneda Activa</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer mt-4 border-0 pt-3">
+        <a asp-controller="Currencies" asp-action="Index" class="btn btn-light rounded-3 px-4">Volver Atrás</a>
+        <button type="submit" class="btn btn-success rounded-3 px-4 shadow-sm ms-2">Actualizar Moneda</button>
+    </div>
+</form>

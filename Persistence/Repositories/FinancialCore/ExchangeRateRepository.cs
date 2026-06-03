@@ -37,25 +37,35 @@ namespace Persistence.Repositories.FinancialCore
             return false;
         }
 
-        public async Task<ExchangeRate> GetEntityById(int key)
+        public async Task<ExchangeRate?> GetEntityById(int key)
         {
             return await _context.ExchangeRates
+                .AsNoTracking()
                 .Include(e => e.SourceCurrency)
                 .Include(e => e.DestinationCurrency)
-                .FirstAsync(e => e.Key == key);
+                .FirstOrDefaultAsync(e => e.Key == key);
         }
 
         public async Task<IReadOnlyCollection<ExchangeRate>> GetAllAsync()
         {
             return await _context.ExchangeRates
+                .AsNoTracking()
                 .Include(e => e.SourceCurrency)
                 .Include(e => e.DestinationCurrency)
                 .ToListAsync();
         }
 
+        public async Task<bool> HasExchangeRatesByCurrencyId(int currencyId)
+        {
+            return await _context.ExchangeRates
+                .AsNoTracking()
+                .AnyAsync(e => e.SourceCurrencyId == currencyId || e.DestinationCurrencyId == currencyId);
+        }
+
         public async Task<ExchangeRate?> GetLatestRateAsync(int sourceId, int destinationId, DateTime date)
         {
             return await _context.ExchangeRates
+                .AsNoTracking()
                 .Where(e => e.SourceCurrencyId == sourceId 
                          && e.DestinationCurrencyId == destinationId 
                          && e.State == true 

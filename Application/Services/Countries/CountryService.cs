@@ -55,16 +55,6 @@ namespace Application.Services.Countries
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(dto.Name) || string.IsNullOrWhiteSpace(dto.IsoCode))
-                {
-                    return new ServiceResult { Success = false, Message = "El nombre y el código ISO son obligatorios.", TypeAlert = "danger" };
-                }
-
-                if (dto.IsoCode.Trim().Length < 2 || dto.IsoCode.Trim().Length > 3)
-                {
-                    return new ServiceResult { Success = false, Message = "El código ISO debe tener entre 2 y 3 caracteres.", TypeAlert = "danger" };
-                }
-
                 dto.IsoCode = dto.IsoCode.Trim().ToUpper();
                 var existingCountry = await _repository.GetByIsoCodeAsync(dto.IsoCode);
                 if (existingCountry != null)
@@ -96,16 +86,6 @@ namespace Application.Services.Countries
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(dto.Name) || string.IsNullOrWhiteSpace(dto.IsoCode))
-                {
-                    return new ServiceResult { Success = false, Message = "El nombre y el código ISO son obligatorios.", TypeAlert = "danger" };
-                }
-
-                if (dto.IsoCode.Trim().Length < 2 || dto.IsoCode.Trim().Length > 3)
-                {
-                    return new ServiceResult { Success = false, Message = "El código ISO debe tener entre 2 y 3 caracteres.", TypeAlert = "danger" };
-                }
-
                 dto.IsoCode = dto.IsoCode.Trim().ToUpper();
                 var existing = await _repository.GetEntityById(dto.Key);
                 if (existing == null)
