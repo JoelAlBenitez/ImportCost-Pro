@@ -32,8 +32,6 @@ namespace ImportCost.ViewModels.ImportationExpenses
         [DataType(DataType.Date)]
         [Display(Name = "Fecha del Gasto")]
         public DateTime ImportationExpenseDate { get; set; } = DateTime.Today;
-
-        // Lista de monedas para el dropdown
         public List<ViewModelSelectCurrency> CurrenciesList { get; set; } = new();
         public DateTime ExpenseDate { get; set; }
     }

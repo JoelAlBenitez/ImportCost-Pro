@@ -6,20 +6,16 @@ using System.ComponentModel.DataAnnotations;
 namespace ImportCost.ViewModels.ImportationExpenses
 {
     public class ExpenseEditViewModel
-    {
-        //Llave primaria del gasto 
+    { 
         [Required(ErrorMessage = "El ID del gasto es obligatorio.")]
         public string ImportationExpenseId { get; set; } = string.Empty;
-
-        //ID de la Orden 
+ 
         [Required(ErrorMessage = "El identificador de la orden es obligatorio.")]
         public string OrderId { get; set; } = string.Empty;
 
-        // Propiedad de Solo Lectura
         [Display(Name = "Orden de Importación")]
         public string OrderNumberDisplay { get; set; } = string.Empty;
 
-        //Campos editables con las mismas validaciones de la creación
         [Required(ErrorMessage = "Debe seleccionar un tipo de gasto.")]
         [Display(Name = "Tipo de Gasto")]
         public ExpenseType ExpenseType { get; set; }
@@ -42,7 +38,6 @@ namespace ImportCost.ViewModels.ImportationExpenses
         [Display(Name = "Fecha del Gasto")]
         public DateTime ImportationExpenseDate { get; set; }
 
-        //Lista de monedas para el dropdown
         public List<ViewModelSelectCurrency> CurrenciesList { get; set; } = new();
         public DateTime ExpenseDate { get; set; }
     }

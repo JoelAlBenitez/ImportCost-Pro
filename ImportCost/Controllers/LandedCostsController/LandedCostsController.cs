@@ -15,7 +15,6 @@ namespace ImportCost.Controllers
             _landedCostService = landedCostService;
         }
 
-        //Muestra el reporte matemático antes de guardarlo 
         [HttpGet]
         public async Task<IActionResult> Preview(string orderId)
         {
@@ -37,7 +36,6 @@ namespace ImportCost.Controllers
             }
         }
 
-        //Guarda el cálculo oficial y cierra la orden
         [HttpPost]
         public async Task<IActionResult> Save(string orderId)
         {

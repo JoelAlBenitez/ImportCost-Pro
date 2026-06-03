@@ -71,7 +71,6 @@ namespace ImportCost.Controllers
                 return View("Create", viewModel);
             }
 
-            // Mapeo
             var dto = new ImportationExpenseCreateDTO
             {
                 OrderId = viewModel.OrderId,
@@ -134,7 +133,6 @@ namespace ImportCost.Controllers
                 return View("Edit", viewModel);
             }
 
-            // Mapeo
             var dto = new ImportationExpenseUpdateDTO
             {
                 ImportationExpenseId = viewModel.ImportationExpenseId,

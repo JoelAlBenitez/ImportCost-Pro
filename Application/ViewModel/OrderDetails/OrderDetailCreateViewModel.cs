@@ -27,7 +27,6 @@ namespace ImportCost.ViewModels.OrderDetails
         [Display(Name = "Margen de Ganancia Esperado (%)")]
         public decimal ExpectedProfitMargin { get; set; }
 
-        // Lista para llenar el DropDownList de productos
         public List<ViewModelSelectProducts>? ProductsList { get; set; }
     }
 }

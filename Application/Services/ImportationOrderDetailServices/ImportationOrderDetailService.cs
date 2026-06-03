@@ -104,7 +104,6 @@ namespace Application.Services.ImportationOrderDetailServices
 
             await _detailRepository.AddAsync(newDetail);
 
-            // éxito
             return new ServiceResult { Success = true, Message = "Producto agregado correctamente.", TypeAlert = "success" }; 
         }
 

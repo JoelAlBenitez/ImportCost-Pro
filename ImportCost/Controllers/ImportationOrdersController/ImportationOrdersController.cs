@@ -12,7 +12,6 @@ namespace ImportCost.Controllers.ImportationOrdersController
 {
     public class ImportationOrdersController : Controller
     {
-        // DEPENDENCIAS
         private readonly ImportationOrderService _orderService;
         private readonly ImportersServices _importersService;
         private readonly CountryService _countryService;
@@ -20,7 +19,6 @@ namespace ImportCost.Controllers.ImportationOrdersController
         private readonly SuppliersServices _suppliersService;
         private readonly CurrencyService _currenciesService;
 
-        // CONSTRUCTOR CON INYECCIÓN MÚLTIPLE
         public ImportationOrdersController(
             ImportationOrderService orderService,
             ImportersServices importersService,
@@ -34,7 +32,6 @@ namespace ImportCost.Controllers.ImportationOrdersController
             _suppliersService = suppliersService;
             _currenciesService = currenciesService;
         }
-        //Action para mostrar la vista de creación de orden de importación
 
         [HttpGet]
         public async Task<IActionResult> Index()

@@ -60,8 +60,6 @@ namespace ImportCost.ViewModels.LandedCosts
         [Display(Name = "Cantidad Total Importada")]
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public decimal TotalImportedQuantity { get; set; }
-
-        // La lista con el desglose por producto que se dibujará en la tabla principal
         public List<LandedCostDetailViewModel> ProductDetails { get; set; } = new List<LandedCostDetailViewModel>();
     }
 }

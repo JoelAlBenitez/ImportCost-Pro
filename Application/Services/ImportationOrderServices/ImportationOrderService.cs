@@ -61,13 +61,11 @@ namespace Application.Services.ImportationOrderServices
    
         public async Task<ServiceResult> CreateOrderAsync(ImportationOrderCreateDTO dto)
         {
-            // Limpiar espacios
             string finalOrderId = dto.OrderId?.Trim() ?? string.Empty;
 
             if (string.IsNullOrEmpty(finalOrderId))
                 return new ServiceResult { Success = false, Message = "El número de orden es requerido.", TypeAlert = "warning" };
 
-            // Prefijo ORIM-
             if (!finalOrderId.StartsWith("ORIM-", StringComparison.OrdinalIgnoreCase))
             {
                 finalOrderId = $"ORIM-{finalOrderId}";
@@ -75,14 +73,12 @@ namespace Application.Services.ImportationOrderServices
 
             finalOrderId = finalOrderId.ToUpper();
 
-            //Validar duplicados
             var existingOrder = await _orderRepository.GetEntityById(finalOrderId);
             if (existingOrder != null)
             {
                 return new ServiceResult { Success = false, Message = $"Ya existe una orden de importación registrada con el número {finalOrderId}.", TypeAlert = "warning" };
             }
 
-            // Mapeo
             var newOrder = new ImportationOrder
             {
                 OrderId = finalOrderId,
@@ -96,7 +92,6 @@ namespace Application.Services.ImportationOrderServices
 
             };
 
-            //Guardar en BD
             bool saved = await _orderRepository.CreateAsync(newOrder);
 
             if (!saved)

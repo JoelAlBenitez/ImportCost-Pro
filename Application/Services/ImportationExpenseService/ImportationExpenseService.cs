@@ -132,7 +132,6 @@ namespace Application.Services.ImportationExpenseServices
                 TypeAlert = "success"
             };
         }
-        // ELIMINAR UN GASTO DELETE
 
         public async Task<ServiceResult> RemoveExpenseAsync(string expenseId)
         {

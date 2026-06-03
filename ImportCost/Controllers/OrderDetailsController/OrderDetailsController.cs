@@ -11,7 +11,6 @@ namespace ImportCost.Controllers.OrderDetailsController
 {
     public class OrderDetailsController : Controller
     {
-        // DEPENDENCIAS
         private readonly ImportationOrderDetailService _importationOrderDetailService;
         private readonly ProductsServices _productsService;
 
@@ -21,7 +20,6 @@ namespace ImportCost.Controllers.OrderDetailsController
             _productsService = productsService;
         }
 
-        //Index
 
         [HttpGet]
         public async Task<IActionResult> Index(string orderId) 
@@ -29,7 +27,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             if (string.IsNullOrWhiteSpace(orderId))
             {
                 TempData["ErrorMessage"] = "Debes seleccionar una orden para ver sus detalles.";
-                return RedirectToAction("Index", "ImportationOrders"); //vuelve al controlador maestro
+                return RedirectToAction("Index", "ImportationOrders"); 
             }
 
             var detailsList = await _importationOrderDetailService.GetDetailsByOrderIdAsync(orderId);
@@ -105,7 +103,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             var products = await _productsService.GetAllAsync();
   
             viewModel.ProductsList = products
-                .Where(p => p.State == true) // Solo productos activos
+                .Where(p => p.State == true)
                 .Select(p => new Application.ViewModel.Select.ViewModelSelectProducts
             {
                 CodeReference = p.Key,
@@ -113,7 +111,6 @@ namespace ImportCost.Controllers.OrderDetailsController
             }).ToList();
         }
 
-        // EDIT Muestra el formulario con los datos actuales
         [HttpGet]
         public async Task<IActionResult> Edit(string id)  
         {
@@ -173,8 +170,6 @@ namespace ImportCost.Controllers.OrderDetailsController
                 return View("Edit", viewModel);
             }
         }
-
-        //DELETE Elimina un producto de la orden
         [HttpPost] 
         public async Task<IActionResult> Delete(string id, string orderId)
         {
