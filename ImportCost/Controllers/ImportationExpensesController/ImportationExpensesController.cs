@@ -19,12 +19,14 @@ namespace ImportCost.Controllers
             _currenciesService = currenciesService;
         }
 
-        [HttpGet]
+        [HttpGet("ImportationOrders/{orderId}/Expenses")]
         public async Task<IActionResult> Index(string orderId)
         {
             if (string.IsNullOrWhiteSpace(orderId))
             {
-                TempData["ErrorMessage"] = "Debes seleccionar una orden para ver sus gastos.";
+                TempData["Message"] = "Debes seleccionar una orden válida para ver sus gastos.";
+                TempData["TypeMessage"] = "danger"; // Usamos "danger" en lugar de "error" (Punto 2.1)
+
                 return RedirectToAction("Index", "ImportationOrders");
             }
 
