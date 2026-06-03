@@ -1,0 +1,79 @@
+﻿@using Application.ViewModel.Importers;
+@model ViewModelImporterSave; 
+
+
+<div class="card-header bg-white border-0 p-0 mb-4">
+    <h5 class="fw-bold text-dark">Editar Importador </h5>
+</div>
+
+@* Mensaje de alerta *@
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-@TempData["TypeAlert"] w-auto alert-dismissible fade show shadow-sm border-0" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<form asp-controller="Importers" asp-action="Edit" method="POST">
+
+    <input type="hidden" asp-for="Key" />
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Name" class="form-label fw-semibold small text-muted">Nombre Completo</label>
+            <input asp-for="Name" class="form-control rounded-3" placeholder="Ej: Juan Pérez S.R.L." />
+            <span asp-validation-for="Name" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Identifcation" class="form-label fw-semibold small text-muted">Identificación (RNC/Cédula)</label>
+            <input asp-for="Identifcation" class="form-control rounded-3" />
+            <span asp-validation-for="Identifcation" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="countryId" class="form-label fw-semibold small text-muted">País</label>
+            <select asp-for="countryId" class="form-select rounded-3">
+                @if (Model.Countries != null)
+                {
+                    foreach (var c in Model.Countries)
+                    {
+                        <option value="@c.CountryId">@c.CountryName</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="countryId" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="PhoneNumber" class="form-label fw-semibold small text-muted">Teléfono</label>
+            <input asp-for="PhoneNumber" class="form-control rounded-3" />
+            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12">
+            <label asp-for="Email" class="form-label fw-semibold small text-muted">Correo Electrónico</label>
+            <input asp-for="Email" class="form-control rounded-3" type="email" />
+            <span asp-validation-for="Email" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12">
+            <label asp-for="Address" class="form-label fw-semibold small text-muted">Dirección</label>
+            <textarea asp-for="Address" class="form-control rounded-3" rows="2"></textarea>
+            <span asp-validation-for="Address" class="text-danger small"></span>
+        </div>
+
+           
+        <div class="col-12 mt-3">
+            <div class="form-check form-switch">
+                <input asp-for="State" class="form-check-input" type="checkbox" id="stateSwitch">
+                <label class="form-check-label fw-semibold text-muted" for="stateSwitch">Importador Activo</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer mt-4 border-0 pt-3">
+        <a asp-controller="Importers" asp-action="Index" class="btn btn-light rounded-3 px-4">Volver Atrás</a>
+        <button type="submit" class="btn btn-success rounded-3 px-4 shadow-sm">Actualizar Importador</button>
+    </div>
+</form>

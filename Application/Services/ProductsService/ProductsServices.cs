@@ -61,9 +61,8 @@ namespace Application.Services.ProductsServices
                 if (exit) return new ServiceResult { Success = false, Message = "Ya existe un producto con este código de referencia", TypeAlert = "danger" };
                 bool create = await _productsRepository.CreateAsync(products);
 
-                //agregar validacion de pais activo o no activo
-
-                if (create) return new ServiceResult { Success = false, Message = "Producto creado éxitosamente", TypeAlert = "success" };
+                
+                if (create) return new ServiceResult { Success = true, Message = "Producto creado éxitosamente", TypeAlert = "success" };
                 return new ServiceResult { Success = false, Message = "Ha ocurrido un error al crear el producto", TypeAlert = "danger" };
             }
             catch (Exception ex)
@@ -98,6 +97,14 @@ namespace Application.Services.ProductsServices
         {
             try
             {
+                if (dto == null) return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Ha ocurrido un fallo al cargar los datos de este producto, favor intente con otro registro",
+                    TypeAlert = "danger"
+                };
+                
+
                 Products products = new()
                 {
                     Key = dto.Key,
@@ -116,12 +123,13 @@ namespace Application.Services.ProductsServices
                 };
 
                 bool exitsMoreProductsWithSameCode = (await _productsRepository.GetAllAsync())
-                        .Any(t => t.CodeRefence == products.CodeRefence && t.CodeRefence != products.CodeRefence);
+                        .Any(t => t.CodeRefence == products.CodeRefence && t.Key != products.Key);
                 if (exitsMoreProductsWithSameCode) return new ServiceResult {Success = false, Message = "Ya existe otro producto asociado a este código de referencia" , TypeAlert = "danger"};
                     
                 bool edit = await _productsRepository.EditAsync(products);
 
                 if (edit) return new ServiceResult { Success = true, Message = "Producto editado éxitosamente", TypeAlert = "success" };
+
                 return new ServiceResult { Success = false, Message = "Ha ocurrido un error en al edición del producto", TypeAlert = "danger" };
 
             }

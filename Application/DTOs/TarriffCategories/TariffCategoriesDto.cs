@@ -9,6 +9,8 @@ namespace Application.DTOs.TarriffCategories
         public required bool ITBIS { get; set; }
         public required bool SelectiveTaxApplies { get; set; }
         public decimal? PorcentageTaxSelective { get; set; }
+        public string? OldTariffCode { get; set; }
+
     }
 }
 
