@@ -8,11 +8,11 @@ namespace ImportCost.ViewModels.ImportationExpenses
     public class ExpenseEditViewModel
     {
         //Llave primaria del gasto 
-        [Required]
+        [Required(ErrorMessage = "El ID del gasto es obligatorio.")]
         public string ImportationExpenseId { get; set; } = string.Empty;
 
         //ID de la Orden 
-        [Required]
+        [Required(ErrorMessage = "El identificador de la orden es obligatorio.")]
         public string OrderId { get; set; } = string.Empty;
 
         // Propiedad de Solo Lectura

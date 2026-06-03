@@ -19,7 +19,7 @@ namespace ImportCost.Controllers
             _currenciesService = currenciesService;
         }
 
-        [HttpGet("ImportationOrders/{orderId}/Expenses")]
+        [HttpGet]
         public async Task<IActionResult> Index(string orderId)
         {
             if (string.IsNullOrWhiteSpace(orderId))
@@ -43,7 +43,7 @@ namespace ImportCost.Controllers
             }).ToList();
 
             ViewBag.CurrentOrderId = orderId;
-            return View(viewModelList);
+            return View("Index", viewModelList);
         }
 
         [HttpGet]
@@ -59,7 +59,7 @@ namespace ImportCost.Controllers
             };
 
             await LoadCatalogsAsync(viewModel);
-            return View(viewModel);
+            return View("Create", viewModel);
         }
 
         [HttpPost]
@@ -68,7 +68,7 @@ namespace ImportCost.Controllers
             if (!ModelState.IsValid)
             {
                 await LoadCatalogsAsync(viewModel);
-                return View(viewModel);
+                return View("Create", viewModel);
             }
 
             // Mapeo
@@ -90,7 +90,7 @@ namespace ImportCost.Controllers
             if (!result.Success)
             {
                 await LoadCatalogsAsync(viewModel);
-                return View(viewModel);
+                return View("Create", viewModel);
             }
 
             return RedirectToAction(nameof(Index), new { orderId = viewModel.OrderId });
@@ -122,7 +122,7 @@ namespace ImportCost.Controllers
             };
 
             await LoadCatalogsAsync(viewModel);
-            return View(viewModel);
+            return View("Edit", viewModel);
         }
 
         [HttpPost]
@@ -131,7 +131,7 @@ namespace ImportCost.Controllers
             if (!ModelState.IsValid)
             {
                 await LoadCatalogsAsync(viewModel, viewModel.CurrencyId);
-                return View(viewModel);
+                return View("Edit", viewModel);
             }
 
             // Mapeo
@@ -155,7 +155,7 @@ namespace ImportCost.Controllers
                 if (!result.Success)
                 {
                     await LoadCatalogsAsync(viewModel);
-                    return View(viewModel);
+                    return View("Edit", viewModel);
                 }
 
                 return RedirectToAction(nameof(Index), new { orderId = viewModel.OrderId });
@@ -165,7 +165,7 @@ namespace ImportCost.Controllers
                 TempData["Message"] = "Ocurrió un error inesperado: " + ex.Message;
                 TempData["TypeMessage"] = "error";
                 await LoadCatalogsAsync(viewModel);
-                return View(viewModel);
+                return View("Edit", viewModel);
             }
         }
 

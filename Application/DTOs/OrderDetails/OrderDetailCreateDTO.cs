@@ -5,7 +5,7 @@ using Persistence.Entities.Enums;
 
 public class OrderDetailCreateDTO
 {
-        public string OrderId { get; set; } = null!; // El PDF dice Max 30 caracteres
+        public string OrderId { get; set; } = null!;
 
         public int ProductId { get; set; }
         public decimal Quantity { get; set; }

@@ -46,7 +46,7 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             ViewBag.CurrentOrderId = orderId;
 
-            return View(viewModelList);
+            return View("Index", viewModelList);
         }
 
         [HttpGet]
@@ -64,7 +64,7 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             await LoadProductsCatalogAsync(viewModel);
 
-            return View(viewModel);
+            return View("AddProductToOrderAsync", viewModel);
         }
 
         [HttpPost] 
@@ -73,7 +73,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             if (!ModelState.IsValid)
             {
                 await LoadProductsCatalogAsync(viewModel);
-                return View(viewModel);
+                return View("Create", viewModel);
             }
             var dto = new OrderDetailCreateDTO
             {
@@ -91,7 +91,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             if (!result.Success)
             {
                 await LoadProductsCatalogAsync(viewModel);
-                return View(viewModel);
+                return View("Create", viewModel);
             }
             return RedirectToAction(nameof(Index), new { orderId = viewModel.OrderId });
 
@@ -115,7 +115,7 @@ namespace ImportCost.Controllers.OrderDetailsController
 
         // EDIT Muestra el formulario con los datos actuales
         [HttpGet]
-        public async Task<IActionResult> Edit(string id) //es el OrderDetailId
+        public async Task<IActionResult> Edit(string id)  
         {
             if (string.IsNullOrWhiteSpace(id))
                 return RedirectToAction("Index", "ImportationOrders");
@@ -140,14 +140,13 @@ namespace ImportCost.Controllers.OrderDetailsController
                 ExpectedProfitMargin = detail.ExpectedProfitMargin
             };
 
-            return View(viewModel);
+            return View("Create", viewModel);
         }
-
-        // EDIT: Guarda las modificaciones
+ 
         [HttpPost]
         public async Task<IActionResult> Edit(OrderDetailEditViewModel viewModel)
         {
-            if (!ModelState.IsValid) return View(viewModel);
+            if (!ModelState.IsValid) return View("Edit", viewModel);
 
             var dto = new OrderDetailUpdateDTO
             {
@@ -163,7 +162,7 @@ namespace ImportCost.Controllers.OrderDetailsController
                 TempData["Message"] = result.Message;
                 TempData["TypeMessage"] = result.TypeAlert;
 
-                if (!result.Success) return View(viewModel);
+                if (!result.Success) return View("Edit", viewModel);
 
                 return RedirectToAction(nameof(Index), new { orderId = viewModel.OrderId });
             }
@@ -171,7 +170,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             {
                 TempData["Message"] = "Ocurrió un error inesperado: " + ex.Message;
                 TempData["TypeMessage"] = "danger";
-                return View(viewModel);
+                return View("Edit", viewModel);
             }
         }
 

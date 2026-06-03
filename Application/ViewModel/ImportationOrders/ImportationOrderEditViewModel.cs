@@ -6,7 +6,6 @@ namespace ImportCost.ViewModels.ImportationOrders
 {
     public class ImportationOrderEditViewModel
     {
-        //Campo oculto Para saber cuál era el ID antes de que el usuario lo edite y poder buscarlo
         [Required]
         public string? OriginalOrderId { get; set; }
 
@@ -40,15 +39,10 @@ namespace ImportCost.ViewModels.ImportationOrders
         [Display(Name = "Modalidad de Transporte")]
         public TransportMode TransportMode { get; set; }
 
-        // El estado se envía a la vista solo para mostrarlo
         [Display(Name = "Estado Actual")]
         public OrderState OrderState { get; set; }
 
-
-        // true = HTML pondrá los menús desplegables en disabled
         public bool IsCalculated { get; set; }
-
-        // Listas para llenar los DropDownList de la vista
         public List<ViewModelSelectImporters>? ImportersList { get; set; }
         public List<ViewModelSelectSuppliers>? SuppliersList { get; set; }
         public List<ViewModelSelectCountries>? CountriesList { get; set; }

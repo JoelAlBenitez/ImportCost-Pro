@@ -8,7 +8,7 @@ namespace ImportCost.ViewModels.ImportationExpenses
     public class ExpenseCreateViewModel
     {
 
-        [Required]
+        [Required(ErrorMessage = "El identificador de la orden es obligatorio.")]
         public string OrderId { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Debe seleccionar un tipo de gasto.")]

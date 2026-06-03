@@ -43,7 +43,8 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
         public async Task<ImportationExpense> GetEntityById(string key)
         {
 
-            return await _context.ImportationExpenses.FindAsync(key);
+            return await _context.ImportationExpenses
+                         .FirstOrDefaultAsync(e => e.ImportationExpenseId == key);
         }
 
         public async Task<IReadOnlyCollection<ImportationExpense>> GetAllAsync()

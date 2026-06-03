@@ -1,7 +1,8 @@
 ﻿namespace Application.DTOs.Expenses;
 
-using System;
+using Application.Services.Result;
 using Persistence.Entities.Enums;
+using System;
 
 public class ImportationExpenseResponseDTO
 {

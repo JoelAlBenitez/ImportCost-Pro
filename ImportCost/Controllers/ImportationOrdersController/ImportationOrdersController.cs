@@ -58,7 +58,7 @@ namespace ImportCost.Controllers.ImportationOrdersController
                 EstimatedTotalCost = order.TotalImportationExpected
             }).ToList();
 
-            return View(viewModelList);
+            return View("Index", viewModelList);
         }
             [HttpPost]
             public async Task<IActionResult> Create(ImportationOrderCreateViewModel viewModel)
@@ -67,8 +67,8 @@ namespace ImportCost.Controllers.ImportationOrdersController
                 if (!ModelState.IsValid)
                 {
                     await LoadCatalogsAsync(viewModel);
-                    return View(viewModel);
-                }
+                return View("Create", viewModel);
+            }
 
                 
                 var createDto = new ImportationOrderCreateDTO
@@ -91,7 +91,7 @@ namespace ImportCost.Controllers.ImportationOrdersController
             if (!result.Success)
             {
                 await LoadCatalogsAsync(viewModel);
-                return View(viewModel);
+                return View("Create", viewModel);
             }
 
             return RedirectToAction(nameof(Index));
@@ -176,7 +176,7 @@ namespace ImportCost.Controllers.ImportationOrdersController
                 currentSupplierId: order.SupplierId,
                 currentCurrencyId: order.CurrencyId);
 
-            return View(viewModel);
+            return View("Edit", viewModel);
         }
 
         [HttpPost]
@@ -185,7 +185,7 @@ namespace ImportCost.Controllers.ImportationOrdersController
             if (!ModelState.IsValid)
             {
                 await LoadCatalogsAsync(viewModel, viewModel.ImporterId, viewModel.OriginCountryId, viewModel.SupplierId, viewModel.CurrencyId);
-                return View(viewModel);
+                return View("Edit", viewModel);
             }
 
             var dto = new ImportationOrderUpdateDTO
@@ -207,7 +207,7 @@ namespace ImportCost.Controllers.ImportationOrdersController
             if (!result.Success)
             {
                 await LoadCatalogsAsync(viewModel, viewModel.ImporterId, viewModel.OriginCountryId, viewModel.SupplierId, viewModel.CurrencyId);
-                return View(viewModel);
+                return View("Edit", viewModel);
             }
 
             return RedirectToAction(nameof(Index));

@@ -5,9 +5,8 @@ namespace ImportCost.ViewModels.OrderDetails
 {
     public class OrderDetailCreateViewModel
     {
-        // ID oculto para saber a qué orden pertenece este producto
-        [Required]
-        public string? OrderId { get; set; } 
+        [Required(ErrorMessage = "El ID de la orden es obligatorio.")]
+        public string OrderId { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Debe seleccionar un producto.")]
         [Display(Name = "Producto")]

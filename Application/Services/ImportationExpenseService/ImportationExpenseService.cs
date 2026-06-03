@@ -22,8 +22,6 @@ namespace Application.Services.ImportationExpenseServices
             _orderRepository = orderRepository;
             _expenseRepository = expenseRepository;
         }
-
-        //OBTENER TODOS LOS GASTOS DE UNA ORDEN
         public async Task<List<ImportationExpenseResponseDTO>> GetExpensesByOrderIdAsync(string orderId)
         {
             var order = await _orderRepository.GetEntityById(orderId);
@@ -43,12 +41,13 @@ namespace Application.Services.ImportationExpenseServices
             }).ToList();
         }
 
-        // OBTENER UN GASTO ESPECÍFICO
-        public async Task<ImportationExpenseResponseDTO> GetExpenseByIdAsync(string expenseId)
+        public async Task<ImportationExpenseResponseDTO?> GetExpenseByIdAsync(string expenseId)
         {
             var expense = await _expenseRepository.GetEntityById(expenseId);
-
-            if (expense == null) return null!;
+            if (expense == null)
+            {
+                return null;
+            }
 
             return new ImportationExpenseResponseDTO
             {
@@ -62,8 +61,6 @@ namespace Application.Services.ImportationExpenseServices
             };
         }
 
-
-        // AGREGAR UN GASTO A LA ORDEN, CREATE
 
         public async Task<ServiceResult> AddExpenseToOrderAsync(ImportationExpenseCreateDTO dto)
         {
@@ -97,7 +94,6 @@ namespace Application.Services.ImportationExpenseServices
             return new ServiceResult { Success = true, Message = "Gasto registrado correctamente.", TypeAlert = "success" };
         }
 
-        //EDITAR UN GASTO UPDATE
         public async Task<ServiceResult> EditExpenseAsync(ImportationExpenseUpdateDTO dto)
         {
             var expense = await _expenseRepository.GetEntityById(dto.ImportationExpenseId);
@@ -122,8 +118,6 @@ namespace Application.Services.ImportationExpenseServices
                     TypeAlert = "warning"
                 };
             }
-
-            // Actualizamos los campos
             expense.ExpenseType = dto.ExpenseType;
             expense.ExpenseAmount = dto.ExpenseAmount;
             expense.CurrencyId = dto.CurrencyId;
