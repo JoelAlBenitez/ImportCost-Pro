@@ -1,11 +1,11 @@
 using Application.Services.Currencies;
 using Application.Services.ImportationExpenseServices;
+using Application.Services.ImportationOrderDetailServices;
 using Application.Services.ImportationOrderServices;
+using Application.ServicesRegistration;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Repositories.ImportationOrderAndLandCost;
-
-using Application.ServicesRegistration;
 using Persistence.ServiceRegistration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +34,7 @@ builder.Services.AddScoped<ImportationOrderService>();
 builder.Services.AddScoped<ImportationExpenseService>();
 builder.Services.AddScoped<CurrencyService>();
 builder.Services.AddScoped<LandedCostService>();
+builder.Services.AddScoped<ImportationOrderDetailService>();
 
 
 

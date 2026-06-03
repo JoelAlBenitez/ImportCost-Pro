@@ -44,18 +44,63 @@ namespace ImportCost.Controllers
         {
             if (string.IsNullOrWhiteSpace(orderId))
             {
-                TempData["ErrorMessage"] = "Debes seleccionar una orden para calcular el costo.";
-                return RedirectToAction("Index", "ImportationOrders");
+                TempData["Message"] = "Debes seleccionar una orden para calcular el costo.";
+                TempData["TypeAlert"] = "warning";
+                return RedirectToAction("Index", "LandedCost");
             }
 
             try
             {
-                var summary = await _landedCostService.CalculateLandedCostAsync(orderId);
-                return View(summary);
+                var summaryDTO = await _landedCostService.CalculateLandedCostAsync(orderId);
+
+                var detailViewModels = summaryDTO.ProductDetails.Select(d => new ImportCost.ViewModels.LandedCosts.LandedCostDetailViewModel
+                {
+
+                    ProductName = "Prod. ID: " + d.ProductId.ToString(),
+
+                    Quantity = d.Quantity,
+                    OriginalTotalFob = d.OriginalTotalFob,
+                    LocalTotalFob = d.LocalTotalFob,
+                    AssignedFreight = d.AssignedFreight,
+                    AssignedInsurance = d.AssignedInsurance,
+                    TotalCif = d.TotalCif,
+                    TotalTariff = d.TotalTariff,
+                    TotalSelectiveTax = d.TotalSelectiveTax,
+                    TotalCustomsServiceFee = d.TotalCustomsServiceFee,
+                    TotalItbis = d.TotalItbis,
+                    AssignedLocalExpenses = d.AssignedLocalExpenses,
+                    TotalImportedCost = d.TotalImportedCost,
+                    UnitImportedCost = d.UnitImportedCost,
+                    DesiredMargin = d.DesiredMargin,
+                    SuggestedSalePrice = d.SuggestedSalePrice
+                }).ToList();
+
+                var viewModel = new ImportCost.ViewModels.LandedCosts.LandedCostSummaryViewModel
+                {
+                    OrderId = summaryDTO.ImportationOrderId,
+                    LocalCurrencyUsed = summaryDTO.LocalCurrencyUsed.ToString(),
+                    ExchangeRate = summaryDTO.ExchangeRate,
+                    OriginalTotalFob = summaryDTO.OriginalTotalFob,
+                    LocalTotalFob = summaryDTO.LocalTotalFob,
+                    TotalFreight = summaryDTO.TotalFreight,
+                    TotalInsurance = summaryDTO.TotalInsurance,
+                    TotalCif = summaryDTO.TotalCif,
+                    TotalTariff = summaryDTO.TotalTariff,
+                    TotalSelectiveTax = summaryDTO.TotalSelectiveTax,
+                    TotalCustomsServiceFee = summaryDTO.TotalCustomsServiceFee,
+                    TotalItbis = summaryDTO.TotalItbis,
+                    TotalLocalExpenses = summaryDTO.TotalLocalExpenses,
+                    TotalImportationCost = summaryDTO.TotalImportationCost,
+                    TotalImportedQuantity = summaryDTO.TotalImportedQuantity,
+                    ProductDetails = detailViewModels 
+                };
+
+                return View(viewModel);
             }
+        
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
+                TempData["Message"] = ex.Message;
                 return RedirectToAction("Index", "ImportationOrders");
             }
         }

@@ -51,6 +51,12 @@ namespace Application.Services.ImportationOrderServices
                 OrderDate = order.OrderDate,
                 TransportMode = order.TransportMode,
                 OrderState = order.OrderState,
+
+                ImporterName = order.Importer?.Name,
+                SupplierName = order.Supplier?.Name,
+                OriginCountryName = order.Country?.Name,
+                CurrencyCode = order.Currency?.IsoCode,
+
                 TotalFOB = CalculateTotalFob(order),
                 TotalImportationExpected = CalculateTotalExpected(order)
             }).ToList();
@@ -237,7 +243,7 @@ namespace Application.Services.ImportationOrderServices
                     TypeAlert = "warning"
                 };
             }
-
+            
             if (order.LandedCostSummary == null)
             {
                 return new ServiceResult
@@ -247,7 +253,7 @@ namespace Application.Services.ImportationOrderServices
                     TypeAlert = "warning"
                 };
             }
-
+            
             order.OrderState = OrderState.Cerrada;
             await _orderRepository.EditAsync(order);
             return new ServiceResult

@@ -48,7 +48,7 @@ public class LandedCostService
         if (order.ImportationExpenses == null || !order.ImportationExpenses.Any(e => e.ExpenseType == ExpenseType.FleteInternacional))
             throw new InvalidOperationException("La orden debe tener un gasto de tipo Flete internacional registrado.");
 
-        if (!order.ImportationExpenses.Any(e => e.ExpenseType == ExpenseType.SeguroInternacional))
+        if (!order.ImportationExpenses.Any(e => (int)e.ExpenseType == (int)ExpenseType.SeguroInternacional))
             throw new InvalidOperationException("La orden debe tener un gasto de tipo Seguro internacional registrado.");
 
         if (order.ImportationExpenses.Any(e => e.DistributionMethod == DistributionMethod.PorVolumen))

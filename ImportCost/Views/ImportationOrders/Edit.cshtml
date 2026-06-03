@@ -1,7 +1,6 @@
 ﻿@model ImportCost.ViewModels.ImportationOrders.ImportationOrderEditViewModel
 @{
     ViewData["Title"] = "Editar Orden";
-    // Determinar si los campos deben estar bloqueados
     var isReadOnly = Model.OrderState.ToString() == "Cerrada" || Model.OrderState.ToString() == "Cancelada" || Model.IsCalculated;
 }
 

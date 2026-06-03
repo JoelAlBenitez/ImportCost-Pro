@@ -23,9 +23,10 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
                                  .ToListAsync();
         }
 
-        public async Task<ImportationOrderDetail?> GetByIdAsync(string id)
+        public async Task<ImportationOrderDetail?> GetByIdAsync(string orderDetailId)
         {
-            return await _context.ImportationOrderDetails.FindAsync(id);
+            return await _context.ImportationOrderDetails.Include(d => d.Product)
+            .FirstOrDefaultAsync(d => d.OrderDetailId == orderDetailId);
         }
         public async Task<bool> AddAsync(ImportationOrderDetail orderDetail)
         {

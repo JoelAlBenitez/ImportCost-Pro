@@ -16,19 +16,19 @@ namespace ImportCost.ViewModels.ImportationOrders
 
         [Required(ErrorMessage = "Debe seleccionar un importador.")]
         [Display(Name = "Importador")]
-        public int ImporterId { get; set; }
+        public int? ImporterId { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar un proveedor.")]
         [Display(Name = "Proveedor")]
-        public int SupplierId { get; set; }
+        public int? SupplierId { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar un país de origen.")]
         [Display(Name = "País de Origen")]
-        public int OriginCountryId { get; set; }
+        public int? OriginCountryId { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar una moneda.")]
         [Display(Name = "Moneda")]
-        public int CurrencyId { get; set; }
+        public int? CurrencyId { get; set; }
 
         [Required(ErrorMessage = "La fecha de la orden es obligatoria.")]
         [DataType(DataType.Date)]
@@ -37,7 +37,7 @@ namespace ImportCost.ViewModels.ImportationOrders
 
         [Required(ErrorMessage = "Debe seleccionar una modalidad de transporte.")]
         [Display(Name = "Modalidad de Transporte")]
-        public TransportMode TransportMode { get; set; }
+        public TransportMode? TransportMode { get; set; }
 
         [Display(Name = "Estado Actual")]
         public OrderState OrderState { get; set; }

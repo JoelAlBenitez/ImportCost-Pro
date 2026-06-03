@@ -23,7 +23,9 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
                 .Include(o => o.Country)
                 .Include(o => o.Currency)
                 .Include(o => o.ImportationOrderDetails)
+                .ThenInclude(d => d.Product)         
                 .Include(o => o.ImportationExpenses)
+                .Include(o => o.LandedCostSummary)
                 .FirstOrDefaultAsync(o => o.OrderId == orderId);
         }
 

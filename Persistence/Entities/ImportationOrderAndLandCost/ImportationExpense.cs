@@ -1,7 +1,6 @@
-﻿
-
-using Persistence.Entities.Enums;
+﻿using Persistence.Entities.Enums;
 using Persistence.Entities.FinancialCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {
@@ -26,6 +25,5 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         public ImportationOrder? ImportationOrder { get; set; }
 
         public Currency? Currency { get; set; }
-        public DateTime ExpenseDate { get; set; }
     }
 }

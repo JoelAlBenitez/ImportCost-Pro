@@ -37,7 +37,7 @@ namespace Application.Services.ImportationExpenseServices
                 ExpenseAmount = e.ExpenseAmount,
                 CurrencyId = e.CurrencyId,
                 DistributionMethod = e.DistributionMethod,
-                ExpenseDate = e.ExpenseDate
+                ExpenseDate = e.ImportationExpenseDate
             }).ToList();
         }
 
@@ -57,7 +57,7 @@ namespace Application.Services.ImportationExpenseServices
                 ExpenseAmount = expense.ExpenseAmount,
                 CurrencyId = expense.CurrencyId,
                 DistributionMethod = expense.DistributionMethod,
-                ExpenseDate = expense.ExpenseDate
+                ExpenseDate = expense.ImportationExpenseDate
             };
         }
 
@@ -122,7 +122,7 @@ namespace Application.Services.ImportationExpenseServices
             expense.ExpenseAmount = dto.ExpenseAmount;
             expense.CurrencyId = dto.CurrencyId;
             expense.DistributionMethod = dto.DistributionMethod;
-            expense.ExpenseDate = dto.ExpenseDate;
+            expense.ImportationExpenseDate = dto.ExpenseDate;
 
             await _expenseRepository.EditAsync(expense);
             return new ServiceResult

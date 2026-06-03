@@ -177,13 +177,15 @@ namespace ImportCost.Controllers.ImportationOrdersController
 
             var viewModel = new ImportationOrderEditViewModel
             {
+                OriginalOrderId = order.OrderId,
                 OrderId = order.OrderId,
                 ImporterId = order.ImporterId,
                 SupplierId = order.SupplierId,
                 OriginCountryId = order.OriginCountryId,
                 CurrencyId = order.CurrencyId,
                 OrderDate = order.OrderDate,
-                TransportMode = order.TransportMode
+                TransportMode = order.TransportMode,
+                OrderState = order.OrderState
             };
             await LoadCatalogsAsync(viewModel,
                 currentImporterId: order.ImporterId,
@@ -206,12 +208,12 @@ namespace ImportCost.Controllers.ImportationOrdersController
             var dto = new ImportationOrderUpdateDTO
             {
                 OrderId = viewModel.OrderId,
-                ImporterId = viewModel.ImporterId,
-                SupplierId = viewModel.SupplierId,
-                OriginCountryId = viewModel.OriginCountryId,
-                CurrencyId = viewModel.CurrencyId,
+                ImporterId = viewModel.ImporterId.Value,
+                SupplierId = viewModel.SupplierId.Value,
+                OriginCountryId = viewModel.OriginCountryId.Value,
+                CurrencyId = viewModel.CurrencyId.Value,
                 OrderDate = viewModel.OrderDate,
-                TransportMode = viewModel.TransportMode
+                TransportMode = viewModel.TransportMode.Value
             };
 
             var result = await _orderService.EditAsync(viewModel.OrderId, dto);
@@ -238,6 +240,26 @@ namespace ImportCost.Controllers.ImportationOrdersController
             TempData["TypeAlert"] = result.TypeAlert;
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CloseOrder(string orderId)
+        {
+            try
+            {
+                var result = await _orderService.CloseOrderAsync(orderId);
+
+                TempData["Message"] = result.Message;
+                TempData["TypeAlert"] = result.TypeAlert;
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = "Error inesperado: " + ex.Message;
+                TempData["TypeAlert"] = "danger";
+                return RedirectToAction("Index");
+            }
         }
     }
 }

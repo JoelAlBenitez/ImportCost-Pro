@@ -92,6 +92,16 @@
                                             </button>
                                         </form>
                                     }
+
+                                    @if (item.OrderState != "Cerrada")
+                                    {
+                                        <form asp-controller="ImportationOrders" asp-action="CloseOrder" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas cerrar esta orden? Una vez cerrada, no podrás modificarla ni agregar más gastos.');">
+                                            <input type="hidden" name="orderId" value="@item.OrderId" />
+                                            <button type="submit" class="btn btn-sm btn-light text-secondary border-0" title="Cerrar Orden">
+                                                <i class="bi bi-lock-fill"></i>
+                                            </button>
+                                        </form>
+                                    }
                                 </div>
                             </td>
                         </tr>
