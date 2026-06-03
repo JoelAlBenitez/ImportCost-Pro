@@ -1,12 +1,13 @@
 using Application.Services.Currencies;
 using Application.Services.ImportationExpenseServices;
 using Application.Services.ImportationOrderServices;
-using Application.ServicesRegistration;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Repositories.ImportationOrderAndLandCost;
 
+using Application.ServicesRegistration;
 using Persistence.ServiceRegistration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
