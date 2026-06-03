@@ -37,11 +37,11 @@ namespace Persistence.Repositories.FinancialCore
             return false;
         }
 
-        public async Task<Currency?> GetEntityById(int key)
+        public async Task<Currency> GetEntityById(int key)
         {
-            return await _context.Currencies
+            return (await _context.Currencies
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Key == key);
+                .FirstOrDefaultAsync(c => c.Key == key))!;
         }
 
         public async Task<IReadOnlyCollection<Currency>> GetAllAsync()

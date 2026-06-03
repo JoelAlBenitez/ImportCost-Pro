@@ -37,13 +37,13 @@ namespace Persistence.Repositories.FinancialCore
             return false;
         }
 
-        public async Task<ExchangeRate?> GetEntityById(int key)
+        public async Task<ExchangeRate> GetEntityById(int key)
         {
-            return await _context.ExchangeRates
+            return (await _context.ExchangeRates
                 .AsNoTracking()
                 .Include(e => e.SourceCurrency)
                 .Include(e => e.DestinationCurrency)
-                .FirstOrDefaultAsync(e => e.Key == key);
+                .FirstOrDefaultAsync(e => e.Key == key))!;
         }
 
         public async Task<IReadOnlyCollection<ExchangeRate>> GetAllAsync()

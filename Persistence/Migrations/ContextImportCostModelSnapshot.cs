@@ -100,12 +100,6 @@ namespace Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Key"));
 
-                    b.Property<int?>("CurrencyKey")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CurrencyKey1")
-                        .HasColumnType("int");
-
                     b.Property<int>("DestinationCurrencyId")
                         .HasColumnType("int");
 
@@ -129,10 +123,6 @@ namespace Persistence.Migrations
                         .HasDefaultValue(true);
 
                     b.HasKey("Key");
-
-                    b.HasIndex("CurrencyKey");
-
-                    b.HasIndex("CurrencyKey1");
 
                     b.HasIndex("DestinationCurrencyId");
 
@@ -624,22 +614,14 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Persistence.Entities.FinancialCore.ExchangeRate", b =>
                 {
-                    b.HasOne("Persistence.Entities.FinancialCore.Currency", null)
-                        .WithMany("ExchangeRatesDestination")
-                        .HasForeignKey("CurrencyKey");
-
-                    b.HasOne("Persistence.Entities.FinancialCore.Currency", null)
-                        .WithMany("ExchangeRatesSource")
-                        .HasForeignKey("CurrencyKey1");
-
                     b.HasOne("Persistence.Entities.FinancialCore.Currency", "DestinationCurrency")
-                        .WithMany()
+                        .WithMany("ExchangeRatesDestination")
                         .HasForeignKey("DestinationCurrencyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Persistence.Entities.FinancialCore.Currency", "SourceCurrency")
-                        .WithMany()
+                        .WithMany("ExchangeRatesSource")
                         .HasForeignKey("SourceCurrencyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

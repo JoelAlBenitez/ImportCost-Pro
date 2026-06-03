@@ -12,8 +12,8 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ContextImportCost))]
-    [Migration("20260603180434_CompleteFinancialCoreMigration")]
-    partial class CompleteFinancialCoreMigration
+    [Migration("20260603215311_FixCurrencyRelations")]
+    partial class FixCurrencyRelations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -103,12 +103,6 @@ namespace Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Key"));
 
-                    b.Property<int?>("CurrencyKey")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CurrencyKey1")
-                        .HasColumnType("int");
-
                     b.Property<int>("DestinationCurrencyId")
                         .HasColumnType("int");
 
@@ -132,10 +126,6 @@ namespace Persistence.Migrations
                         .HasDefaultValue(true);
 
                     b.HasKey("Key");
-
-                    b.HasIndex("CurrencyKey");
-
-                    b.HasIndex("CurrencyKey1");
 
                     b.HasIndex("DestinationCurrencyId");
 
@@ -627,22 +617,14 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Persistence.Entities.FinancialCore.ExchangeRate", b =>
                 {
-                    b.HasOne("Persistence.Entities.FinancialCore.Currency", null)
-                        .WithMany("ExchangeRatesDestination")
-                        .HasForeignKey("CurrencyKey");
-
-                    b.HasOne("Persistence.Entities.FinancialCore.Currency", null)
-                        .WithMany("ExchangeRatesSource")
-                        .HasForeignKey("CurrencyKey1");
-
                     b.HasOne("Persistence.Entities.FinancialCore.Currency", "DestinationCurrency")
-                        .WithMany()
+                        .WithMany("ExchangeRatesDestination")
                         .HasForeignKey("DestinationCurrencyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Persistence.Entities.FinancialCore.Currency", "SourceCurrency")
-                        .WithMany()
+                        .WithMany("ExchangeRatesSource")
                         .HasForeignKey("SourceCurrencyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
