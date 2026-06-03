@@ -2,18 +2,42 @@
 using Application.DTOs.LandedCost;
 using System;
 using System.Threading.Tasks;
-
+using System.Linq;
+using Application.Services.ImportationOrderServices;
+using Persistence.Entities.Enums;
 
 namespace ImportCost.Controllers
 {
     public class LandedCostController : Controller
     {
         private readonly LandedCostService _landedCostService;
+        private readonly ImportationOrderService _orderService;
 
-        public LandedCostController(LandedCostService landedCostService)
+        public LandedCostController(LandedCostService landedCostService, ImportationOrderService orderService)
         {
             _landedCostService = landedCostService;
+            _orderService = orderService;
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var orders = await _orderService.GetAllAsync();
+
+            var openOrders = orders
+                .Where(o => o.OrderState == OrderState.Abierta)
+                .OrderByDescending(o => o.OrderDate)
+                .ToList();
+
+            ViewBag.OrdersList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(openOrders, "OrderId", "OrderId");
+
+            return View();
+        }
+
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> Preview(string orderId)

@@ -62,7 +62,7 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             await LoadProductsCatalogAsync(viewModel);
 
-            return View("AddProductToOrderAsync", viewModel);
+            return View("Create", viewModel);
         }
 
         [HttpPost] 
@@ -137,7 +137,7 @@ namespace ImportCost.Controllers.OrderDetailsController
                 ExpectedProfitMargin = detail.ExpectedProfitMargin
             };
 
-            return View("Create", viewModel);
+            return View("Edit", viewModel);
         }
  
         [HttpPost]

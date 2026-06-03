@@ -57,7 +57,21 @@ namespace ImportCost.Controllers.ImportationOrdersController
 
             return View("Index", viewModelList);
         }
-            [HttpPost]
+
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            var viewModel = new ImportationOrderCreateViewModel
+            {
+                OrderDate = DateTime.Today
+            };
+            await LoadCatalogsAsync(viewModel);
+            return View(viewModel);
+        }
+
+
+        [HttpPost]
             public async Task<IActionResult> Create(ImportationOrderCreateViewModel viewModel)
             {
                 
@@ -105,37 +119,41 @@ namespace ImportCost.Controllers.ImportationOrdersController
             var suppliers = await _suppliersService.GetAllAsync();
             var currencies = await _currenciesService.GetAllAsync();
 
-            viewModel.ImportersList = importers
-                .Where(i => i.State == true || i.Key == currentImporterId)
-                .Select(i => new Application.ViewModel.Select.ViewModelSelectImporters
-                {
-                    ImporterId = i.Key,
-                    ImporterName = i.Name
-                }).ToList();
+            viewModel.ImportersList = importers != null
+                ? importers.Where(i => i.State == true || i.Key == currentImporterId)
+                           .Select(i => new Application.ViewModel.Select.ViewModelSelectImporters
+                           {
+                               ImporterId = i.Key,
+                               ImporterName = i.Name
+                           }).ToList()
+                : new List<Application.ViewModel.Select.ViewModelSelectImporters>();
 
-            viewModel.CountriesList = countries
-                .Where(c => c.State == true || c.Key == currentCountryId)
-                .Select(c => new Application.ViewModel.Select.ViewModelSelectCountries
-                {
-                    CountryId = c.Key,
-                    CountryName = c.Name
-                }).ToList();
+            viewModel.CountriesList = countries != null
+                ? countries.Where(c => c.State == true || c.Key == currentCountryId)
+                           .Select(c => new Application.ViewModel.Select.ViewModelSelectCountries
+                           {
+                               CountryId = c.Key,
+                               CountryName = c.Name
+                           }).ToList()
+                : new List<Application.ViewModel.Select.ViewModelSelectCountries>();
 
-            viewModel.SuppliersList = suppliers
-                .Where(s => s.State == true || s.Key == currentSupplierId)
-                .Select(s => new Application.ViewModel.Select.ViewModelSelectSuppliers
-                {
-                    SupplierId = s.Key,
-                    SupplierName = s.Name
-                }).ToList();
+            viewModel.SuppliersList = suppliers != null
+                ? suppliers.Where(s => s.State == true || s.Key == currentSupplierId)
+                           .Select(s => new Application.ViewModel.Select.ViewModelSelectSuppliers
+                           {
+                               SupplierId = s.Key,
+                               SupplierName = s.Name
+                           }).ToList()
+                : new List<Application.ViewModel.Select.ViewModelSelectSuppliers>();
 
-            viewModel.CurrenciesList = currencies
-                .Where(c => c.State == true || c.Key == currentCurrencyId)
-                .Select(c => new Application.ViewModel.Select.ViewModelSelectCurrency
-                {
-                    Id = c.Key,
-                    NameCurrency = c.Name
-                }).ToList();
+            viewModel.CurrenciesList = currencies != null
+                ? currencies.Where(c => c.State == true || c.Key == currentCurrencyId)
+                           .Select(c => new Application.ViewModel.Select.ViewModelSelectCurrency
+                           {
+                               Id = c.Key,
+                               NameCurrency = c.Name
+                           }).ToList()
+                : new List<Application.ViewModel.Select.ViewModelSelectCurrency>();
         }
         
 

@@ -1,0 +1,79 @@
+﻿@model ImportCost.ViewModels.ImportationOrders.ImportationOrderCreateViewModel
+@{
+    ViewData["Title"] = "Crear Orden";
+}
+
+<div class="card border-0 shadow-sm rounded-4 p-4 mx-auto" style="max-width: 900px;">
+    <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+        <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+            <i class="bi bi-file-earmark-plus text-primary fs-4"></i>
+        </div>
+        <div>
+            <h4 class="mb-0 fw-bold text-dark">Nueva Orden de Importación</h4>
+            <small class="text-muted">Complete los datos generales para registrar una orden.</small>
+        </div>
+    </div>
+
+    <form asp-action="Create" method="POST">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <label asp-for="OrderId" class="form-label fw-semibold small text-muted"></label>
+                <input asp-for="OrderId" class="form-control rounded-3 py-2" placeholder="Ej: IMP-001" />
+                <span asp-validation-for="OrderId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="OrderDate" class="form-label fw-semibold small text-muted"></label>
+                <input asp-for="OrderDate" class="form-control rounded-3 py-2" />
+                <span asp-validation-for="OrderDate" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="ImporterId" class="form-label fw-semibold small text-muted"></label>
+                <select asp-for="ImporterId" asp-items="@(new SelectList(Model.ImportersList, "ImporterId", "ImporterName"))" class="form-select rounded-3 py-2">
+                    <option value="">Seleccione un importador...</option>
+                </select>
+                <span asp-validation-for="ImporterId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="SupplierId" class="form-label fw-semibold small text-muted"></label>
+                <select asp-for="SupplierId" asp-items="@(new SelectList(Model.SuppliersList, "SupplierId", "SupplierName"))" class="form-select rounded-3 py-2">
+                    <option value="">Seleccione un proveedor...</option>
+                </select>
+                <span asp-validation-for="SupplierId" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="OriginCountryId" class="form-label fw-semibold small text-muted"></label>
+                <select asp-for="OriginCountryId" asp-items="@(new SelectList(Model.CountriesList, "CountryId", "CountryName"))" class="form-select rounded-3 py-2">
+                    <option value="">Seleccione país...</option>
+                </select>
+                <span asp-validation-for="OriginCountryId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="CurrencyId" class="form-label fw-semibold small text-muted"></label>
+                <select asp-for="CurrencyId" asp-items="@(new SelectList(Model.CurrenciesList, "Id", "NameCurrency"))" class="form-select rounded-3 py-2">
+                    <option value="">Seleccione moneda...</option>
+                </select>
+                <span asp-validation-for="CurrencyId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="TransportMode" class="form-label fw-semibold small text-muted"></label>
+                <select asp-for="TransportMode" asp-items="@Html.GetEnumSelectList<Persistence.Entities.Enums.TransportMode>()" class="form-select rounded-3 py-2">
+                    <option value="">Modalidad...</option>
+                </select>
+                <span asp-validation-for="TransportMode" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-top text-end">
+            <a asp-action="Index" class="btn btn-light rounded-3 px-4 shadow-sm me-2 fw-semibold">Cancelar</a>
+            <button type="submit" class="btn btn-primary rounded-3 px-4 shadow-sm fw-semibold">Guardar Orden</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
