@@ -5,7 +5,7 @@ using Persistence.Entities.Enums;
 
 public class LandedCostSummaryDTO
 {
-    public string LandedCostSummaryId { get; set; }  
+    public string? LandedCostSummaryId { get; set; }  
 
     public required string ImportationOrderId { get; set; }
 
