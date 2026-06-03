@@ -97,7 +97,7 @@ namespace ImportCost.Controllers.ImportationOrdersController
             var result = await _orderService.CreateOrderAsync(createDto);
 
             TempData["Message"] = result.Message;
-            TempData["TypeMessage"] = result.TypeAlert;
+            TempData["TypeAlert"] = result.TypeAlert;
 
             if (!result.Success)
             {
@@ -164,14 +164,14 @@ namespace ImportCost.Controllers.ImportationOrdersController
             if (order == null)
             {
                 TempData["Message"] = "No se encontró la orden.";
-                TempData["TypeMessage"] = "error";
+                TempData["TypeAlert"] = "error";
                 return RedirectToAction(nameof(Index));
             }
 
             if (order.OrderState == OrderState.Cerrada || order.OrderState == OrderState.Cancelada)
             {
                 TempData["Message"] = "No se puede editar esta orden porque está cerrada o cancelada.";
-                TempData["TypeMessage"] = "warning";
+                TempData["TypeAlert"] = "warning";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -217,7 +217,7 @@ namespace ImportCost.Controllers.ImportationOrdersController
             var result = await _orderService.EditAsync(viewModel.OrderId, dto);
 
             TempData["Message"] = result.Message;
-            TempData["TypeMessage"] = result.TypeAlert;
+            TempData["TypeAlert"] = result.TypeAlert;
 
             if (!result.Success)
             {
@@ -235,7 +235,7 @@ namespace ImportCost.Controllers.ImportationOrdersController
             var result = await _orderService.DeleteAsync(id);
 
             TempData["Message"] = result.Message;
-            TempData["TypeMessage"] = result.TypeAlert;
+            TempData["TypeAlert"] = result.TypeAlert;
 
             return RedirectToAction(nameof(Index));
         }

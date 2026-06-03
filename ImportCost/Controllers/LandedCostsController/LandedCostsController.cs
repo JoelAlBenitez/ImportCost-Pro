@@ -66,7 +66,7 @@ namespace ImportCost.Controllers
             if (string.IsNullOrWhiteSpace(orderId))
             {
                 TempData["Message"] = "Debes seleccionar una orden válida.";
-                TempData["TypeMessage"] = "warning";
+                TempData["TypeAlert"] = "warning";
                 return RedirectToAction("Index", "ImportationOrders");
             }
 
@@ -77,12 +77,12 @@ namespace ImportCost.Controllers
                 var result = await _landedCostService.SaveOfficialCalculationAsync(orderId, summary);
 
                 TempData["Message"] = result.Message;
-                TempData["TypeMessage"] = result.TypeAlert;
+                TempData["TypeAlert"] = result.TypeAlert;
             }
             catch (Exception ex)
             {
                 TempData["Message"] = "Ocurrió un error al procesar el costo: " + ex.Message;
-                TempData["TypeMessage"] = "error";
+                TempData["TypeAlert"] = "error";
             }
 
             return RedirectToAction("Index", "ImportationOrders");

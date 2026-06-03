@@ -94,7 +94,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             var result = await _importationOrderDetailService.AddProductToOrderAsync(viewModel.OrderId, dto);
 
             TempData["Message"] = result.Message;
-            TempData["TypeMessage"] = result.TypeAlert;
+            TempData["TypeAlert"] = result.TypeAlert;
 
             if (!result.Success)
             {
@@ -133,7 +133,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             if (detail == null)
             {
                 TempData["Message"] = "No se encontró el gasto solicitado.";
-                TempData["TypeMessage"] = "danger";
+                TempData["TypeAlert"] = "danger";
                 return RedirectToAction("Index", "ImportationOrders");
             }
 
@@ -175,7 +175,7 @@ namespace ImportCost.Controllers.OrderDetailsController
                 var result = await _importationOrderDetailService.EditProductInOrderAsync(viewModel.OrderDetailId, dto);
 
                 TempData["Message"] = result.Message;
-                TempData["TypeMessage"] = result.TypeAlert;
+                TempData["TypeAlert"] = result.TypeAlert;
 
                 if (!result.Success) return View("Edit", viewModel);
 
@@ -184,7 +184,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             catch (Exception ex)
             {
                 TempData["Message"] = "Ocurrió un error inesperado: " + ex.Message;
-                TempData["TypeMessage"] = "danger";
+                TempData["TypeAlert"] = "danger";
                 return View("Edit", viewModel);
             }
         }
@@ -204,12 +204,12 @@ namespace ImportCost.Controllers.OrderDetailsController
 
                 TempData["Message"] = result.Message;
 
-                TempData["TypeMessage"] = result.TypeAlert;
+                TempData["TypeAlert"] = result.TypeAlert;
             }
             catch (Exception ex)
             {
                 TempData["Message"] = "Ocurrió un error inesperado: " + ex.Message;
-                TempData["TypeMessage"] = "danger";
+                TempData["TypeAlert"] = "danger";
             }
 
 

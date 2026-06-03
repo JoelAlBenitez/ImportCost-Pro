@@ -29,7 +29,7 @@ namespace ImportCost.Controllers
             if (string.IsNullOrWhiteSpace(orderId))
             {
                 TempData["Message"] = "Debes seleccionar una orden válida para ver sus gastos.";
-                TempData["TypeMessage"] = "danger";
+                TempData["TypeAlert"] = "danger";
 
                 return RedirectToAction("Index", "ImportationOrders");
             }
@@ -96,7 +96,7 @@ namespace ImportCost.Controllers
             var result = await _expenseService.AddExpenseToOrderAsync(dto);
 
             TempData["Message"] = result.Message;
-            TempData["TypeMessage"] = result.TypeAlert;
+            TempData["TypeAlert"] = result.TypeAlert;
 
             if (!result.Success)
             {
@@ -168,7 +168,7 @@ namespace ImportCost.Controllers
                 var result = await _expenseService.EditExpenseAsync(dto);
 
                 TempData["Message"] = result.Message;
-                TempData["TypeMessage"] = result.TypeAlert;
+                TempData["TypeAlert"] = result.TypeAlert;
 
                 if (!result.Success)
                 {
@@ -181,7 +181,7 @@ namespace ImportCost.Controllers
             catch (Exception ex)
             {
                 TempData["Message"] = "Ocurrió un error inesperado: " + ex.Message;
-                TempData["TypeMessage"] = "error";
+                TempData["TypeAlert"] = "error";
                 await LoadCatalogsAsync(viewModel);
                 return View("Edit", viewModel);
             }
@@ -202,12 +202,12 @@ namespace ImportCost.Controllers
                 var result = await _expenseService.RemoveExpenseAsync(id);
 
                 TempData["Message"] = result.Message;
-                TempData["TypeMessage"] = result.TypeAlert;
+                TempData["TypeAlert"] = result.TypeAlert;
             }
             catch (Exception ex)
             {
                 TempData["Message"] = "Ocurrió un error inesperado en el servidor: " + ex.Message;
-                TempData["TypeMessage"] = "error";
+                TempData["TypeAlert"] = "error";
             }
 
             return RedirectToAction(nameof(Index), new { orderId = orderId });
