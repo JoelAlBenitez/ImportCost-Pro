@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Persistence.Context;
 using Persistence.Repositories.FinancialCore;
 using Persistence.Repositories.OperationalCommercial;
+using Persistence.Repositories.ImportationOrderAndLandCost;
 
 namespace Persistence.ServiceRegistration
 {
@@ -19,6 +20,10 @@ namespace Persistence.ServiceRegistration
             services.AddScoped<ProductsRepository>();
             services.AddScoped<SuppliersRepository>();
             services.AddScoped<TariffCategoriesRepository>();
+
+            // Repositorios de Importación y LandCost (Necesarios para el blindaje de Monedas y Tasas)
+            services.AddScoped<ImportationOrderRepository>();
+            services.AddScoped<ImportationExpenseRepository>();
 
             //agreguen aqui sus repositorios por favor -> 
             services.AddScoped<CountryRepository>();

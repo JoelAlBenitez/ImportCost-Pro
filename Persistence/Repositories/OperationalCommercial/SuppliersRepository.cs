@@ -78,6 +78,12 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             return await _context.Suppliers.AnyAsync(s => s.countryId == countryId);
         }
+
+        public async Task<bool> HasSuppliersByCurrencyId(int currencyId)
+        {
+            return await _context.Suppliers.AnyAsync(s => s.MainCurrencyId == currencyId);
+        }
+
         public async Task<bool> AssociateImportationOrderBySupplier(int key)
         {
             return await _context.ImportationOrders.AnyAsync(s => s.SupplierId == key);

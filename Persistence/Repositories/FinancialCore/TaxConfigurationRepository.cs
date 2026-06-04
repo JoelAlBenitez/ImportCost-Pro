@@ -37,19 +37,24 @@ namespace Persistence.Repositories.FinancialCore
             return false;
         }
 
-        public async Task<TaxConfiguration> GetEntityById(int key)
+        public async Task<TaxConfiguration?> GetEntityById(int key)
         {
-            return await _context.TaxConfigurations.FirstAsync(t => t.Key == key);
+            return await _context.TaxConfigurations
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Key == key);
         }
 
         public async Task<IReadOnlyCollection<TaxConfiguration>> GetAllAsync()
         {
-            return await _context.TaxConfigurations.ToListAsync();
+            return await _context.TaxConfigurations
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<TaxConfiguration?> GetCurrentConfigAsync()
         {
             return await _context.TaxConfigurations
+                .AsNoTracking()
                 .FirstOrDefaultAsync(t => t.State == true);
         }
     }

@@ -4,7 +4,7 @@ using Application.Services.Result;
 using Persistence.Entities.FinancialCore;
 using Persistence.Repositories.FinancialCore;
 using Persistence.Repositories.OperationalCommercial;
-//using Persistence.Repositories.ImportationOrderAndLandCost;
+using Persistence.Repositories.ImportationOrderAndLandCost;
 
 namespace Application.Services.Currencies
 {
@@ -13,22 +13,21 @@ namespace Application.Services.Currencies
         private readonly CurrencyRepository _repository;
         private readonly SuppliersRepository _suppliersRepository;
         private readonly ExchangeRateRepository _exchangeRateRepository;
-        //private readonly ImportationOrderRepository _ordersRepository;
-        //private readonly ImportationExpenseRepository _expensesRepository;
+        private readonly ImportationOrderRepository _ordersRepository;
+        private readonly ImportationExpenseRepository _expensesRepository;
 
         public CurrencyService(
-    
             CurrencyRepository repository,
-            SuppliersRepository suppliersRepository, ExchangeRateRepository exchangeRateRepositor)
-           
-            //ImportationOrderRepository ordersRepository,
-            //ImportationExpenseRepository expensesRepository)
+            SuppliersRepository suppliersRepository,
+            ExchangeRateRepository exchangeRateRepository,
+            ImportationOrderRepository ordersRepository,
+            ImportationExpenseRepository expensesRepository)
         {
             _repository = repository;
             _suppliersRepository = suppliersRepository;
-            _exchangeRateRepository = exchangeRateRepositor;
-            //_ordersRepository = ordersRepository;
-            //_expensesRepository = expensesRepository;
+            _exchangeRateRepository = exchangeRateRepository;
+            _ordersRepository = ordersRepository;
+            _expensesRepository = expensesRepository;
         }
 
         public async Task<IReadOnlyCollection<CurrencyDto>> GetAllAsync()
@@ -132,15 +131,15 @@ namespace Application.Services.Currencies
 
                 if (existing.IsoCode != dto.IsoCode)
                 {
-                    //bool inUse = await _suppliersRepository.HasSuppliersByCurrencyId(dto.Key) ||
-                    //             await _exchangeRateRepository.HasExchangeRatesByCurrencyId(dto.Key) ||
-                    //             await _ordersRepository.HasOrdersByCurrencyId(dto.Key) ||
-                    //             await _expensesRepository.HasExpensesByCurrencyId(dto.Key);
+                    bool inUse = await _suppliersRepository.HasSuppliersByCurrencyId(dto.Key) ||
+                                 await _exchangeRateRepository.HasExchangeRatesByCurrencyId(dto.Key) ||
+                                 await _ordersRepository.HasOrdersByCurrencyId(dto.Key) ||
+                                 await _expensesRepository.HasExpensesByCurrencyId(dto.Key);
 
-                    //if (inUse)
-                    //{
-                    //    return new ServiceResult { Success = false, Message = "No se puede modificar el código ISO porque esta moneda ya está asociada a proveedores, tasas, órdenes o gastos.", TypeAlert = "danger" };
-                    //}
+                    if (inUse)
+                    {
+                        return new ServiceResult { Success = false, Message = "No se puede modificar el código ISO porque esta moneda ya está asociada a proveedores, tasas, órdenes o gastos.", TypeAlert = "danger" };
+                    }
                 }
 
                 if (!existing.IsLocalCurrency && dto.IsLocalCurrency)
@@ -154,15 +153,15 @@ namespace Application.Services.Currencies
 
                 if (existing.IsLocalCurrency && !dto.State)
                 {
-                    //bool inUse = await _suppliersRepository.HasSuppliersByCurrencyId(dto.Key) ||
-                    //             await _exchangeRateRepository.HasExchangeRatesByCurrencyId(dto.Key) ||
-                    //             await _ordersRepository.HasOrdersByCurrencyId(dto.Key) ||
-                    //             await _expensesRepository.HasExpensesByCurrencyId(dto.Key);
+                    bool inUse = await _suppliersRepository.HasSuppliersByCurrencyId(dto.Key) ||
+                                 await _exchangeRateRepository.HasExchangeRatesByCurrencyId(dto.Key) ||
+                                 await _ordersRepository.HasOrdersByCurrencyId(dto.Key) ||
+                                 await _expensesRepository.HasExpensesByCurrencyId(dto.Key);
 
-                    //if (inUse)
-                    //{
-                    //    return new ServiceResult { Success = false, Message = "No se puede inactivar la moneda local mientras existan registros que dependan de ella.", TypeAlert = "danger" };
-                    //}
+                    if (inUse)
+                    {
+                        return new ServiceResult { Success = false, Message = "No se puede inactivar la moneda local mientras existan registros que dependan de ella.", TypeAlert = "danger" };
+                    }
                 }
 
                 existing.Name = dto.Name;
@@ -197,15 +196,15 @@ namespace Application.Services.Currencies
                     return new ServiceResult { Success = false, Message = "No se puede eliminar la moneda local del sistema.", TypeAlert = "danger" };
                 }
 
-                //bool inUse = await _suppliersRepository.HasSuppliersByCurrencyId(id) ||
-                //             await _exchangeRateRepository.HasExchangeRatesByCurrencyId(id) ||
-                //             await _ordersRepository.HasOrdersByCurrencyId(id) ||
-                //             await _expensesRepository.HasExpensesByCurrencyId(id);
+                bool inUse = await _suppliersRepository.HasSuppliersByCurrencyId(id) ||
+                             await _exchangeRateRepository.HasExchangeRatesByCurrencyId(id) ||
+                             await _ordersRepository.HasOrdersByCurrencyId(id) ||
+                             await _expensesRepository.HasExpensesByCurrencyId(id);
 
-                //if (inUse)
-                //{
-                //    return new ServiceResult { Success = false, Message = "No se puede eliminar esta moneda porque está en uso por proveedores, tasas, órdenes o gastos.", TypeAlert = "danger" };
-                //}
+                if (inUse)
+                {
+                    return new ServiceResult { Success = false, Message = "No se puede eliminar esta moneda porque está en uso por proveedores, tasas, órdenes o gastos.", TypeAlert = "danger" };
+                }
 
                 var result = await _repository.DeleteAsync(id);
                 if (result) return new ServiceResult { Success = true, Message = "Moneda eliminada con éxito.", TypeAlert = "success" };

@@ -23,12 +23,12 @@
                         </div>
                         <span class="badge bg-success-light text-success small">Activo</span>
                     </div>
-                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Productos</h6>
-                    <p class="h3 mb-2 fw-bold">-</p>
-                    <p class="text-muted small mb-0">Gestiona tu catálogo de productos</p>
+                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Países</h6>
+                    <p class="h3 mb-2 fw-bold">@ViewBag.TotalCountries</p>
+                    <p class="text-muted small mb-0">Gestiona los países del sistema</p>
                 </div>
                 <div class="card-footer bg-transparent border-0 p-4 pt-0">
-                    <a href="@Url.Action("Index", "Products")" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
+                    <a href="@Url.Action("Index", "Countries")" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
                         Ver detalles
                         <i class="bi bi-arrow-right" style="font-size: 0.875rem;"></i>
                     </a>
@@ -40,17 +40,26 @@
             <div class="card border-0 shadow-sm h-100 transition-card">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
+<<<<<<< HEAD
                         <div class="d-flex align-items-center justify-content-center rounded bg-primary-subtle text-primary" style="width: 48px; height: 48px;">
                          <i class="bi bi-receipt fs-4"></i> 
+=======
+                        <div class="bg-light p-3 rounded" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-cash-coin" style="font-size: 1.5rem; color: #0d6efd;"></i>
+>>>>>>> feature/FinancialCore
                         </div>
                         <span class="badge bg-primary-light text-primary small">Activo</span>
                     </div>
-                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Ordenes de importación</h6>
-                    <p class="h3 mb-2 fw-bold">-</p>
-                    <p class="text-muted small mb-0">Gestiona tus ordenes de importación</p>
+                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Monedas</h6>
+                    <p class="h3 mb-2 fw-bold">@ViewBag.TotalCurrencies</p>
+                    <p class="text-muted small mb-0">Gestiona las monedas base</p>
                 </div>
                 <div class="card-footer bg-transparent border-0 p-4 pt-0">
+<<<<<<< HEAD
                     <a asp-controller="ImportationOrders" asp-action="Index" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
+=======
+                    <a href="@Url.Action("Index", "Currencies")" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
+>>>>>>> feature/FinancialCore
                         Ver detalles
                         <i class="bi bi-arrow-right" style="font-size: 0.875rem;"></i>
                     </a>
@@ -63,16 +72,16 @@
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div class="bg-light p-3 rounded" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                            <i class="bi bi-tag" style="font-size: 1.5rem; color: #dc3545;"></i>
+                            <i class="bi bi-graph-up-arrow" style="font-size: 1.5rem; color: #dc3545;"></i>
                         </div>
                         <span class="badge bg-danger-light text-danger small">Activo</span>
                     </div>
-                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Configuración Categorías</h6>
-                    <p class="h3 mb-2 fw-bold">-</p>
-                    <p class="text-muted small mb-0">Administra configuraciones</p>
+                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Tasas de Cambio</h6>
+                    <p class="h3 mb-2 fw-bold">@ViewBag.TotalRates</p>
+                    <p class="text-muted small mb-0">Historial de conversiones</p>
                 </div>
                 <div class="card-footer bg-transparent border-0 p-4 pt-0">
-                    <a href="@Url.Action("Index", "TaxConfigurations")" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
+                    <a href="@Url.Action("Index", "ExchangeRates")" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
                         Ver detalles
                         <i class="bi bi-tag" style="font-size: 0.875rem;"></i>
                     </a>
@@ -85,16 +94,20 @@
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div class="bg-light p-3 rounded" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                            <i class="bi bi-cash" style="font-size: 1.5rem; color: #ffc107;"></i>
+                            <i class="bi bi-calculator" style="font-size: 1.5rem; color: #ffc107;"></i>
                         </div>
-                        <span class="badge bg-warning-light text-warning small">Activo</span>
+                        <span class="badge @(ViewBag.HasTaxConfig ? "bg-success" : "bg-warning") text-dark small">@(ViewBag.HasTaxConfig ? "Configurado" : "Pendiente")</span>
                     </div>
-                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Landed Costs</h6>
-                    <p class="h3 mb-2 fw-bold">-</p>
-                    <p class="text-muted small mb-0">Gestiona tus calculos</p>
+                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Configuración de Impuestos</h6>
+                    <p class="h3 mb-2 fw-bold">@(ViewBag.HasTaxConfig ? "LISTO" : "N/A")</p>
+                    <p class="text-muted small mb-0">Porcentajes globales</p>
                 </div>
                 <div class="card-footer bg-transparent border-0 p-4 pt-0">
+<<<<<<< HEAD
                     <a asp-controller="LandedCost" asp-action="Index" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
+=======
+                    <a href="@Url.Action("Index", "TaxConfigurations")" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
+>>>>>>> feature/FinancialCore
                         Ver detalles
                         <i class="bi bi-arrow-right" style="font-size: 0.875rem;"></i>
                     </a>

@@ -1,6 +1,3 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Entities.ImportationOrderAndLandCost;
@@ -10,6 +7,7 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
 {
     
     public class ImportationExpenseRepository : BaseRepository<ImportationExpense, string>
+
     {
         private readonly ContextImportCost _context;
 
@@ -17,6 +15,7 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
         {
             _context = context;
         }
+
 
 
         public async Task<bool> CreateAsync(ImportationExpense entity)
@@ -43,7 +42,7 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
         public async Task<ImportationExpense> GetEntityById(string key)
         {
 
-            return await (_context.ImportationExpenses
+            return (await _context.ImportationExpenses
                          .FirstOrDefaultAsync(e => e.ImportationExpenseId == key))!;
         }
 
@@ -58,6 +57,10 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
                                  .AsNoTracking()
                                  .Where(e => e.ImportationOrderId == orderId)
                                  .ToListAsync();
+        }
+        public async Task<bool> HasExpensesByCurrencyId(int currencyId)
+        {
+            return await _context.ImportationExpenses.AnyAsync(e => e.CurrencyId == currencyId);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Entities.ImportationOrderAndLandCost;
@@ -23,7 +22,7 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
                 .Include(o => o.Country)
                 .Include(o => o.Currency)
                 .Include(o => o.ImportationOrderDetails)
-                .ThenInclude(d => d.Product)         
+                .ThenInclude(d => d.Product)
                 .Include(o => o.ImportationExpenses)
                 .ThenInclude(e => e.Currency)
                 .Include(o => o.LandedCostSummary)

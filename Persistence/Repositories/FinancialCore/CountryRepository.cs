@@ -37,20 +37,32 @@ namespace Persistence.Repositories.FinancialCore
             return false;
         }
 
-        public async Task<Country> GetEntityById(int key)
+        public async Task<Country?> GetEntityById(int key)
         {
-            return await _context.Countries.FirstAsync(c => c.Key == key);
+            return await _context.Countries
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Key == key);
         }
 
         public async Task<IReadOnlyCollection<Country>> GetAllAsync()
         {
-            return await _context.Countries.ToListAsync();
+            return await _context.Countries
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Country?> GetByIsoCodeAsync(string isoCode)
         {
             return await _context.Countries
+                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.IsoCode.ToLower() == isoCode.ToLower());
+        }
+
+        public async Task<Country?> GetByNameAsync(string name)
+        {
+            return await _context.Countries
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
         }
     }
 }

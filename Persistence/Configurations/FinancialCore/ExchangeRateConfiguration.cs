@@ -30,5 +30,7 @@ namespace Persistence.Configurations.FinancialCore
                    .OnDelete(DeleteBehavior.Restrict);
 
         }
+
+
     }
 }

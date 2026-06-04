@@ -55,21 +55,19 @@ namespace Application.Services.Countries
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(dto.Name) || string.IsNullOrWhiteSpace(dto.IsoCode))
-                {
-                    return new ServiceResult { Success = false, Message = "El nombre y el código ISO son obligatorios.", TypeAlert = "danger" };
-                }
-
-                if (dto.IsoCode.Trim().Length < 2 || dto.IsoCode.Trim().Length > 3)
-                {
-                    return new ServiceResult { Success = false, Message = "El código ISO debe tener entre 2 y 3 caracteres.", TypeAlert = "danger" };
-                }
-
                 dto.IsoCode = dto.IsoCode.Trim().ToUpper();
+                dto.Name = dto.Name.Trim();
+
                 var existingCountry = await _repository.GetByIsoCodeAsync(dto.IsoCode);
                 if (existingCountry != null)
                 {
                     return new ServiceResult { Success = false, Message = "Ya existe un país registrado con este código ISO.", TypeAlert = "danger" };
+                }
+
+                var existingWithName = await _repository.GetByNameAsync(dto.Name);
+                if (existingWithName != null)
+                {
+                    return new ServiceResult { Success = false, Message = "Ya existe un país registrado con este nombre.", TypeAlert = "danger" };
                 }
 
                 var entity = new Country
@@ -96,17 +94,9 @@ namespace Application.Services.Countries
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(dto.Name) || string.IsNullOrWhiteSpace(dto.IsoCode))
-                {
-                    return new ServiceResult { Success = false, Message = "El nombre y el código ISO son obligatorios.", TypeAlert = "danger" };
-                }
-
-                if (dto.IsoCode.Trim().Length < 2 || dto.IsoCode.Trim().Length > 3)
-                {
-                    return new ServiceResult { Success = false, Message = "El código ISO debe tener entre 2 y 3 caracteres.", TypeAlert = "danger" };
-                }
-
                 dto.IsoCode = dto.IsoCode.Trim().ToUpper();
+                dto.Name = dto.Name.Trim();
+
                 var existing = await _repository.GetEntityById(dto.Key);
                 if (existing == null)
                 {
@@ -117,6 +107,12 @@ namespace Application.Services.Countries
                 if (countryWithThatIso != null && countryWithThatIso.Key != dto.Key)
                 {
                     return new ServiceResult { Success = false, Message = "Ya existe un país registrado con este código ISO.", TypeAlert = "danger" };
+                }
+
+                var existingWithName = await _repository.GetByNameAsync(dto.Name);
+                if (existingWithName != null && existingWithName.Key != dto.Key)
+                {
+                    return new ServiceResult { Success = false, Message = "Ya existe un país registrado con este nombre.", TypeAlert = "danger" };
                 }
 
                 existing.Name = dto.Name;

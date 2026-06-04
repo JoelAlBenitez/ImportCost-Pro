@@ -9,11 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportCost", "ImportCost\ImportCost.csproj", "{E2EBF041-070A-3EFE-94C6-A11FBCA4E173}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{8FD2D888-59E2-40A1-9BF1-B25E2698FA14}"
-	ProjectSection(SolutionItems) = preProject
-		requerimientos.txt = requerimientos.txt
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
