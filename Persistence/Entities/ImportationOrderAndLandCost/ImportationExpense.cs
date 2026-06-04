@@ -1,7 +1,6 @@
-﻿
-
-using Persistence.Entities.Enums;
+﻿using Persistence.Entities.Enums;
 using Persistence.Entities.FinancialCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Persistence.Entities.ImportationOrderAndLandCost
 {
@@ -9,7 +8,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
     {
         public required string ImportationExpenseId { get; set; }
 
-        public required string OrderId { get; set; }
+        public required string ImportationOrderId { get; set; }
 
         public required ExpenseType ExpenseType { get; set; }
 
@@ -23,8 +22,8 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         //navigation properties
 
-        public virtual ImportationOrder ImportationOrder { get; set; } = null!;
+        public ImportationOrder? ImportationOrder { get; set; }
 
-        public virtual Currency Currency { get; set; } = null!;
+        public Currency? Currency { get; set; }
     }
 }

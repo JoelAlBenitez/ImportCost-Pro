@@ -12,6 +12,8 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
             builder.HasKey(x => x.OrderDetailId);
             builder.Property(x => x.OrderDetailId).HasMaxLength(50);
             builder.Property(x => x.OrderId).HasMaxLength(30);
+            builder.Property(d => d.FOBUnitPrice).HasPrecision(18, 2);
+
 
             builder.ToTable("ImportationOrderDetails", t =>
             {
@@ -22,8 +24,8 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
 
             #region Property Configurations
 
-            builder.HasOne(x => x.ImportationOrder).WithMany(y => y.ImportationOrderDetails).HasForeignKey(x => x.OrderId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.ImportationOrder).WithMany(y => y.ImportationOrderDetails).HasForeignKey(x => x.OrderId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Cascade);
             builder.Property(x => x.Quantity).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.FOBUnitPrice).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.ExpectedProfitMargin).IsRequired().HasColumnType("decimal(18,2)");

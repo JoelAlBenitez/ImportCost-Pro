@@ -1,0 +1,78 @@
+﻿@model ImportCost.ViewModels.ImportationExpenses.ExpenseCreateViewModel
+@{
+    ViewData["Title"] = "Registrar Gasto";
+}
+
+@if (TempData["Message"] != null)
+{
+    var alertType = TempData["TypeAlert"]?.ToString() == "error" ? "danger" : TempData["TypeAlert"];
+    <div class="alert alert-@alertType alert-dismissible fade show shadow-sm rounded-3 mx-auto" style="max-width: 800px;" role="alert">
+        <i class="bi bi-info-circle-fill me-2"></i> @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm rounded-4 p-4 mx-auto" style="max-width: 800px;">
+    <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+        <div class="bg-warning bg-opacity-10 p-3 rounded-3 me-3">
+            <i class="bi bi-cash-coin text-warning fs-4"></i>
+        </div>
+        <div>
+            <h4 class="mb-0 fw-bold text-dark">Registrar Gasto de Importación</h4>
+            <small class="text-muted">Orden No. <span class="fw-bold">@Model.OrderId</span></small>
+        </div>
+    </div>
+
+    <form asp-action="Create" method="POST">
+        <input type="hidden" asp-for="OrderId" />
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <label asp-for="ExpenseType" class="form-label fw-semibold small text-muted"></label>
+                <select asp-for="ExpenseType" asp-items="@Html.GetEnumSelectList<Persistence.Entities.Enums.ExpenseType>()" class="form-select rounded-3 py-2">
+                    <option value="">Seleccione el tipo de gasto...</option>
+                </select>
+                <span asp-validation-for="ExpenseType" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="DistributionMethod" class="form-label fw-semibold small text-muted"></label>
+                <select asp-for="DistributionMethod" asp-items="@Html.GetEnumSelectList<Persistence.Entities.Enums.DistributionMethod>()" class="form-select rounded-3 py-2">
+                    <option value="">¿Cómo se distribuirá?</option>
+                </select>
+                <span asp-validation-for="DistributionMethod" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="ExpenseAmount" class="form-label fw-semibold small text-muted"></label>
+                <input asp-for="ExpenseAmount" type="number" step="0.01" min="0.01" class="form-control rounded-3 py-2" placeholder="0.00" onkeypress="return event.charCode != 45" />
+                <span asp-validation-for="ExpenseAmount" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="CurrencyId" class="form-label fw-semibold small text-muted"></label>
+                <select asp-for="CurrencyId" asp-items="@(new SelectList(Model.CurrenciesList, "Id", "NameCurrency"))" class="form-select rounded-3 py-2">
+                    <option value="">Seleccione moneda...</option>
+                </select>
+                <span asp-validation-for="CurrencyId" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="ExpenseDate" class="form-label fw-semibold small text-muted"></label>
+                <input asp-for="ExpenseDate" type="date" class="form-control rounded-3 py-2" />
+                <span asp-validation-for="ExpenseDate" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-top text-end">
+            <a asp-action="Index" asp-route-orderId="@Model.OrderId" class="btn btn-light rounded-3 px-4 shadow-sm me-2 fw-semibold">Cancelar</a>
+            <button type="submit" class="btn btn-warning text-dark rounded-3 px-4 shadow-sm fw-bold">Guardar Gasto</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

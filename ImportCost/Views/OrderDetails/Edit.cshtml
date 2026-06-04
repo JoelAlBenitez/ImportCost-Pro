@@ -1,0 +1,88 @@
+﻿@model ImportCost.ViewModels.OrderDetails.OrderDetailEditViewModel
+@{
+    ViewData["Title"] = "Editar Producto";
+}
+
+@* 1. Bloque de alertas nativo (sin JS externo) *@
+@if (TempData["Message"] != null)
+{
+    var alertType = TempData["TypeAlert"]?.ToString() == "error" ? "danger" : TempData["TypeAlert"];
+    <div class="alert alert-@alertType alert-dismissible fade show shadow-sm rounded-3 mx-auto d-flex align-items-center mb-4" style="max-width: 800px;" role="alert">
+        <i class="bi bi-info-circle-fill fs-5 me-3"></i>
+        <div>@TempData["Message"]</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm rounded-4 p-4 mx-auto" style="max-width: 800px;">
+    <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+        <div class="bg-success bg-opacity-10 p-3 rounded-3 me-3">
+            <i class="bi bi-pencil-square text-success fs-4"></i>
+        </div>
+        <div>
+            <h4 class="mb-0 fw-bold text-dark">Editar Detalles del Producto</h4>
+            <small class="text-muted">Orden No. <span class="fw-bold">@Model.OrderId</span></small>
+        </div>
+    </div>
+
+    @* 2. Formulario con token de seguridad para evitar fallos de POST *@
+    <form asp-action="Edit" asp-controller="OrderDetails" method="POST">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="OrderDetailId" />
+        <input type="hidden" asp-for="OrderId" />
+        <input type="hidden" asp-for="ProductId" />
+        @{
+        Console.WriteLine(Model.OrderDetailId);
+        Console.WriteLine(Model.OrderId);
+        Console.WriteLine(Model.ProductId);
+            Console.WriteLine(Model.Quantity);
+            Console.WriteLine(Model.FOBUnitPrice);
+            Console.WriteLine(Model.ExpectedProfitMargin);
+        }
+        @* 3. Resumen de validación para ver si el modelo falla al llegar al servidor *@
+        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+        <div class="row g-4">
+            <div class="col-md-12">
+                <label asp-for="ProductName" class="form-label fw-semibold small text-muted"></label>
+                <input asp-for="ProductName" class="form-control rounded-3 py-2 bg-light text-muted" readonly />
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="Quantity" class="form-label fw-semibold small text-muted"></label>
+                <input asp-for="Quantity" type="number" step="0.01" class="form-control rounded-3 py-2" />
+                <span asp-validation-for="Quantity" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="FOBUnitPrice" class="form-label fw-semibold small text-muted"></label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-currency-dollar"></i></span>
+                    <input asp-for="FOBUnitPrice" type="number" step="0.01" class="form-control rounded-3 border-start-0 py-2" />
+                </div>
+                <span asp-validation-for="FOBUnitPrice" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="ExpectedProfitMargin" class="form-label fw-semibold small text-muted"></label>
+                <div class="input-group">
+                    <input asp-for="ExpectedProfitMargin" type="number" step="0.01" class="form-control rounded-3 border-end-0 py-2" />
+                    <span class="input-group-text bg-light border-start-0">%</span>
+                </div>
+                <span asp-validation-for="ExpectedProfitMargin" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-top text-end">
+            <a asp-action="Index" asp-route-orderId="@Model.OrderId" class="btn btn-light rounded-3 px-4 shadow-sm me-2 fw-semibold">Cancelar</a>
+            <button type="submit" class="btn btn-success rounded-3 px-4 shadow-sm fw-semibold">Guardar Cambios</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

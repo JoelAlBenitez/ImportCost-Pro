@@ -181,11 +181,6 @@ namespace ImportCost.Controllers.ExchangeRates
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
 
-            if (!result.Success)
-            {
-                return RedirectToAction(nameof(Delete), new { key = vm.Key });
-            }
-
             return RedirectToAction(nameof(Index));
         }
     }

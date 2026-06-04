@@ -1,6 +1,11 @@
+using Application.Services.Currencies;
+using Application.Services.ImportationExpenseServices;
+using Application.Services.ImportationOrderDetailServices;
+using Application.Services.ImportationOrderServices;
 using Application.ServicesRegistration;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
+using Persistence.Repositories.ImportationOrderAndLandCost;
 using Persistence.ServiceRegistration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +22,25 @@ builder.Services.AddApplicationRegistration();
 builder.Services.AddPersistenceRegistration(builder.Configuration);
 
 builder.Environment.IsDevelopment();
+
+builder.Services.AddScoped<Persistence.Repositories.FinancialCore.CurrencyRepository>();
+builder.Services.AddScoped<Persistence.Repositories.FinancialCore.ExchangeRateRepository>();
+builder.Services.AddScoped<Persistence.Repositories.FinancialCore.TaxConfigurationRepository>();
+
+builder.Services.AddScoped<Persistence.Repositories.ImportationOrderAndLandCost.ImportationOrderRepository>();
+builder.Services.AddScoped<Persistence.Repositories.ImportationOrderAndLandCost.ImportationExpenseRepository>();
+builder.Services.AddScoped<Persistence.Repositories.ImportationOrderAndLandCost.OrderDetailRepository>();
+
+builder.Services.AddScoped<ImportationOrderService>();
+builder.Services.AddScoped<ImportationExpenseService>();
+builder.Services.AddScoped<CurrencyService>();
+builder.Services.AddScoped<LandedCostService>();
+builder.Services.AddScoped<ImportationOrderDetailService>();
+
+
+
+
+
 
 var app = builder.Build();
 

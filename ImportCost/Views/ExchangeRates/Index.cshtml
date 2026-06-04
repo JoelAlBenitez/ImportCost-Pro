@@ -102,7 +102,11 @@
                     </table>
                 </div>
                 <div class="card-footer bg-white border-top-0 p-3 d-flex justify-content-between align-items-center">
-                    <span class="text-muted small">Mostrando @(Model?.Count ?? 0) tasas registradas</span>
+                    <span class="text-muted small" id="paginationInfo">Mostrando @(Model?.Count ?? 0) tasas registradas</span>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

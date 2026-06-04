@@ -89,6 +89,23 @@
                 </li>
               
                 @*metan sus opciones aqui  pongalo asi como los de arriba para el efecto de cambio de item*@
+
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "ImportationOrders" ? "active" : "")"
+                       asp-area="" asp-controller="ImportationOrders" asp-action="Index">
+                        <i class="bi bi-receipt"></i>
+                        <span>Órdenes de Importación</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "LandedCost" ? "active" : "")"
+                       asp-area="" asp-controller="LandedCost" asp-action="Index">
+                        <i class="bi bi-calculator"></i>
+                        <span>Cálculo Landed Cost</span>
+                    </a>
+                </li>
+            
             </ul>
         </nav>
 

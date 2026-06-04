@@ -20,9 +20,9 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
             });
 
             #region Property Configurations
-            builder.HasOne(x=> x.ImportationOrder).WithOne(y  => y.LandedCostSummary).HasForeignKey<LandedCostSummary>(x => x.OrderId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x=> x.ImportationOrder).WithOne(y  => y.LandedCostSummary).HasForeignKey<LandedCostSummary>(x => x.OrderId).OnDelete(DeleteBehavior.Cascade);
 
-            builder.Property(x => x.LocalCurrencyUsed).IsRequired();
+            builder.Property(x => x.LocalCurrencyId).IsRequired();
             builder.Property(x => x.ExchangeRate).IsRequired().HasColumnType("decimal(18,4)");
             builder.Property(x => x.OriginalTotalFob).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.LocalTotalFob).IsRequired().HasColumnType("decimal(18,2)");

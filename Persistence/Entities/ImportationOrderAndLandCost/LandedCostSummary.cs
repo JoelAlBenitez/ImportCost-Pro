@@ -8,7 +8,7 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         public required string OrderId { get; set; }
 
-        public required int LocalCurrencyUsed { get; set; }
+        public required int LocalCurrencyId { get; set; }
 
         public required decimal ExchangeRate { get; set; }
 
@@ -38,9 +38,9 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
         //navigation properties
 
         //antes: public required ImportationOrder ImportationOrder { get; set; }
-        public virtual ImportationOrder ImportationOrder { get; set; } = null!;
+        public ImportationOrder ImportationOrder { get; set; } = null!;
 
-        public virtual ICollection<LandedCostDetail> LandedCostDetails { get; set; } = new List<LandedCostDetail>();
+        public ICollection<LandedCostDetail> LandedCostDetails { get; set; } = new List<LandedCostDetail>();
 
     }
 }

@@ -57,5 +57,12 @@ namespace Persistence.Repositories.FinancialCore
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.IsoCode.ToLower() == isoCode.ToLower());
         }
+
+        public async Task<Country?> GetByNameAsync(string name)
+        {
+            return await _context.Countries
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
+        }
     }
 }

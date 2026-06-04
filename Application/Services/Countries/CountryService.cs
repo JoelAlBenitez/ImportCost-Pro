@@ -56,10 +56,18 @@ namespace Application.Services.Countries
             try
             {
                 dto.IsoCode = dto.IsoCode.Trim().ToUpper();
+                dto.Name = dto.Name.Trim();
+
                 var existingCountry = await _repository.GetByIsoCodeAsync(dto.IsoCode);
                 if (existingCountry != null)
                 {
                     return new ServiceResult { Success = false, Message = "Ya existe un país registrado con este código ISO.", TypeAlert = "danger" };
+                }
+
+                var existingWithName = await _repository.GetByNameAsync(dto.Name);
+                if (existingWithName != null)
+                {
+                    return new ServiceResult { Success = false, Message = "Ya existe un país registrado con este nombre.", TypeAlert = "danger" };
                 }
 
                 var entity = new Country
@@ -87,6 +95,8 @@ namespace Application.Services.Countries
             try
             {
                 dto.IsoCode = dto.IsoCode.Trim().ToUpper();
+                dto.Name = dto.Name.Trim();
+
                 var existing = await _repository.GetEntityById(dto.Key);
                 if (existing == null)
                 {
@@ -97,6 +107,12 @@ namespace Application.Services.Countries
                 if (countryWithThatIso != null && countryWithThatIso.Key != dto.Key)
                 {
                     return new ServiceResult { Success = false, Message = "Ya existe un país registrado con este código ISO.", TypeAlert = "danger" };
+                }
+
+                var existingWithName = await _repository.GetByNameAsync(dto.Name);
+                if (existingWithName != null && existingWithName.Key != dto.Key)
+                {
+                    return new ServiceResult { Success = false, Message = "Ya existe un país registrado con este nombre.", TypeAlert = "danger" };
                 }
 
                 existing.Name = dto.Name;

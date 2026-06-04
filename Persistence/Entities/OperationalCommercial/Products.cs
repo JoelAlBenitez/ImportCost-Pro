@@ -17,5 +17,7 @@ namespace Persistence.Entities.OperationalCommercial
         public TariffCategories? tariffCategories { get; set; }
         public Country? country { get; set; }
         public required int countryId { get; set; }
+
+
     }
 }

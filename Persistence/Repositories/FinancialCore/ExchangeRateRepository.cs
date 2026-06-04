@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Entities.FinancialCore;
 using Persistence.Repositories.Base;
-
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Persistence.Repositories.FinancialCore
 {
     public class ExchangeRateRepository : BaseRepository<ExchangeRate, int>

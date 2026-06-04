@@ -23,19 +23,19 @@ namespace Persistence.Entities.ImportationOrderAndLandCost
 
         //navigation properties
 
-        public virtual Importers Importer { get; set; } = null!;
+        public  Importers Importer { get; set; } = null!;
 
-        public virtual Suppliers Supplier { get; set; } = null!;
+        public  Suppliers Supplier { get; set; } = null!;
 
-        public virtual Country OriginCountry { get; set; } = null!;
+        public  Country Country { get; set; } = null!;
 
-        public virtual Currency Currency { get; set; } = null!;
+        public  Currency Currency { get; set; } = null!;
 
-        public virtual ICollection<ImportationOrderDetail> ImportationOrderDetails { get; set; } = new List<ImportationOrderDetail>();
+        public  ICollection<ImportationOrderDetail> ImportationOrderDetails { get; set; } = new List<ImportationOrderDetail>();
 
-        public virtual LandedCostSummary LandedCostSummary { get; set; } = null!;
+        public  LandedCostSummary LandedCostSummary { get; set; } = null!;
 
-        public virtual ICollection<ImportationExpense> ImportationExpenses { get; set; } = new List<ImportationExpense>();
+        public  ICollection<ImportationExpense> ImportationExpenses { get; set; } = new List<ImportationExpense>();
 
 
     }
