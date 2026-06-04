@@ -51,7 +51,7 @@ namespace ImportCost.Controllers.OrderDetailsController
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddProductToOrderAsync(string orderId)
+        public async Task<IActionResult> Create(string orderId)
         {
             if (string.IsNullOrWhiteSpace(orderId))
             {
