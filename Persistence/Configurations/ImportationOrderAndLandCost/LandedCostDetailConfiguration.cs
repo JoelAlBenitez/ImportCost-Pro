@@ -19,8 +19,8 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
                 t.HasCheckConstraint("CK_LandedCostDetails_Quantity", "Quantity > 0");
             });
 
-            builder.HasOne(x => x.LandedCostSummary).WithMany(y=> y.LandedCostDetails).HasForeignKey(x => x.LandedCostSummaryId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.LandedCostSummary).WithMany(y=> y.LandedCostDetails).HasForeignKey(x => x.LandedCostSummaryId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Cascade);
             builder.Property(x => x.Quantity).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.OriginalFOB).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.LocalFob).IsRequired().HasColumnType("decimal(18,2)");

@@ -14,10 +14,10 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
             builder.ToTable("ImportationOrders");
 
             #region Property Configurations
-            builder.HasOne(x => x.Importer).WithMany().HasForeignKey(x => x.ImporterId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.Supplier).WithMany().HasForeignKey(x => x.SupplierId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.Country).WithMany().HasForeignKey(x => x.OriginCountryId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.Currency).WithMany().HasForeignKey(x => x.CurrencyId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Importer).WithMany().HasForeignKey(x => x.ImporterId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Supplier).WithMany().HasForeignKey(x => x.SupplierId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Country).WithMany().HasForeignKey(x => x.OriginCountryId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Currency).WithMany().HasForeignKey(x => x.CurrencyId).OnDelete(DeleteBehavior.Cascade);
             
             builder.Property(x => x.OrderDate).IsRequired();
             builder.Property(x => x.TransportMode).IsRequired().HasConversion<string>();

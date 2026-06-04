@@ -24,8 +24,8 @@ namespace Persistence.Configurations.ImportationOrderAndLandCost
 
             #region Property Configurations
 
-            builder.HasOne(x => x.ImportationOrder).WithMany(y => y.ImportationOrderDetails).HasForeignKey(x => x.OrderId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.ImportationOrder).WithMany(y => y.ImportationOrderDetails).HasForeignKey(x => x.OrderId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Cascade);
             builder.Property(x => x.Quantity).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.FOBUnitPrice).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.ExpectedProfitMargin).IsRequired().HasColumnType("decimal(18,2)");
