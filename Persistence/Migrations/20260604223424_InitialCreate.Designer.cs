@@ -12,7 +12,7 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ContextImportCost))]
-    [Migration("20260604212935_InitialCreate")]
+    [Migration("20260604223424_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -635,13 +635,13 @@ namespace Persistence.Migrations
                     b.HasOne("Persistence.Entities.FinancialCore.Currency", "Currency")
                         .WithMany("ImportationExpenses")
                         .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Persistence.Entities.ImportationOrderAndLandCost.ImportationOrder", "ImportationOrder")
                         .WithMany("ImportationExpenses")
                         .HasForeignKey("ImportationOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Currency");
@@ -654,29 +654,30 @@ namespace Persistence.Migrations
                     b.HasOne("Persistence.Entities.FinancialCore.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Persistence.Entities.FinancialCore.Currency", null)
                         .WithMany("ImportationOrders")
-                        .HasForeignKey("CurrencyKey");
+                        .HasForeignKey("CurrencyKey")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Persistence.Entities.OperationalCommercial.Importers", "Importer")
                         .WithMany()
                         .HasForeignKey("ImporterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Persistence.Entities.FinancialCore.Country", "Country")
                         .WithMany()
                         .HasForeignKey("OriginCountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Persistence.Entities.OperationalCommercial.Suppliers", "Supplier")
                         .WithMany()
                         .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Country");
@@ -693,13 +694,13 @@ namespace Persistence.Migrations
                     b.HasOne("Persistence.Entities.ImportationOrderAndLandCost.ImportationOrder", "ImportationOrder")
                         .WithMany("ImportationOrderDetails")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Persistence.Entities.OperationalCommercial.Products", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ImportationOrder");
@@ -712,13 +713,13 @@ namespace Persistence.Migrations
                     b.HasOne("Persistence.Entities.ImportationOrderAndLandCost.LandedCostSummary", "LandedCostSummary")
                         .WithMany("LandedCostDetails")
                         .HasForeignKey("LandedCostSummaryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Persistence.Entities.OperationalCommercial.Products", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("LandedCostSummary");
@@ -731,7 +732,7 @@ namespace Persistence.Migrations
                     b.HasOne("Persistence.Entities.ImportationOrderAndLandCost.ImportationOrder", "ImportationOrder")
                         .WithOne("LandedCostSummary")
                         .HasForeignKey("Persistence.Entities.ImportationOrderAndLandCost.LandedCostSummary", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ImportationOrder");
@@ -742,7 +743,7 @@ namespace Persistence.Migrations
                     b.HasOne("Persistence.Entities.FinancialCore.Country", "country")
                         .WithMany("Importers")
                         .HasForeignKey("countryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("country");
@@ -753,13 +754,13 @@ namespace Persistence.Migrations
                     b.HasOne("Persistence.Entities.FinancialCore.Country", "country")
                         .WithMany("Products")
                         .HasForeignKey("countryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Persistence.Entities.OperationalCommercial.TariffCategories", "tariffCategories")
                         .WithMany("Products")
                         .HasForeignKey("tarrifCategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("country");
@@ -772,13 +773,13 @@ namespace Persistence.Migrations
                     b.HasOne("Persistence.Entities.FinancialCore.Currency", "MainCurrency")
                         .WithMany("Suppliers")
                         .HasForeignKey("MainCurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Persistence.Entities.FinancialCore.Country", "Country")
                         .WithMany("Suppliers")
                         .HasForeignKey("countryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Country");

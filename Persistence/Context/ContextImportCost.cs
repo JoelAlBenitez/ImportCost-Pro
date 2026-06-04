@@ -1,4 +1,4 @@
-﻿    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
     using Persistence.Entities.ImportationOrderAndLandCost;
     using Persistence.Entities.FinancialCore;
     using Persistence.Entities.OperationalCommercial;
@@ -34,7 +34,12 @@
 
                 modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+                foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+                {
+                    relationship.DeleteBehavior = DeleteBehavior.Restrict;
+                }
             }
 
         }
     }
+

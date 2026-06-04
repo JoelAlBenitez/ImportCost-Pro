@@ -98,7 +98,7 @@ namespace Persistence.Migrations
                         column: x => x.countryId,
                         principalTable: "Countries",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,13 +152,13 @@ namespace Persistence.Migrations
                         column: x => x.countryId,
                         principalTable: "Countries",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Suppliers_Currencies_MainCurrencyId",
                         column: x => x.MainCurrencyId,
                         principalTable: "Currencies",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -187,13 +187,13 @@ namespace Persistence.Migrations
                         column: x => x.countryId,
                         principalTable: "Countries",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Products_TariffCategories_tarrifCategoriesId",
                         column: x => x.tarrifCategoriesId,
                         principalTable: "TariffCategories",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -208,7 +208,7 @@ namespace Persistence.Migrations
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TransportMode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderState = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                  
+                    CurrencyKey = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -218,26 +218,31 @@ namespace Persistence.Migrations
                         column: x => x.OriginCountryId,
                         principalTable: "Countries",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ImportationOrders_Currencies_CurrencyId",
                         column: x => x.CurrencyId,
                         principalTable: "Currencies",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
-                  
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ImportationOrders_Currencies_CurrencyKey",
+                        column: x => x.CurrencyKey,
+                        principalTable: "Currencies",
+                        principalColumn: "Key",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ImportationOrders_Importers_ImporterId",
                         column: x => x.ImporterId,
                         principalTable: "Importers",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ImportationOrders_Suppliers_SupplierId",
                         column: x => x.SupplierId,
                         principalTable: "Suppliers",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -261,13 +266,13 @@ namespace Persistence.Migrations
                         column: x => x.CurrencyId,
                         principalTable: "Currencies",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ImportationExpenses_ImportationOrders_ImportationOrderId",
                         column: x => x.ImportationOrderId,
                         principalTable: "ImportationOrders",
                         principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -292,13 +297,13 @@ namespace Persistence.Migrations
                         column: x => x.OrderId,
                         principalTable: "ImportationOrders",
                         principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ImportationOrderDetails_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -332,7 +337,7 @@ namespace Persistence.Migrations
                         column: x => x.OrderId,
                         principalTable: "ImportationOrders",
                         principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -368,13 +373,13 @@ namespace Persistence.Migrations
                         column: x => x.LandedCostSummaryId,
                         principalTable: "LandedCostSummaries",
                         principalColumn: "LandedCostSummaryId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_LandedCostDetails_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -425,7 +430,10 @@ namespace Persistence.Migrations
                 table: "ImportationOrders",
                 column: "CurrencyId");
 
-           
+            migrationBuilder.CreateIndex(
+                name: "IX_ImportationOrders_CurrencyKey",
+                table: "ImportationOrders",
+                column: "CurrencyKey");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ImportationOrders_ImporterId",
