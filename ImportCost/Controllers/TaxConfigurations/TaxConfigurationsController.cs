@@ -17,26 +17,28 @@ namespace ImportCost.Controllers.TaxConfigurations
         public async Task<IActionResult> Index()
         {
             var list = await _taxConfigurationService.GetAllAsync();
-            var listView = new List<ViewModelTaxConfiguration>();
-
-            foreach (var item in list)
+            
+            // Regla del PDF (Pág. 112): Formulario único.
+            // Si no existe, mandar a crear. Si existe, mandar a editar el primero que encuentre.
+            if (!list.Any())
             {
-                ViewModelTaxConfiguration viewModel = new()
-                {
-                    key = item.Key,
-                    Name = "Configuración de Impuestos",
-                    GeneralItbisPercentage = item.GeneralItbisPercentage,
-                    CustomsServiceRatePercentage = item.CustomsServiceRatePercentage,
-                    State = item.State
-                };
-                listView.Add(viewModel);
+                return RedirectToAction(nameof(Create));
             }
 
-            return View(listView);
+            var currentConfig = list.First();
+            return RedirectToAction(nameof(Edit), new { id = currentConfig.Key });
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var list = await _taxConfigurationService.GetAllAsync();
+            if (list.Any())
+            {
+                TempData["Message"] = "La configuración global ya ha sido establecida. Solo se permite un registro.";
+                TempData["TypeAlert"] = "warning";
+                return RedirectToAction(nameof(Index));
+            }
+
             return View("Save", new ViewModelTaxConfigurationSave
             {
                 Key = 0,

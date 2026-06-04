@@ -24,15 +24,25 @@
                     Defina los porcentajes globales de ITBIS y Tasa Aduanal que se aplicarán en todos los cálculos de Landed Cost.
                 </p>
             </div>
-            @if (Model == null || !Model.Any())
-            {
-                <div class="col-md-4 text-center p-4">
+            
+            <div class="col-md-4 text-center p-4">
+                @if (Model == null || !Model.Any())
+                {
                     <a asp-controller="TaxConfigurations" asp-action="Create"
                        class="btn btn-primary px-4 py-2 fw-semibold rounded-3 shadow-sm">
                         <i class="bi bi-plus-circle me-2"></i>Crear Configuración Inicial
                     </a>
-                </div>
-            }
+                }
+                else
+                {
+                    <div class="alert alert-info border-0 shadow-sm mb-0 text-start" role="alert">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-info-circle-fill fs-5"></i>
+                            <span class="small fw-semibold">La configuración ya existe. Use la opción de <strong>Editar</strong> para realizar cambios.</span>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 

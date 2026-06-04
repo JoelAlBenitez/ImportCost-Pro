@@ -141,13 +141,20 @@ namespace Application.Services.Countries
                     return new ServiceResult { Success = false, Message = "El país que intenta eliminar no existe.", TypeAlert = "danger" };
                 }
 
-                var hasImporters = await _importersRepository.HasImportersByCountryId(id);
-                var hasSuppliers = await _suppliersRepository.HasSuppliersByCountryId(id);
-                var hasProducts = await _productsRepository.HasProductsByCountryId(id);
-
-                if (hasImporters || hasSuppliers || hasProducts)
+                // Desglose de validaciones para ser honestos con el usuario (Calidad Joel)
+                if (await _importersRepository.HasImportersByCountryId(id))
                 {
-                    return new ServiceResult { Success = false, Message = "No se puede eliminar este país porque está asociado a otros registros del sistema.", TypeAlert = "danger" };
+                    return new ServiceResult { Success = false, Message = "No se puede eliminar este país porque tiene Importadores asociados.", TypeAlert = "danger" };
+                }
+
+                if (await _suppliersRepository.HasSuppliersByCountryId(id))
+                {
+                    return new ServiceResult { Success = false, Message = "No se puede eliminar este país porque tiene Proveedores asociados.", TypeAlert = "danger" };
+                }
+
+                if (await _productsRepository.HasProductsByCountryId(id))
+                {
+                    return new ServiceResult { Success = false, Message = "No se puede eliminar este país porque tiene Productos asociados.", TypeAlert = "danger" };
                 }
 
                 var result = await _repository.DeleteAsync(existing.Key);

@@ -196,14 +196,25 @@ namespace Application.Services.Currencies
                     return new ServiceResult { Success = false, Message = "No se puede eliminar la moneda local del sistema.", TypeAlert = "danger" };
                 }
 
-                bool inUse = await _suppliersRepository.HasSuppliersByCurrencyId(id) ||
-                             await _exchangeRateRepository.HasExchangeRatesByCurrencyId(id) ||
-                             await _ordersRepository.HasOrdersByCurrencyId(id) ||
-                             await _expensesRepository.HasExpensesByCurrencyId(id);
-
-                if (inUse)
+                // Desglose de validaciones para ser honestos con el usuario (Calidad Joel)
+                if (await _suppliersRepository.HasSuppliersByCurrencyId(id))
                 {
-                    return new ServiceResult { Success = false, Message = "No se puede eliminar esta moneda porque está en uso por proveedores, tasas, órdenes o gastos.", TypeAlert = "danger" };
+                    return new ServiceResult { Success = false, Message = "No se puede eliminar esta moneda porque tiene Proveedores asociados.", TypeAlert = "danger" };
+                }
+
+                if (await _exchangeRateRepository.HasExchangeRatesByCurrencyId(id))
+                {
+                    return new ServiceResult { Success = false, Message = "No se puede eliminar esta moneda porque tiene Tasas de Cambio vinculadas.", TypeAlert = "danger" };
+                }
+
+                if (await _ordersRepository.HasOrdersByCurrencyId(id))
+                {
+                    return new ServiceResult { Success = false, Message = "No se puede eliminar esta moneda porque tiene Órdenes de Importación registradas.", TypeAlert = "danger" };
+                }
+
+                if (await _expensesRepository.HasExpensesByCurrencyId(id))
+                {
+                    return new ServiceResult { Success = false, Message = "No se puede eliminar esta moneda porque tiene Gastos de Importación asociados.", TypeAlert = "danger" };
                 }
 
                 var result = await _repository.DeleteAsync(id);
