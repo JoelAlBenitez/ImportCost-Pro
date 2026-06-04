@@ -155,25 +155,21 @@ namespace ImportCost.Controllers.ImportationOrdersController
                            }).ToList()
                 : new List<Application.ViewModel.Select.ViewModelSelectCurrency>();
         }
-        
+
 
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            var order = await _orderService.GetEntityById(id);
-            if (order == null)
+            var validationResult = await _orderService.ValidateOrderForEditAsync(id);
+
+            if (!validationResult.Success)
             {
-                TempData["Message"] = "No se encontró la orden.";
-                TempData["TypeAlert"] = "error";
+                TempData["Message"] = validationResult.Message;
+                TempData["TypeAlert"] = validationResult.TypeAlert;
                 return RedirectToAction(nameof(Index));
             }
 
-            if (order.OrderState == OrderState.Cerrada || order.OrderState == OrderState.Cancelada)
-            {
-                TempData["Message"] = "No se puede editar esta orden porque está cerrada o cancelada.";
-                TempData["TypeAlert"] = "warning";
-                return RedirectToAction(nameof(Index));
-            }
+            var order = await _orderService.GetEntityById(id);
 
             var viewModel = new ImportationOrderEditViewModel
             {
@@ -187,6 +183,7 @@ namespace ImportCost.Controllers.ImportationOrdersController
                 TransportMode = order.TransportMode,
                 OrderState = order.OrderState
             };
+
             await LoadCatalogsAsync(viewModel,
                 currentImporterId: order.ImporterId,
                 currentCountryId: order.OriginCountryId,

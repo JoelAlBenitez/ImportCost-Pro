@@ -263,5 +263,36 @@ namespace Application.Services.ImportationOrderServices
                 TypeAlert = "success"
             };
         }
+
+        public async Task<ServiceResult> ValidateOrderForEditAsync(string id)
+        {
+            var order = await _orderRepository.GetEntityById(id);
+
+            if (order == null)
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "No se encontró la orden.",
+                    TypeAlert = "danger" 
+                };
+            }
+
+            if (order.OrderState == OrderState.Cerrada || order.OrderState == OrderState.Cancelada)
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "No se puede editar esta orden porque está cerrada o cancelada.",
+                    TypeAlert = "danger" 
+                };
+            }
+            return new ServiceResult
+            {
+                Success = true,
+                Message = string.Empty,
+                TypeAlert = string.Empty
+            };
+        }
     }
 }
