@@ -156,7 +156,7 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             if (!ModelState.IsValid) return View("Edit", viewModel);
 
-            if (!await IsOrderEditable(viewModel.OrderId))
+            if (!await IsOrderEditable(viewModel.OrderId!))
             {
                 TempData["Message"] = "Acción prohibida: Esta orden no permite modificaciones.";
                 TempData["TypeAlert"] = "danger";
@@ -172,7 +172,7 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             try
             {
-                var result = await _importationOrderDetailService.EditProductInOrderAsync(viewModel.OrderDetailId, dto);
+                var result = await _importationOrderDetailService.EditProductInOrderAsync(viewModel.OrderDetailId!, dto);
 
                 TempData["Message"] = result.Message;
                 TempData["TypeAlert"] = result.TypeAlert;

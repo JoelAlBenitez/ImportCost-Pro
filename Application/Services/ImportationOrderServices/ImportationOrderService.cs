@@ -121,7 +121,7 @@ namespace Application.Services.ImportationOrderServices
         public async Task<ImportationOrderResponseDTO> GetEntityById(string id)
         {
             var order = await _orderRepository.GetEntityById(id);
-            if (order == null) return null;
+            if (order == null) return null!;
 
             var response = new ImportationOrderResponseDTO
             {

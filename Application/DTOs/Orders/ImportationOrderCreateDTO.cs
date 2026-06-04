@@ -5,7 +5,7 @@ using Persistence.Entities.Enums;
 
 public class ImportationOrderCreateDTO
 {
-        public string OrderId { get; set; } = null!;  
+        public required string OrderId { get; set; } 
 
         public int ImporterId { get; set; }
 

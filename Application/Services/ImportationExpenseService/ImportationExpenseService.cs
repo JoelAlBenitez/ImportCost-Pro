@@ -90,9 +90,23 @@ namespace Application.Services.ImportationExpenseServices
                 Currency = null!
             };
 
-            await _expenseRepository.CreateAsync(newExpense);
+            bool saved = await _expenseRepository.CreateAsync(newExpense);
 
-            return new ServiceResult { Success = true, Message = "Gasto registrado correctamente.", TypeAlert = "success" };
+            if (!saved)
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Hubo un error inesperado y el gasto no se pudo registrar.",
+                    TypeAlert = "danger"
+                };
+            }
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "Gasto registrado correctamente.",
+                TypeAlert = "success"
+            };
         }
 
         public async Task<ServiceResult> EditExpenseAsync(ImportationExpenseUpdateDTO dto)

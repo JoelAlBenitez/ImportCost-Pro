@@ -7,6 +7,7 @@ using Application.Services.SuppliersServices;
 using ImportCost.ViewModels.ImportationOrders;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Entities.Enums;
+using Persistence.Entities.OperationalCommercial;
 
 namespace ImportCost.Controllers.ImportationOrdersController
 {
@@ -64,6 +65,7 @@ namespace ImportCost.Controllers.ImportationOrdersController
         {
             var viewModel = new ImportationOrderCreateViewModel
             {
+                OrderId = string.Empty,
                 OrderDate = DateTime.Today
             };
             await LoadCatalogsAsync(viewModel);
@@ -204,16 +206,16 @@ namespace ImportCost.Controllers.ImportationOrdersController
 
             var dto = new ImportationOrderUpdateDTO
             {
-                OrderId = viewModel.OrderId,
-                ImporterId = viewModel.ImporterId.Value,
-                SupplierId = viewModel.SupplierId.Value,
-                OriginCountryId = viewModel.OriginCountryId.Value,
-                CurrencyId = viewModel.CurrencyId.Value,
+                OrderId = viewModel.OrderId!,
+                ImporterId = viewModel.ImporterId!.Value,
+                SupplierId = viewModel.SupplierId!.Value,
+                OriginCountryId = viewModel.OriginCountryId!.Value,
+                CurrencyId = viewModel.CurrencyId!.Value,
                 OrderDate = viewModel.OrderDate,
-                TransportMode = viewModel.TransportMode.Value
+                TransportMode = viewModel.TransportMode!.Value
             };
 
-            var result = await _orderService.EditAsync(viewModel.OrderId, dto);
+            var result = await _orderService.EditAsync(viewModel.OrderId!, dto);
 
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;

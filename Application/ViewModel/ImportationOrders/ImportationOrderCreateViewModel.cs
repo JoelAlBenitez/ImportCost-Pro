@@ -9,7 +9,7 @@ namespace ImportCost.ViewModels.ImportationOrders
         [Required(ErrorMessage = "El número de orden es obligatorio.")]
         [MaxLength(30, ErrorMessage = "El número de orden no puede superar los 30 caracteres.")]
         [Display(Name = "Número de Orden")]
-        public string? OrderId { get; set; }
+        public required string OrderId { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar un importador.")]
         [Display(Name = "Importador")]

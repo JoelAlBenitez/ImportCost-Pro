@@ -56,7 +56,7 @@ namespace Application.Services.ImportationOrderDetailServices
         public async Task<OrderDetailResponseDTO> GetDetailByIdAsync(string orderDetailId)
         {
             var detail = await _detailRepository.GetByIdAsync(orderDetailId);
-            if (detail == null) return null;
+            if (detail == null) return null!;
 
             return new OrderDetailResponseDTO
             {
