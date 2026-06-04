@@ -35,7 +35,7 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             var detailsList = await _importationOrderDetailService.GetDetailsByOrderIdAsync(orderId);
 
-            var viewModelList = detailsList.Select(detail => new OrderDetailEditViewModel
+            var viewModelList = detailsList.Select(detail => new OrderDetailViewModel
             {
                 OrderDetailId = detail.OrderDetailId,
                 OrderId = detail.OrderId,
@@ -141,6 +141,7 @@ namespace ImportCost.Controllers.OrderDetailsController
             {
                 OrderDetailId = detail.OrderDetailId,
                 OrderId = detail.OrderId,
+                ProductId = detail.ProductId,
                 ProductName = detail.ProductName,
                 Quantity = detail.Quantity,
                 FOBUnitPrice = detail.FOBUnitPrice,
@@ -154,7 +155,10 @@ namespace ImportCost.Controllers.OrderDetailsController
         public async Task<IActionResult> Edit(OrderDetailEditViewModel viewModel)
         {
 
-            if (!ModelState.IsValid) return View("Edit", viewModel);
+            if (!ModelState.IsValid) 
+            {
+                Console.WriteLine("llego");
+                return View("Edit", viewModel); }
 
             if (!await IsOrderEditable(viewModel.OrderId!))
             {
@@ -170,6 +174,7 @@ namespace ImportCost.Controllers.OrderDetailsController
                 ExpectedProfitMargin = viewModel.ExpectedProfitMargin
             };
 
+            Console.WriteLine(dto.OrderId);
             try
             {
                 var result = await _importationOrderDetailService.EditProductInOrderAsync(viewModel.OrderDetailId!, dto);

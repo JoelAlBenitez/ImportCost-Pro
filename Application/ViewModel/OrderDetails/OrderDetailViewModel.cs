@@ -5,7 +5,9 @@ namespace ImportCost.ViewModels.OrderDetails
     public class OrderDetailViewModel
     {
         
-        public string? OrderDetailId { get; set; }
+        public required string OrderDetailId { get; set; }
+
+        public required string OrderId { get; set; }
 
         [Display(Name = "Producto")]
         public string? ProductName { get; set; }
@@ -20,7 +22,7 @@ namespace ImportCost.ViewModels.OrderDetails
 
         [Display(Name = "FOB Total")]
         [DisplayFormat(DataFormatString = "{0:N2}")]
-        public decimal TotalFob { get; set; }
+        public decimal TotalFOB { get; set; }
 
         [Display(Name = "Peso Total (kg)")]
         [DisplayFormat(DataFormatString = "{0:N2}")]

@@ -3,6 +3,7 @@
     ViewData["Title"] = "Editar Producto";
 }
 
+@* 1. Bloque de alertas nativo (sin JS externo) *@
 @if (TempData["Message"] != null)
 {
     var alertType = TempData["TypeAlert"]?.ToString() == "error" ? "danger" : TempData["TypeAlert"];
@@ -24,10 +25,23 @@
         </div>
     </div>
 
-    <form asp-action="Edit" method="POST">
+    @* 2. Formulario con token de seguridad para evitar fallos de POST *@
+    <form asp-action="Edit" asp-controller="OrderDetails" method="POST">
+        @Html.AntiForgeryToken()
+
         <input type="hidden" asp-for="OrderDetailId" />
         <input type="hidden" asp-for="OrderId" />
         <input type="hidden" asp-for="ProductId" />
+        @{
+        Console.WriteLine(Model.OrderDetailId);
+        Console.WriteLine(Model.OrderId);
+        Console.WriteLine(Model.ProductId);
+            Console.WriteLine(Model.Quantity);
+            Console.WriteLine(Model.FOBUnitPrice);
+            Console.WriteLine(Model.ExpectedProfitMargin);
+        }
+        @* 3. Resumen de validación para ver si el modelo falla al llegar al servidor *@
+        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
 
         <div class="row g-4">
             <div class="col-md-12">

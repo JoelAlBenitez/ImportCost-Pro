@@ -30,8 +30,5 @@ namespace ImportCost.ViewModels.OrderDetails
         [Range(0, 99.99, ErrorMessage = "El margen debe ser mayor o igual a 0 y menor que 100.")]
         [Display(Name = "Margen de Ganancia Esperado (%)")]
         public decimal ExpectedProfitMargin { get; set; }
-
-        [Range(0.01, double.MaxValue, ErrorMessage = "El Total FOB debe ser mayor que 0.")]
-        public decimal TotalFOB { get; set; }
     }
 }
