@@ -1,9 +1,4 @@
 ﻿using Persistence.Entities.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Persistence.Entities.FinancialCore
 {
@@ -16,7 +11,7 @@ namespace Persistence.Entities.FinancialCore
 
 
 
-        public required Currency SourceCurrency { get; set; }
-        public required Currency DestinationCurrency { get; set; }
+        public Currency? SourceCurrency { get; set; }
+        public Currency? DestinationCurrency { get; set; }
     }
 }

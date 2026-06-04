@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Persistence\Persistence.csproj" />
+    <Compile Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <None Remove="Interfaces\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Services\" />
+    <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

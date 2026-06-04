@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Persistence.Entities.Base;
 using Persistence.Entities.FinancialCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Persistence.Configurations.FinancialCore
 {
@@ -28,7 +23,7 @@ namespace Persistence.Configurations.FinancialCore
                    .WithOne(s => s.MainCurrency)
                    .HasForeignKey(s => s.MainCurrencyId)
                    .OnDelete(DeleteBehavior.Restrict);
-                
+
 
         }
     }

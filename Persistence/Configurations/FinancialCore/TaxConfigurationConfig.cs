@@ -9,7 +9,7 @@ namespace Persistence.Configurations.FinancialCore
         public void Configure(EntityTypeBuilder<TaxConfiguration> builder)
         {
             builder.ToTable("TaxConfigurations");
-            
+
             builder.HasKey(t => t.Key);
 
             builder.Property(t => t.Name)

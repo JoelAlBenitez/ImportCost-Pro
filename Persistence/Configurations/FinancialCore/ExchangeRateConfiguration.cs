@@ -17,19 +17,15 @@ namespace Persistence.Configurations.FinancialCore
                 .IsUnique();
 
 
-
-
-
-
             // relacion con Moneda Origennn
             builder.HasOne(e => e.SourceCurrency)
-                   .WithMany()
+                   .WithMany(e => e.ExchangeRatesSource)
                    .HasForeignKey(e => e.SourceCurrencyId)
                    .OnDelete(DeleteBehavior.Restrict);
 
             // Relacion con Moneda Destinoo
             builder.HasOne(e => e.DestinationCurrency)
-                   .WithMany()
+                   .WithMany(e => e.ExchangeRatesDestination)
                    .HasForeignKey(e => e.DestinationCurrencyId)
                    .OnDelete(DeleteBehavior.Restrict);
 
