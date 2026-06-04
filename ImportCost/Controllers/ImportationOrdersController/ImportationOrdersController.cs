@@ -14,24 +14,11 @@ namespace ImportCost.Controllers.ImportationOrdersController
     public class ImportationOrdersController : Controller
     {
         private readonly ImportationOrderService _orderService;
-        private readonly ImportersServices _importersService;
-        private readonly CountryService _countryService;
-
-        private readonly SuppliersServices _suppliersService;
-        private readonly CurrencyService _currenciesService;
 
         public ImportationOrdersController(
-            ImportationOrderService orderService,
-            ImportersServices importersService,
-            CountryService countryService,
-            SuppliersServices suppliersService,
-            CurrencyService currenciesService)
+            ImportationOrderService orderService)
         {
             _orderService = orderService;
-            _importersService = importersService;
-            _countryService = countryService;
-            _suppliersService = suppliersService;
-            _currenciesService = currenciesService;
         }
 
         [HttpGet]
@@ -110,52 +97,23 @@ namespace ImportCost.Controllers.ImportationOrdersController
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task LoadCatalogsAsync(dynamic viewModel,
+        private async Task LoadCatalogsAsync(ImportationOrderCreateViewModel viewModel)
+        {
+            viewModel.ImportersList = await _orderService.GetImportersForSelectAsync();
+            viewModel.CountriesList = await _orderService.GetCountriesForSelectAsync();
+            viewModel.SuppliersList = await _orderService.GetSuppliersForSelectAsync();
+            viewModel.CurrenciesList = await _orderService.GetCurrenciesForSelectAsync();
+        }
+        private async Task LoadCatalogsAsync(ImportationOrderEditViewModel viewModel,
             int? currentImporterId = null,
             int? currentCountryId = null,
             int? currentSupplierId = null,
             int? currentCurrencyId = null)
         {
-            var importers = await _importersService.GetAllAsync();
-            var countries = await _countryService.GetAllAsync();
-            var suppliers = await _suppliersService.GetAllAsync();
-            var currencies = await _currenciesService.GetAllAsync();
-
-            viewModel.ImportersList = importers != null
-                ? importers.Where(i => i.State == true || i.Key == currentImporterId)
-                           .Select(i => new Application.ViewModel.Select.ViewModelSelectImporters
-                           {
-                               ImporterId = i.Key,
-                               ImporterName = i.Name
-                           }).ToList()
-                : new List<Application.ViewModel.Select.ViewModelSelectImporters>();
-
-            viewModel.CountriesList = countries != null
-                ? countries.Where(c => c.State == true || c.Key == currentCountryId)
-                           .Select(c => new Application.ViewModel.Select.ViewModelSelectCountries
-                           {
-                               CountryId = c.Key,
-                               CountryName = c.Name
-                           }).ToList()
-                : new List<Application.ViewModel.Select.ViewModelSelectCountries>();
-
-            viewModel.SuppliersList = suppliers != null
-                ? suppliers.Where(s => s.State == true || s.Key == currentSupplierId)
-                           .Select(s => new Application.ViewModel.Select.ViewModelSelectSuppliers
-                           {
-                               SupplierId = s.Key,
-                               SupplierName = s.Name
-                           }).ToList()
-                : new List<Application.ViewModel.Select.ViewModelSelectSuppliers>();
-
-            viewModel.CurrenciesList = currencies != null
-                ? currencies.Where(c => c.State == true || c.Key == currentCurrencyId)
-                           .Select(c => new Application.ViewModel.Select.ViewModelSelectCurrency
-                           {
-                               Id = c.Key,
-                               NameCurrency = c.Name
-                           }).ToList()
-                : new List<Application.ViewModel.Select.ViewModelSelectCurrency>();
+            viewModel.ImportersList = await _orderService.GetImportersForSelectAsync(currentImporterId);
+            viewModel.CountriesList = await _orderService.GetCountriesForSelectAsync(currentCountryId);
+            viewModel.SuppliersList = await _orderService.GetSuppliersForSelectAsync(currentSupplierId);
+            viewModel.CurrenciesList = await _orderService.GetCurrenciesForSelectAsync(currentCurrencyId);
         }
 
 

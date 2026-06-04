@@ -3,6 +3,16 @@
     ViewData["Title"] = "Vista Previa del Landed Cost";
 }
 
+@if (TempData["Message"] != null)
+{
+    var alertType = TempData["TypeAlert"]?.ToString() == "error" ? "danger" : TempData["TypeAlert"];
+    <div class="alert alert-@alertType alert-dismissible fade show shadow-sm rounded-3 mx-auto d-flex align-items-center mb-4" style="max-width: 1200px;" role="alert">
+        <i class="bi bi-info-circle-fill fs-5 me-3"></i>
+        <div>@TempData["Message"]</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="card border-0 shadow-sm rounded-4 p-4 mx-auto" style="max-width: 1200px;">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom gap-3">
         <div class="d-flex align-items-center">
@@ -105,11 +115,32 @@
             <i class="bi bi-x-circle me-2"></i> Cancelar / Volver
         </a>
 
-        <form asp-action="Save" method="post" onsubmit="return confirm('¿Está seguro de confirmar este cálculo? Una vez guardado, la orden pasará a estado Calculada y no podrá ser modificada.');">
-            <input type="hidden" name="orderId" value="@Model.OrderId" />
-            <button type="submit" class="btn btn-success rounded-3 px-5 shadow-sm fw-bold fs-6">
-                <i class="bi bi-check-circle-fill me-2"></i> Guardar Cálculo Oficial
-            </button>
-        </form>
+        <button type="button" class="btn btn-success rounded-3 px-5 shadow-sm fw-bold fs-6" data-bs-toggle="modal" data-bs-target="#confirmCalculationModal">
+            <i class="bi bi-check-circle-fill me-2"></i> Guardar Cálculo Oficial
+        </button>
+
+        <div class="modal fade" id="confirmCalculationModal" tabindex="-1" aria-labelledby="confirmCalculationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title fs-5" id="confirmCalculationModalLabel">
+                            <i class="bi bi-check-circle-fill me-2"></i>Confirmar Cálculo
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-start">
+                        <p class="mb-0 text-dark">¿Está seguro de confirmar este cálculo?</p>
+                        <p class="text-muted small mt-2 mb-0">Una vez guardado, la orden pasará a estado <strong>Calculada</strong> y no podrá ser modificada.</p>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Cancelar</button>
+                        <form asp-action="Save" method="post" class="m-0">
+                            <input type="hidden" name="orderId" value="@Model.OrderId" />
+                            <button type="submit" class="btn btn-success rounded-3 fw-bold">Sí, guardar cálculo</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

@@ -3,6 +3,11 @@ using Application.Services.Result;
 using Persistence.Entities.Enums;
 using Persistence.Entities.ImportationOrderAndLandCost;
 using Persistence.Repositories.ImportationOrderAndLandCost;
+using Application.Services.Countries;
+using Application.Services.Currencies;
+using Application.Services.Importers;
+using Application.Services.SuppliersServices;
+using Application.ViewModel.Select;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +20,64 @@ namespace Application.Services.ImportationOrderServices
     {
         private readonly ImportationOrderRepository _orderRepository;
 
-        public ImportationOrderService(ImportationOrderRepository orderRepository)
+        private readonly ImportersServices _importersService;
+        private readonly CountryService _countryService;
+        private readonly Application.Services.SuppliersServices.SuppliersServices _suppliersService;
+        private readonly CurrencyService _currenciesService;
+
+        public ImportationOrderService(
+        ImportationOrderRepository orderRepository,
+        ImportersServices importersService,
+        CountryService countryService,
+        Application.Services.SuppliersServices.SuppliersServices suppliersService,
+        CurrencyService currenciesService)
         {
             _orderRepository = orderRepository;
+            _importersService = importersService;
+            _countryService = countryService;
+            _suppliersService = suppliersService;
+            _currenciesService = currenciesService;
         }
+        public async Task<List<ViewModelSelectImporters>> GetImportersForSelectAsync(int? currentId = null)
+        {
+            var importers = await _importersService.GetAllAsync();
+            return importers != null
+                ? importers.Where(i => i.State == true || i.Key == currentId)
+                           .Select(i => new ViewModelSelectImporters { ImporterId = i.Key, ImporterName = i.Name })
+                           .ToList()
+                : new List<ViewModelSelectImporters>();
+        }
+
+        public async Task<List<ViewModelSelectCountries>> GetCountriesForSelectAsync(int? currentId = null)
+        {
+            var countries = await _countryService.GetAllAsync();
+            return countries != null
+                ? countries.Where(c => c.State == true || c.Key == currentId)
+                           .Select(c => new ViewModelSelectCountries { CountryId = c.Key, CountryName = c.Name })
+                           .ToList()
+                : new List<ViewModelSelectCountries>();
+        }
+
+        public async Task<List<ViewModelSelectSuppliers>> GetSuppliersForSelectAsync(int? currentId = null)
+        {
+            var suppliers = await _suppliersService.GetAllAsync();
+            return suppliers != null
+                ? suppliers.Where(s => s.State == true || s.Key == currentId)
+                           .Select(s => new ViewModelSelectSuppliers { SupplierId = s.Key, SupplierName = s.Name })
+                           .ToList()
+                : new List<ViewModelSelectSuppliers>();
+        }
+
+        public async Task<List<ViewModelSelectCurrency>> GetCurrenciesForSelectAsync(int? currentId = null)
+        {
+            var currencies = await _currenciesService.GetAllAsync();
+            return currencies != null
+                ? currencies.Where(c => c.State == true || c.Key == currentId)
+                           .Select(c => new ViewModelSelectCurrency { Id = c.Key, NameCurrency = c.Name })
+                           .ToList()
+                : new List<ViewModelSelectCurrency>();
+        }
+
 
         private decimal CalculateTotalFob(ImportationOrder order)
         {
@@ -71,11 +130,6 @@ namespace Application.Services.ImportationOrderServices
 
             if (string.IsNullOrEmpty(finalOrderId))
                 return new ServiceResult { Success = false, Message = "El número de orden es requerido.", TypeAlert = "warning" };
-
-            if (!finalOrderId.StartsWith("ORIM-", StringComparison.OrdinalIgnoreCase))
-            {
-                finalOrderId = $"ORIM-{finalOrderId}";
-            }
 
             finalOrderId = finalOrderId.ToUpper();
 

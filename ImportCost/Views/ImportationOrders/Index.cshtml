@@ -3,6 +3,16 @@
     ViewData["Title"] = "Órdenes de Importación";
 }
 
+@if (TempData["Message"] != null)
+{
+    var alertType = TempData["TypeAlert"]?.ToString() == "error" ? "danger" : TempData["TypeAlert"];
+    <div class="alert alert-@alertType alert-dismissible fade show shadow-sm rounded-3 mb-4 d-flex align-items-center" role="alert">
+        <i class="bi bi-info-circle-fill fs-5 me-3"></i>
+        <div>@TempData["Message"]</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="row mb-4 align-items-center">
     <div class="col-md-6">
         <div class="input-group shadow-sm rounded-3 bg-white w-75">
@@ -86,21 +96,61 @@
                                         <a asp-action="Edit" asp-route-id="@item.OrderId" class="btn btn-sm btn-light text-success border-0" title="Editar">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <form asp-action="Delete" asp-route-id="@item.OrderId" method="post" class="d-inline" onsubmit="return confirm('¿Está seguro que desea eliminar esta orden?');">
-                                            <button type="submit" class="btn btn-sm btn-light text-danger border-0" title="Eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-light text-danger border-0" title="Eliminar" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.OrderId">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+
+                                        <!-- Modal Eliminar -->
+                                        <div class="modal fade" id="deleteModal-@item.OrderId" tabindex="-1" aria-labelledby="deleteModalLabel-@item.OrderId" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content border-0 shadow">
+                                                    <div class="modal-header bg-danger text-white">
+                                                        <h5 class="modal-title fs-5" id="deleteModalLabel-@item.OrderId"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar Eliminación</h5>
+                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body text-start">
+                                                        <p class="mb-0 text-dark">¿Está seguro que desea eliminar la orden <strong>@item.OrderId</strong>?</p>
+                                                        <p class="text-muted small mt-2 mb-0">Esta acción no se puede deshacer.</p>
+                                                    </div>
+                                                    <div class="modal-footer bg-light">
+                                                        <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Cancelar</button>
+                                                        <form asp-action="Delete" asp-route-id="@item.OrderId" method="post" class="m-0">
+                                                            <button type="submit" class="btn btn-danger rounded-3 fw-bold">Sí, eliminar</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     }
 
                                     @if (item.OrderState != "Cerrada")
                                     {
-                                        <form asp-controller="ImportationOrders" asp-action="CloseOrder" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas cerrar esta orden? Una vez cerrada, no podrás modificarla ni agregar más gastos.');">
-                                            <input type="hidden" name="orderId" value="@item.OrderId" />
-                                            <button type="submit" class="btn btn-sm btn-light text-secondary border-0" title="Cerrar Orden">
-                                                <i class="bi bi-lock-fill"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-light text-secondary border-0" title="Cerrar Orden" data-bs-toggle="modal" data-bs-target="#closeModal-@item.OrderId">
+                                            <i class="bi bi-lock-fill"></i>
+                                        </button>
+
+                                        <!-- Modal Cerrar Orden -->
+                                        <div class="modal fade" id="closeModal-@item.OrderId" tabindex="-1" aria-labelledby="closeModalLabel-@item.OrderId" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content border-0 shadow">
+                                                    <div class="modal-header bg-secondary text-white">
+                                                        <h5 class="modal-title fs-5" id="closeModalLabel-@item.OrderId"><i class="bi bi-lock-fill me-2"></i>Confirmar Cierre</h5>
+                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body text-start">
+                                                        <p class="mb-0 text-dark">¿Estás seguro de que deseas cerrar la orden <strong>@item.OrderId</strong>?</p>
+                                                        <p class="text-muted small mt-2 mb-0">Una vez cerrada, no podrás modificarla ni agregar más gastos.</p>
+                                                    </div>
+                                                    <div class="modal-footer bg-light">
+                                                        <button type="button" class="btn btn-light border rounded-3" data-bs-dismiss="modal">Cancelar</button>
+                                                        <form asp-controller="ImportationOrders" asp-action="CloseOrder" method="post" class="m-0">
+                                                            <input type="hidden" name="orderId" value="@item.OrderId" />
+                                                            <button type="submit" class="btn btn-secondary rounded-3 fw-bold">Sí, cerrar orden</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     }
                                 </div>
                             </td>

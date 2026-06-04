@@ -4,6 +4,16 @@
     var currentOrderId = ViewBag.CurrentOrderId as string;
 }
 
+@if (TempData["Message"] != null)
+{
+    var alertType = TempData["TypeAlert"]?.ToString() == "error" ? "danger" : TempData["TypeAlert"];
+    <div class="alert alert-@alertType alert-dismissible fade show shadow-sm rounded-3 mb-4 d-flex align-items-center" role="alert">
+        <i class="bi bi-info-circle-fill fs-5 me-3"></i>
+        <div>@TempData["Message"]</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="card border-0 shadow-sm rounded-4 p-4">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom gap-3">
         <div>
@@ -17,7 +27,7 @@
             <a asp-controller="ImportationExpenses" asp-action="Index" asp-route-orderId="@currentOrderId" class="btn btn-warning rounded-3 shadow-sm fw-semibold">
                 <i class="bi bi-cash-coin me-1"></i> Ver Gastos
             </a>
-            <a asp-action="AddProductToOrderAsync" asp-route-orderId="@currentOrderId" class="btn btn-primary rounded-3 shadow-sm fw-semibold">
+            <a asp-controller="OrderDetails" asp-action="Create" asp-route-orderId="@currentOrderId" class="btn btn-primary shadow-sm fw-semibold">
                 <i class="bi bi-plus-lg me-1"></i> Agregar Producto
             </a>
         </div>
@@ -58,11 +68,26 @@
                                     <a asp-action="Edit" asp-route-id="@item.OrderDetailId" class="btn btn-sm btn-light text-success border-0" title="Editar">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <form asp-action="Delete" asp-route-id="@item.OrderDetailId" asp-route-orderId="@currentOrderId" method="post" class="d-inline" onsubmit="return confirm('¿Desea eliminar este producto de la orden?');">
-                                        <button type="submit" class="btn btn-sm btn-light text-danger border-0" title="Eliminar">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-sm btn-light text-danger border-0" title="Eliminar" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.OrderDetailId">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                                <div class="modal fade" id="deleteModal-@item.OrderDetailId" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0 shadow">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title fs-5"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar Eliminación</h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body text-start">¿Desea eliminar <strong>@item.ProductName</strong> de la orden?</div>
+                                            <div class="modal-footer bg-light">
+                                                <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Cancelar</button>
+                                                <form asp-action="Delete" asp-route-id="@item.OrderDetailId" asp-route-orderId="@currentOrderId" method="post" class="m-0">
+                                                    <button type="submit" class="btn btn-danger rounded-3 fw-bold">Sí, eliminar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -70,7 +95,6 @@
                 </tbody>
             </table>
         </div>
-
         <div class="mt-4 p-3 bg-light rounded-3 d-flex justify-content-end align-items-center gap-3">
             <span class="text-muted fw-semibold">FOB Total de la Orden:</span>
             <span class="fs-5 fw-bold text-primary">@Model.Sum(x => x.TotalFOB).ToString("N2")</span>

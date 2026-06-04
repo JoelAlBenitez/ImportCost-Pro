@@ -3,6 +3,16 @@
     ViewData["Title"] = "Crear Orden";
 }
 
+@if (TempData["Message"] != null)
+{
+    var alertType = TempData["TypeAlert"]?.ToString() == "error" ? "danger" : TempData["TypeAlert"];
+    <div class="alert alert-@alertType alert-dismissible fade show shadow-sm rounded-3 mx-auto d-flex align-items-center mb-4" style="max-width: 900px;" role="alert">
+        <i class="bi bi-info-circle-fill fs-5 me-3"></i>
+        <div>@TempData["Message"]</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="card border-0 shadow-sm rounded-4 p-4 mx-auto" style="max-width: 900px;">
     <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
         <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
