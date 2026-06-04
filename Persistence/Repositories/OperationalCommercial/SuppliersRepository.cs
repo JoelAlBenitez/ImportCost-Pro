@@ -59,11 +59,11 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<Suppliers> GetEntityById(int key)
         {
-            return await _context.Suppliers
+            return (await _context.Suppliers
                 .AsNoTracking()
                  .Include(s => s.MainCurrency)
                 .Include(s => s.Country)
-                .FirstOrDefaultAsync(s => s.Key == key);
+                .FirstOrDefaultAsync(s => s.Key == key))!;
         }
 
         public async Task<bool> ExistName(string name)

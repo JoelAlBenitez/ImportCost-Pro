@@ -37,8 +37,8 @@ namespace ImportCost.Controllers.OrderDetailsController
 
             var viewModelList = detailsList.Select(detail => new OrderDetailViewModel
             {
-                OrderDetailId = detail.OrderDetailId,
-                OrderId = detail.OrderId,
+                OrderDetailId = detail.OrderDetailId!,
+                OrderId = detail.OrderId!,
                 ProductName = detail.ProductName,
                 Quantity = detail.Quantity,
                 FOBUnitPrice = detail.FOBUnitPrice,

@@ -1,7 +1,10 @@
-
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
+using Persistence.Entities.Enums;
+using Persistence.Entities.FinancialCore;
 using Persistence.Entities.ImportationOrderAndLandCost;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Persistence.Repositories.ImportationOrderAndLandCost
 {
@@ -61,6 +64,20 @@ namespace Persistence.Repositories.ImportationOrderAndLandCost
             _context.ImportationOrders.Remove(order);
             var result = await _context.SaveChangesAsync();
             return result > 0;
+        }
+
+        public async Task<bool> HasOrdersByCurrencyId(int currencyId)
+        {
+            return await _context.ImportationOrders.AnyAsync(o => o.CurrencyId == currencyId);
+        }
+
+        public async Task<bool> IsRateInUseAsync(ExchangeRate rate)
+        {
+           
+            return await _context.ImportationOrders.AnyAsync(o =>
+                o.CurrencyId == rate.SourceCurrencyId &&
+                (o.OrderState == OrderState.Calculada || o.OrderState == OrderState.Cerrada) &&
+                o.OrderDate >= rate.EffectiveDate);
         }
     }
 }
