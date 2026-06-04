@@ -135,7 +135,7 @@ namespace Application.Services.Currencies
                                  await _exchangeRateRepository.HasExchangeRatesByCurrencyId(dto.Key) ||
                                  await _ordersRepository.HasOrdersByCurrencyId(dto.Key) ||
                                  await _expensesRepository.HasExpensesByCurrencyId(dto.Key);
-
+                    
                     if (inUse)
                     {
                         return new ServiceResult { Success = false, Message = "No se puede modificar el código ISO porque esta moneda ya está asociada a proveedores, tasas, órdenes o gastos.", TypeAlert = "danger" };
