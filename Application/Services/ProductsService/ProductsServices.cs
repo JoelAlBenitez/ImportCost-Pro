@@ -150,7 +150,7 @@ namespace Application.Services.ProductsServices
                 var products = await _productsRepository.GetAllAsync();
 
 
-                if (products != null)
+                if (products != null && products.Any())
                 {
                     foreach (var item in products)
                     {
@@ -175,14 +175,13 @@ namespace Application.Services.ProductsServices
                         };
                         productsList.Add(productsDto);
                     }
-                    return productsList;
                 }
 
-                return null!;
+                return productsList;
             }
             catch (Exception)
             {
-                return null!;
+                return new List<ProductsDto>();
             }
         }
 

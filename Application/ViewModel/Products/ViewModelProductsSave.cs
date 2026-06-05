@@ -20,7 +20,7 @@ namespace Application.ViewModel.Products
         [Range(0.01, double.MaxValue, ErrorMessage = "Ingrese un precio unitario mayor que 0.")]
         public required decimal UnitWeight { get; set; }
 
-        public  List<ViewModelSelectCategories>? Categories { get; set; }
+        public List<ViewModelSelectCategories>? Categories { get; set; }
 
         public  List<ViewModelSelectUnit>? Units { get; set; }
 
@@ -35,7 +35,6 @@ namespace Application.ViewModel.Products
 
         [Required(ErrorMessage = "Debe seleccionar una categoria valida del listado de categorias")]
         public required string TariffCategoriesId { get; set; }
-
         [Required(ErrorMessage = "Seleccione una unidad de medida válida para el producto.")]
 
         public required int unit { get; set; }

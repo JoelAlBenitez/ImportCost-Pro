@@ -135,11 +135,11 @@ namespace Application.Services.Importers
                     return imp;
 
                 }
-                return null!;
+                return imp;
             }
             catch (Exception)
             {
-                return null!;
+                return new List<ImporterDto>();
             }
         }
 

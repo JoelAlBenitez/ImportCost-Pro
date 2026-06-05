@@ -157,7 +157,7 @@ namespace Application.Services.TarriffCategories
                 var tarriffs = await _tarriffCategoriesRepository.GetAllAsync();
 
 
-                if (tarriffs.Any())
+                if (tarriffs != null && tarriffs.Any())
                 {
                     foreach (var item in tarriffs)
                     {
@@ -174,13 +174,12 @@ namespace Application.Services.TarriffCategories
                         };
                         tarrifList.Add(tariff);
                     }
-                    return tarrifList;
                 }
 
-                return null!;
+                return tarrifList;
 
             }
-            catch (Exception) { return null!; }
+            catch (Exception) { return new List<TariffCategoriesDto>(); }
         }
         public async Task<TariffCategoriesDto> GetKeyAsync(string key)
         {

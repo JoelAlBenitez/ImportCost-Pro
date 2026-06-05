@@ -20,7 +20,6 @@ namespace ImportCost.Controllers.TariffCategories
             var listCategories = await _tarriffCategories.GetAllAsync();
             var listCategoriesViewModel = new List<ViewModelTarriffCategories>();
             var dd = listCategories != null;
-            Console.WriteLine(dd);
             foreach (var item in listCategories)
             {
                 ViewModelTarriffCategories vt = new()
