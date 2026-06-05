@@ -19,11 +19,7 @@ namespace Persistence.Configurations.FinancialCore
 
             // relacion con Moneda Origennn
             builder.HasOne(e => e.SourceCurrency)
-<<<<<<< HEAD
                    .WithMany(e  => e.ExchangeRatesSource)
-=======
-                   .WithMany(e => e.ExchangeRatesSource)
->>>>>>> origin/feature/ImportationOrderAndLandCost
                    .HasForeignKey(e => e.SourceCurrencyId)
                    .OnDelete(DeleteBehavior.Restrict);
 

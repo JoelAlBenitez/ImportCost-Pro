@@ -60,7 +60,7 @@ namespace Persistence.Repositories.OperationalCommercial
                 .ToListAsync();
         }
 
-        
+
         public async Task<TariffCategories> GetEntityById(string key)
         {
 

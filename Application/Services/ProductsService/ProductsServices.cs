@@ -52,16 +52,19 @@ namespace Application.Services.ProductsServices
                 if (products.Large.HasValue && products.Large > 0) field++;
                 if (products.High.HasValue && products.High > 0) field++;
                 if (products.Broad.HasValue && products.Broad > 0) field++;
-                if (field > 1 && field != 3) return new ServiceResult { 
-                    Success = false, 
+                if (field > 1 && field != 3) return new ServiceResult
+                {
+                    Success = false,
                     Message = "Ha ocurrido un error en el procesamiento de los datos, se ha intentando colocar " +
-                    "valores no validos en largo, ancho y alto", TypeAlert="danger" };
+                    "valores no validos en largo, ancho y alto",
+                    TypeAlert = "danger"
+                };
 
 
                 if (exit) return new ServiceResult { Success = false, Message = "Ya existe un producto con este código de referencia", TypeAlert = "danger" };
                 bool create = await _productsRepository.CreateAsync(products);
 
-                
+
                 if (create) return new ServiceResult { Success = true, Message = "Producto creado éxitosamente", TypeAlert = "success" };
                 return new ServiceResult { Success = false, Message = "Ha ocurrido un error al crear el producto", TypeAlert = "danger" };
             }
@@ -83,13 +86,13 @@ namespace Application.Services.ProductsServices
                     "si quiere desactivarlo cambie el estado en el módulo de edición",
                     TypeAlert = "danger"
                 };
-                bool delete =  await _productsRepository.DeleteAsync(key);
+                bool delete = await _productsRepository.DeleteAsync(key);
                 if (delete) return new ServiceResult { Success = true, Message = "Producto eliminado con éxito", TypeAlert = "success" };
                 return new ServiceResult { Success = false, Message = "Ha ocurrido un error al intentar eliminar el producto", TypeAlert = "danger" };
             }
             catch (Exception ex)
             {
-                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicación del servicio {ex.Message}", TypeAlert = "danger"};
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicación del servicio {ex.Message}", TypeAlert = "danger" };
             }
         }
 
@@ -103,7 +106,7 @@ namespace Application.Services.ProductsServices
                     Message = "Ha ocurrido un fallo al cargar los datos de este producto, favor intente con otro registro",
                     TypeAlert = "danger"
                 };
-                
+
 
                 Products products = new()
                 {
@@ -119,13 +122,13 @@ namespace Application.Services.ProductsServices
                     High = dto.High,
                     Description = dto.Description,
                     tarrifCategoriesId = dto.TarriffCategoriesId
-                    
+
                 };
 
                 bool exitsMoreProductsWithSameCode = (await _productsRepository.GetAllAsync())
                         .Any(t => t.CodeRefence == products.CodeRefence && t.Key != products.Key);
-                if (exitsMoreProductsWithSameCode) return new ServiceResult {Success = false, Message = "Ya existe otro producto asociado a este código de referencia" , TypeAlert = "danger"};
-                    
+                if (exitsMoreProductsWithSameCode) return new ServiceResult { Success = false, Message = "Ya existe otro producto asociado a este código de referencia", TypeAlert = "danger" };
+
                 bool edit = await _productsRepository.EditAsync(products);
 
                 if (edit) return new ServiceResult { Success = true, Message = "Producto editado éxitosamente", TypeAlert = "success" };
@@ -135,7 +138,7 @@ namespace Application.Services.ProductsServices
             }
             catch (Exception ex)
             {
-                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en al comunicación del servicio {ex.Message}", TypeAlert = "danger"};
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en al comunicación del servicio {ex.Message}", TypeAlert = "danger" };
             }
         }
 
@@ -146,8 +149,8 @@ namespace Application.Services.ProductsServices
                 var productsList = new List<ProductsDto>();
                 var products = await _productsRepository.GetAllAsync();
 
-              
-                if(products != null)
+
+                if (products != null)
                 {
                     foreach (var item in products)
                     {
@@ -155,7 +158,7 @@ namespace Application.Services.ProductsServices
                         {
                             Key = item.Key,
                             Name = item.Name,
-                            CountrysId  = item.countryId,
+                            CountrysId = item.countryId,
                             CountryName = item.country?.Name,
                             unitMesaurement = item.Unit,
                             TariffCategoriesName = item.tariffCategories?.Name,
@@ -166,8 +169,8 @@ namespace Application.Services.ProductsServices
                             Broad = item.Broad,
                             High = item.High,
                             Description = item.Description,
-                            TarriffCategoriesId = item.tarrifCategoriesId 
-                            
+                            TarriffCategoriesId = item.tarrifCategoriesId
+
 
                         };
                         productsList.Add(productsDto);
@@ -186,12 +189,13 @@ namespace Application.Services.ProductsServices
         public async Task<ProductsDto> GetKeyAsync(int key)
         {
             try
-            { 
+            {
                 var product = await _productsRepository.GetEntityById(key);
 
-                if(product != null)
+                if (product != null)
                 {
-                    ProductsDto p = new() { 
+                    ProductsDto p = new()
+                    {
                         Key = product.Key,
                         unitMesaurement = product.Unit,
                         Name = product.Name,
@@ -206,7 +210,7 @@ namespace Application.Services.ProductsServices
                         TarriffCategoriesId = product.tarrifCategoriesId,
                         TariffCategoriesName = product.tariffCategories?.Name,
                         Description = product.Description
-                
+
                     };
                     return p;
                 }
@@ -218,6 +222,6 @@ namespace Application.Services.ProductsServices
             }
         }
 
-        
+
     }
 }

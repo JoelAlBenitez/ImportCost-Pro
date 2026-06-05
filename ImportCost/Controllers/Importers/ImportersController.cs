@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+using Application.Dto.Importers;
+
+using Application.Services.Countries;
 using Application.Services.Importers;
 using Application.ViewModel.Importers;
-using Application.Services.Countries;
 using Application.ViewModel.Select;
-using Application.Dto.Importers;
+using Microsoft.AspNetCore.Mvc;
 namespace ImportCost.Controllers.Importers
 {
     public class ImportersController : Controller
@@ -23,7 +24,8 @@ namespace ImportCost.Controllers.Importers
             var listView = new List<ViewModelImporter>();
             foreach (var item in list)
             {
-                ViewModelImporter viewModel = new() { 
+                ViewModelImporter viewModel = new()
+                {
                     key = item.Key,
                     Name = item.Name,
                     State = item.State,
@@ -44,7 +46,7 @@ namespace ImportCost.Controllers.Importers
             var countries = await _countriesServices.GetAllAsync();
             foreach (var item in countries)
             {
-               if(item.State || (key != 0 && item.Key == key))
+                if (item.State || (key != 0 && item.Key == key))
                 {
                     ViewModelSelectCountries viewModelSelectCountries = new()
                     {
@@ -63,9 +65,9 @@ namespace ImportCost.Controllers.Importers
             {
                 Name = "",
                 Identifcation = "",
-                State  = true,
+                State = true,
                 countryId = 0,
-                Countries = await GetCountries(), 
+                Countries = await GetCountries(),
                 PhoneNumber = "",
                 Email = "",
                 Address = ""
@@ -76,14 +78,15 @@ namespace ImportCost.Controllers.Importers
         public async Task<IActionResult> Create(ViewModelImporterSave vp)
         {
 
-           
+
             if (!ModelState.IsValid)
-            { 
+            {
                 vp.Countries = await GetCountries();
                 return View("Save", vp);
             }
 
-            ImporterDto importerDto = new (){ 
+            ImporterDto importerDto = new()
+            {
                 Key = 0,
                 Name = vp.Name,
                 Identification = vp.Identifcation,
@@ -97,16 +100,18 @@ namespace ImportCost.Controllers.Importers
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
             if (!result.Success) return RedirectToAction(nameof(Create));
- 
+
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Edit(int id) {
-        
+        public async Task<IActionResult> Edit(int id)
+        {
+
             var importes = await _importersServices.GetKeyAsync(id);
             if (importes == null) return RedirectToAction(nameof(Index));
-            
-            ViewModelImporterSave viewModelImporterSave = new() { 
+
+            ViewModelImporterSave viewModelImporterSave = new()
+            {
                 Key = importes.Key,
                 Name = importes.Name,
                 State = importes.State,
@@ -121,14 +126,17 @@ namespace ImportCost.Controllers.Importers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit (ViewModelImporterSave viewModelImporterSave) {
+        public async Task<IActionResult> Edit(ViewModelImporterSave viewModelImporterSave)
+        {
 
-            if (!ModelState.IsValid) { 
-                
+            if (!ModelState.IsValid)
+            {
+
                 viewModelImporterSave.Countries = await GetCountries();
                 return View("Edit", viewModelImporterSave);
             }
-            ImporterDto importerDto = new () { 
+            ImporterDto importerDto = new()
+            {
                 Key = viewModelImporterSave.Key,
                 Name = viewModelImporterSave.Name,
                 State = viewModelImporterSave.State,
@@ -147,7 +155,7 @@ namespace ImportCost.Controllers.Importers
 
         }
         [HttpPost]
-        public async Task<IActionResult> Delete (ViewModelImportDelete vi)
+        public async Task<IActionResult> Delete(ViewModelImportDelete vi)
         {
             if (!ModelState.IsValid) return View("Delete", vi);
             var result = await _importersServices.DeleteAsync(vi.Key);
@@ -155,14 +163,14 @@ namespace ImportCost.Controllers.Importers
             TempData["TypeAlert"] = result.TypeAlert;
             if (!result.Success) return RedirectToAction(nameof(Delete));
 
-            return  RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var import = await _importersServices.GetKeyAsync(id);           
+            var import = await _importersServices.GetKeyAsync(id);
             if (import == null) return RedirectToAction(nameof(Index));
-            return View("Delete", new ViewModelImportDelete { Key = import.Key, Name = import.Name});
+            return View("Delete", new ViewModelImportDelete { Key = import.Key, Name = import.Name });
         }
     }
 }

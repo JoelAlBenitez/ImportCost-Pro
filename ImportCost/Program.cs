@@ -23,13 +23,7 @@ builder.Services.AddPersistenceRegistration(builder.Configuration);
 
 builder.Environment.IsDevelopment();
 
-builder.Services.AddScoped<Persistence.Repositories.FinancialCore.CurrencyRepository>();
-builder.Services.AddScoped<Persistence.Repositories.FinancialCore.ExchangeRateRepository>();
-builder.Services.AddScoped<Persistence.Repositories.FinancialCore.TaxConfigurationRepository>();
 
-builder.Services.AddScoped<Persistence.Repositories.ImportationOrderAndLandCost.ImportationOrderRepository>();
-builder.Services.AddScoped<Persistence.Repositories.ImportationOrderAndLandCost.ImportationExpenseRepository>();
-builder.Services.AddScoped<Persistence.Repositories.ImportationOrderAndLandCost.OrderDetailRepository>();
 
 builder.Services.AddScoped<ImportationOrderService>();
 builder.Services.AddScoped<ImportationExpenseService>();

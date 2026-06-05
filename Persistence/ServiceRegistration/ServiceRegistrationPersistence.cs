@@ -31,6 +31,14 @@ namespace Persistence.ServiceRegistration
             services.AddScoped<ExchangeRateRepository>();
             services.AddScoped<TaxConfigurationRepository>();
 
+            services.AddScoped<CurrencyRepository>();
+            services.AddScoped<ExchangeRateRepository>();
+            services.AddScoped<TaxConfigurationRepository>();
+
+            services.AddScoped<ImportationOrderRepository>();
+            services.AddScoped<ImportationExpenseRepository>();
+            services.AddScoped<OrderDetailRepository>();
+
             return services;
         }
     }

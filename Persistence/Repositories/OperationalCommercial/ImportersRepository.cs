@@ -1,4 +1,4 @@
-﻿﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Entities.OperationalCommercial;
 using Persistence.Repositories.Base;
@@ -26,9 +26,9 @@ namespace Persistence.Repositories.OperationalCommercial
         {
             var import = await _context.Importers.FindAsync(tkey);
 
-            if(import != null)
+            if (import != null)
             {
-                 _context.Importers.Remove(import);
+                _context.Importers.Remove(import);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
             }
@@ -37,13 +37,15 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<bool> EditAsync(Importers entity)
         {
-            if (entity != null) {
+            if (entity != null)
+            {
 
                 _context.Importers.Update(entity);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;
 
-            }return false;
+            }
+            return false;
         }
 
         public async Task<IReadOnlyCollection<Importers>> GetAllAsync()
@@ -59,11 +61,11 @@ namespace Persistence.Repositories.OperationalCommercial
             return (await _context.Importers
                 .AsNoTracking()
                 .Include(i => i.country)
-                .FirstOrDefaultAsync(i => i.Key == key))!; 
+                .FirstOrDefaultAsync(i => i.Key == key))!;
         }
         public async Task<bool> ExistImportersByRnc(string rnc)
         {
-            return await _context.Importers.FirstAsync(i => i.Identification == rnc) != null; 
+            return await _context.Importers.FirstAsync(i => i.Identification == rnc) != null;
         }
 
         public async Task<bool> HasImportersByCountryId(int countryId)
@@ -78,5 +80,4 @@ namespace Persistence.Repositories.OperationalCommercial
     }
 
 }
-      
-    
+

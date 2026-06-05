@@ -10,7 +10,7 @@ namespace ImportCost.Controllers.TariffCategories
     {
         private readonly TarriffCategoriesServices _tarriffCategories;
 
-        public TariffController (TarriffCategoriesServices tarriffCategories)
+        public TariffController(TarriffCategoriesServices tarriffCategories)
         {
             _tarriffCategories = tarriffCategories;
         }
@@ -19,9 +19,12 @@ namespace ImportCost.Controllers.TariffCategories
         {
             var listCategories = await _tarriffCategories.GetAllAsync();
             var listCategoriesViewModel = new List<ViewModelTarriffCategories>();
+            var dd = listCategories != null;
+            Console.WriteLine(dd);
             foreach (var item in listCategories)
             {
-                ViewModelTarriffCategories vt = new() { 
+                ViewModelTarriffCategories vt = new()
+                {
                     key = item.Key,
                     Name = item.Name,
                     State = item.State,
@@ -40,7 +43,8 @@ namespace ImportCost.Controllers.TariffCategories
             var t = await _tarriffCategories.GetKeyAsync(id);
             if (t == null) return RedirectToAction(nameof(Index));
 
-            ViewModelTarriffCategoriesSave tarriffCategoriesSave = new() { 
+            ViewModelTarriffCategoriesSave tarriffCategoriesSave = new()
+            {
                 OldTariffCode = t.Key,
                 TarriffCode = t.Key,
                 Name = t.Name,
@@ -53,24 +57,26 @@ namespace ImportCost.Controllers.TariffCategories
             return View("Edit", tarriffCategoriesSave);
         }
 
-        public async Task<IActionResult> Delete(string id) {
+        public async Task<IActionResult> Delete(string id)
+        {
 
             var t = await _tarriffCategories.GetKeyAsync(id);
             if (t == null) return RedirectToAction(nameof(Index));
-            return View("Delete", new ViewModelTarriffCategoriesDelete { TarriffCode = t.Key, Name = t.Name});
-        
+            return View("Delete", new ViewModelTarriffCategoriesDelete { TarriffCode = t.Key, Name = t.Name });
+
         }
-        
+
         public async Task<IActionResult> Create()
         {
-            return View("Save", new ViewModelTarriffCategoriesSave {
-                    TarriffCode = "",
-                    Name = "",
-                    State = true,
-                    ITBIS = false,
-                    SelectiveTaxApplies = false,
-                    TarriffPorcetage = 0,
-                    PorcentageTaxSelective = 0
+            return View("Save", new ViewModelTarriffCategoriesSave
+            {
+                TarriffCode = "",
+                Name = "",
+                State = true,
+                ITBIS = false,
+                SelectiveTaxApplies = false,
+                TarriffPorcetage = 0,
+                PorcentageTaxSelective = 0
             });
         }
 
@@ -112,7 +118,7 @@ namespace ImportCost.Controllers.TariffCategories
             TempData["Message"] = tariff.Message;
             TempData["TypeAlert"] = tariff.TypeAlert;
             if (!tariff.Success) return RedirectToAction(nameof(Delete));
-           
+
             return RedirectToAction(nameof(Index));
 
         }
@@ -122,21 +128,22 @@ namespace ImportCost.Controllers.TariffCategories
         {
             if (!ModelState.IsValid) return View("Save", vt);
 
-            TariffCategoriesDto tariffCategoriesDto = new () { 
-                    Key = vt.TarriffCode.Trim(),
-                    Name = vt.Name,
-                    State = vt.State,
-                    ITBIS = vt.ITBIS,
-                    SelectiveTaxApplies = vt.SelectiveTaxApplies,
-                    PorcentageTariff = vt.TarriffPorcetage,
-                    PorcentageTaxSelective = vt.PorcentageTaxSelective ?? 0
+            TariffCategoriesDto tariffCategoriesDto = new()
+            {
+                Key = vt.TarriffCode.Trim(),
+                Name = vt.Name,
+                State = vt.State,
+                ITBIS = vt.ITBIS,
+                SelectiveTaxApplies = vt.SelectiveTaxApplies,
+                PorcentageTariff = vt.TarriffPorcetage,
+                PorcentageTaxSelective = vt.PorcentageTaxSelective ?? 0
             };
 
             var result = await _tarriffCategories.CreateAsync(tariffCategoriesDto);
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
             if (!result.Success) return RedirectToAction(nameof(Create));
-          
+
             return RedirectToAction(nameof(Index));
         }
     }

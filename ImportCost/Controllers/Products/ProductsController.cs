@@ -22,17 +22,18 @@ namespace ImportCost.Controllers.Products
             _productsServices = productsServices;
             _tarriffCategoriesServices = tarriffCategoriesServices;
             _countriesService = countriesService;
-            
+
         }
 
         public async Task<IActionResult> Index()
         {
-            var listProducts =  await _productsServices.GetAllAsync();
+            var listProducts = await _productsServices.GetAllAsync();
             var listViewProducts = new List<ViewModelProducts>();
 
             foreach (var item in listProducts)
             {
-                ViewModelProducts p = new() {
+                ViewModelProducts p = new()
+                {
                     key = item.Key,
                     Name = item.Name,
                     State = item.State,
@@ -47,7 +48,7 @@ namespace ImportCost.Controllers.Products
                     CountryId = item.CountrysId,
                     CountryName = item.CountryName!
                 };
-            
+
                 listViewProducts.Add(p);
 
             }
@@ -55,7 +56,7 @@ namespace ImportCost.Controllers.Products
             return View(listViewProducts);
         }
 
-        private  async Task<List<ViewModelSelectCategories>> GetCategories(string? categorieId = null)
+        private async Task<List<ViewModelSelectCategories>> GetCategories(string? categorieId = null)
         {
             var categories = await _tarriffCategoriesServices.GetAllAsync();
             var list = new List<ViewModelSelectCategories>();
@@ -74,7 +75,7 @@ namespace ImportCost.Controllers.Products
             }
             return list;
         }
-      
+
         private List<ViewModelSelectUnit> GetUnitMeasurements()
         {
             return Enum.GetValues(typeof(UnitMeasurement))
@@ -110,10 +111,10 @@ namespace ImportCost.Controllers.Products
             {
 
                 vp.Categories = await GetCategories();
-                vp.Units =  GetUnitMeasurements();
+                vp.Units = GetUnitMeasurements();
                 vp.countries = await GetCountries();
                 return View("Save", vp);
-               
+
             }
             ProductsDto p = new()
             {
@@ -139,8 +140,8 @@ namespace ImportCost.Controllers.Products
 
         public async Task<IActionResult> Create()
         {
-            
-            
+
+
             return View("Save", new ViewModelProductsSave
             {
                 Key = 0,
@@ -172,19 +173,20 @@ namespace ImportCost.Controllers.Products
                 return View("Edit", vp);
             }
 
-            ProductsDto productsDto = new() {
-                 Key = vp.Key,
-                 Name = vp.Name,
-                 State = vp.State,
-                 CodeReference = vp.CodeReference,
-                 TarriffCategoriesId = vp.TariffCategoriesId,
-                 UnitWeight = vp.UnitWeight,
-                 Large = vp.Large,
-                 Broad = vp.Broad,
-                 High = vp.High,
-                 Description = vp.Description,
-                 unitMesaurement = (UnitMesaurement)vp.unit,
-                 CountrysId = vp.CountryId
+            ProductsDto productsDto = new()
+            {
+                Key = vp.Key,
+                Name = vp.Name,
+                State = vp.State,
+                CodeReference = vp.CodeReference,
+                TarriffCategoriesId = vp.TariffCategoriesId,
+                UnitWeight = vp.UnitWeight,
+                Large = vp.Large,
+                Broad = vp.Broad,
+                High = vp.High,
+                Description = vp.Description,
+                unitMesaurement = (UnitMesaurement)vp.unit,
+                CountrysId = vp.CountryId
             };
 
             var result = await _productsServices.EditAsync(productsDto);
@@ -192,14 +194,14 @@ namespace ImportCost.Controllers.Products
             TempData["TypeAlert"] = result.TypeAlert;
             if (!result.Success) return RedirectToAction(nameof(Edit)); ;
             return RedirectToAction(nameof(Index));
-           
+
         }
 
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _productsServices.GetKeyAsync(id);
             if (product == null) return RedirectToAction(nameof(Index)); ;
-           
+
             ViewModelProductsSave vp = new()
             {
                 Key = product.Key,
@@ -225,7 +227,8 @@ namespace ImportCost.Controllers.Products
         [HttpPost]
         public async Task<IActionResult> Delete(ViewModelProductsDelete vp)
         {
-            if (!ModelState.IsValid)  {
+            if (!ModelState.IsValid)
+            {
                 return View("Delete", vp);
             }
 
@@ -233,16 +236,16 @@ namespace ImportCost.Controllers.Products
             TempData["Message"] = result.Message;
             TempData["TypeAlert"] = result.TypeAlert;
             if (!result.Success) return RedirectToAction(nameof(Delete)); ;
-            return   RedirectToAction(nameof(Index)); ;
-        }
-      
-        public async Task<IActionResult> Delete(int id)
-        {
-           var product = await _productsServices.GetKeyAsync(id);
-            if(product  == null) return RedirectToRoute(new { controller = "Products", action ="Index" });
-            return View("Delete", new ViewModelProductsDelete { Key = product.Key , Name = product.Name});
+            return RedirectToAction(nameof(Index)); ;
         }
 
-      
+        public async Task<IActionResult> Delete(int id)
+        {
+            var product = await _productsServices.GetKeyAsync(id);
+            if (product == null) return RedirectToRoute(new { controller = "Products", action = "Index" });
+            return View("Delete", new ViewModelProductsDelete { Key = product.Key, Name = product.Name });
+        }
+
+
     }
 }

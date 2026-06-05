@@ -8,7 +8,7 @@ namespace Application.Services.TarriffCategories
     public class TarriffCategoriesServices : IServicesBase<TariffCategoriesDto, string>
     {
 
-        private readonly TariffCategoriesRepository  _tarriffCategoriesRepository;
+        private readonly TariffCategoriesRepository _tarriffCategoriesRepository;
 
         public TarriffCategoriesServices(TariffCategoriesRepository tarriffCategoriesRepository)
         {
@@ -21,20 +21,22 @@ namespace Application.Services.TarriffCategories
             {
                 return await _tarriffCategoriesRepository.AssociatedProductsC(code);
             }
-            catch (Exception) {
+            catch (Exception)
+            {
 
                 return false;
             }
         }
- 
+
         public async Task<ServiceResult> CreateAsync(TariffCategoriesDto dto)
         {
             try
             {
                 bool t = await _tarriffCategoriesRepository.ExistTariffCode(dto.Key);
-                if (t) return new ServiceResult() {Success = false, Message =" Ya existe una categoría arancelaria con este código", TypeAlert = "danger"};
-                
-                TariffCategories tariffCategories = new (){
+                if (t) return new ServiceResult() { Success = false, Message = " Ya existe una categoría arancelaria con este código", TypeAlert = "danger" };
+
+                TariffCategories tariffCategories = new()
+                {
                     Key = dto.Key.Trim(),
                     Name = dto.Name,
                     State = dto.State,
@@ -45,14 +47,15 @@ namespace Application.Services.TarriffCategories
                 };
 
                 bool InvalidTax = tariffCategories.SelectiveTaxApplies && tariffCategories.PorcentageTaxSelective <= 0;
-                if (InvalidTax) return new ServiceResult {Success =false,Message="Si el impuesto selectivo esta marcado como valido el procentaje deber ser mayor a 0", TypeAlert="danger"};
+                if (InvalidTax) return new ServiceResult { Success = false, Message = "Si el impuesto selectivo esta marcado como valido el procentaje deber ser mayor a 0", TypeAlert = "danger" };
 
-                bool create =  await _tarriffCategoriesRepository.CreateAsync(tariffCategories);
+                bool create = await _tarriffCategoriesRepository.CreateAsync(tariffCategories);
                 if (create) return new ServiceResult { Success = true, Message = "categoría creada con éxito", TypeAlert = "success" };
                 return new ServiceResult { Success = false, Message = "Ha ocurrido un error en la creación de la categoría", TypeAlert = "danger" };
             }
-            catch (Exception ex) {
-                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicación del servicio {ex.Message}", TypeAlert = "danger"};
+            catch (Exception ex)
+            {
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicación del servicio {ex.Message}", TypeAlert = "danger" };
             }
         }
 
@@ -64,18 +67,18 @@ namespace Application.Services.TarriffCategories
                 if (categoriesHasProducts) return new ServiceResult()
                 {
                     Success = false,
-                    Message = 
-                    "Esta categoría tiene productos asociados por lo que no se puede eliminar, pero puede editar su estado en el apartado de edición", 
+                    Message =
+                    "Esta categoría tiene productos asociados por lo que no se puede eliminar, pero puede editar su estado en el apartado de edición",
                     TypeAlert = "danger"
                 };
 
                 bool delete = await _tarriffCategoriesRepository.DeleteAsync(key);
-                if (delete) return new ServiceResult() { Success = true, Message = "categoría arancelaria eliminada con éxito", TypeAlert = "success"};
+                if (delete) return new ServiceResult() { Success = true, Message = "categoría arancelaria eliminada con éxito", TypeAlert = "success" };
                 return new ServiceResult() { Success = false, Message = " Ha ocurrido un error en la eliminacion de la categoría", TypeAlert = "danger" };
             }
             catch (Exception ex)
             {
-                return new ServiceResult() { Success = false, Message = $"Ha ocurrido un error en la comunicación del servicio {ex.Message}", TypeAlert = "danger"} ;
+                return new ServiceResult() { Success = false, Message = $"Ha ocurrido un error en la comunicación del servicio {ex.Message}", TypeAlert = "danger" };
             }
         }
         public async Task<ServiceResult> EditAsync(TariffCategoriesDto dto)
@@ -90,7 +93,7 @@ namespace Application.Services.TarriffCategories
                     TypeAlert = "danger"
                 };
 
-                if(dto.OldTariffCode!.Trim() != dto.Key.Trim())
+                if (dto.OldTariffCode!.Trim() != dto.Key.Trim())
                 {
                     var codeExist = await _tarriffCategoriesRepository.GetEntityById(dto.OldTariffCode);
                     if (codeExist != null) return new ServiceResult
@@ -101,19 +104,20 @@ namespace Application.Services.TarriffCategories
                     };
                 }
 
-                TariffCategories tariff = new() {
+                TariffCategories tariff = new()
+                {
                     Key = dto.Key.Trim(),
                     Name = dto.Name,
                     State = dto.State,
                     PorcentageTariff = dto.PorcentageTariff,
                     ITBIS = dto.ITBIS,
                     SelectiveTaxApplies = dto.SelectiveTaxApplies,
-                    PorcentageTaxSelective = dto.PorcentageTaxSelective  
+                    PorcentageTaxSelective = dto.PorcentageTaxSelective
                 };
 
                 bool tarrP = await _tarriffCategoriesRepository.AssociatedProductsC(tariff.Key);
                 var tarf = await _tarriffCategoriesRepository.GetEntityById(tariff.Key);
-                if(tarrP)
+                if (tarrP)
                 {
                     bool modifieCode = dto.Key != tarf.Key;
                     bool modifiePorcentage = dto.PorcentageTariff != tarf.PorcentageTariff;
@@ -131,9 +135,9 @@ namespace Application.Services.TarriffCategories
                             TypeAlert = "danger"
 
                         };
-         
+
                 }
-                
+
 
                 bool edit = await _tarriffCategoriesRepository.EditAsync(tariff);
                 if (edit) return new ServiceResult { Success = true, Message = "Categoría arancelaria modificada con éxito", TypeAlert = "success" };
@@ -175,16 +179,18 @@ namespace Application.Services.TarriffCategories
 
                 return null!;
 
-            }catch(Exception) { return null!; }
+            }
+            catch (Exception) { return null!; }
         }
         public async Task<TariffCategoriesDto> GetKeyAsync(string key)
         {
             try
             {
                 var tarrifR = await _tarriffCategoriesRepository.GetEntityById(key);
-                if(tarrifR != null)
+                if (tarrifR != null)
                 {
-                    TariffCategoriesDto tariff = new() { 
+                    TariffCategoriesDto tariff = new()
+                    {
                         Key = tarrifR.Key!,
                         Name = tarrifR.Name,
                         State = tarrifR.State,
@@ -195,9 +201,11 @@ namespace Application.Services.TarriffCategories
                     };
                     return tariff;
 
-                }return null!;
+                }
+                return null!;
 
-            }catch(Exception) { return null!; }
+            }
+            catch (Exception) { return null!; }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Application.Dto.Importers;
-
 using Application.Services.BaseServices;
 using Application.Services.Result;
 using Persistence.Repositories.OperationalCommercial;
@@ -9,7 +8,7 @@ namespace Application.Services.Importers
     public class ImportersServices : IServicesBase<ImporterDto, int>
     {
         private readonly ImportersRepository _importersRepository;
-        public ImportersServices (ImportersRepository repository)
+        public ImportersServices(ImportersRepository repository)
         {
             _importersRepository = repository;
         }
@@ -41,14 +40,15 @@ namespace Application.Services.Importers
                     countryId = dto.CountryId
                 };
                 var exits = await ExistRnc(importers.Identification);
-                if (exits) return new ServiceResult {Success = false, Message ="Ya existe un importador con esta identificacion", TypeAlert = "danger"};
+                if (exits) return new ServiceResult { Success = false, Message = "Ya existe un importador con esta identificacion", TypeAlert = "danger" };
 
                 bool create = await _importersRepository.CreateAsync(importers);
                 if (create) return new ServiceResult { Success = true, Message = "Importador registrado con exito", TypeAlert = "success" };
 
-                return new ServiceResult { Success = false, Message = "Ha ocurrido un error en la creacion del importador", TypeAlert = "danger"};
-                
-            }catch(Exception ex)
+                return new ServiceResult { Success = false, Message = "Ha ocurrido un error en la creacion del importador", TypeAlert = "danger" };
+
+            }
+            catch (Exception ex)
             {
                 return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion con el servicio {ex.Message}", TypeAlert = "danger" };
             }
@@ -59,15 +59,15 @@ namespace Application.Services.Importers
             try
             {
                 bool exitsImp = await _importersRepository.AssociatedImportationOrderByImporters(key);
-                if (exitsImp) return new ServiceResult { Success = false, Message = "Este importador tiene ordenes de importación asociadas por lo que no se puede eliminar", TypeAlert= "danger"};
+                if (exitsImp) return new ServiceResult { Success = false, Message = "Este importador tiene ordenes de importación asociadas por lo que no se puede eliminar", TypeAlert = "danger" };
 
-                bool delete =  await _importersRepository.DeleteAsync(key);
+                bool delete = await _importersRepository.DeleteAsync(key);
                 if (delete) return new ServiceResult { Success = true, Message = "Importador eliminado con extio", TypeAlert = "success" };
-                return new ServiceResult {Success = false, Message = "Ha ocurrido un error al eliminar el importador", TypeAlert = "danger" };
+                return new ServiceResult { Success = false, Message = "Ha ocurrido un error al eliminar el importador", TypeAlert = "danger" };
             }
             catch (Exception ex)
             {
-                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion del servicio {ex.Message}", TypeAlert = "danger"};
+                return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion del servicio {ex.Message}", TypeAlert = "danger" };
             }
         }
 
@@ -89,13 +89,14 @@ namespace Application.Services.Importers
                 bool existOtherImporters = (await _importersRepository.GetAllAsync())
                     .Any(i => i.Identification == importers.Identification && i.Key != importers.Key);
 
-                if (existOtherImporters) return new ServiceResult { Success = false, Message = "Ya existe otro importador con esta identificacion", TypeAlert = "danger"};
-                bool editar =  await _importersRepository.EditAsync(importers);
+                if (existOtherImporters) return new ServiceResult { Success = false, Message = "Ya existe otro importador con esta identificacion", TypeAlert = "danger" };
+                bool editar = await _importersRepository.EditAsync(importers);
 
-                if (editar) return new ServiceResult { Success = true,Message = "Importador editado con exito", TypeAlert = "success"};
-                return new ServiceResult {Success = false, Message = "Ha ocurrido un error al editar el importador", TypeAlert = "danger"};
+                if (editar) return new ServiceResult { Success = true, Message = "Importador editado con exito", TypeAlert = "success" };
+                return new ServiceResult { Success = false, Message = "Ha ocurrido un error al editar el importador", TypeAlert = "danger" };
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
 
                 return new ServiceResult { Success = false, Message = $"Ha ocurrido un error en la comunicacion del servicio {ex.Message}", TypeAlert = "danger" };
             }
@@ -110,10 +111,10 @@ namespace Application.Services.Importers
 
                 if (importers.Any())
                 {
-                    
+
                     foreach (var item in importers)
                     {
-                       
+
                         ImporterDto importerDto = new()
                         {
                             Key = item.Key,
@@ -127,7 +128,7 @@ namespace Application.Services.Importers
                             CountryName = item.country!.Name
 
                         };
-                       
+
                         imp.Add(importerDto);
 
                     }
@@ -136,7 +137,7 @@ namespace Application.Services.Importers
                 }
                 return null!;
             }
-            catch(Exception )
+            catch (Exception)
             {
                 return null!;
             }
@@ -147,8 +148,8 @@ namespace Application.Services.Importers
             try
             {
                 var imp = await _importersRepository.GetEntityById(key);
-                
-                if(imp != null)
+
+                if (imp != null)
                 {
                     ImporterDto importerDto = new()
                     {
@@ -166,9 +167,11 @@ namespace Application.Services.Importers
 
                     return importerDto;
 
-                }return null!;
+                }
+                return null!;
 
-            }catch(Exception)
+            }
+            catch (Exception)
             {
                 return null!;
             }

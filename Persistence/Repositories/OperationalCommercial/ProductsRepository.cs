@@ -57,7 +57,7 @@ namespace Persistence.Repositories.OperationalCommercial
 
         public async Task<Products> GetEntityById(int key)
         {
-            return (await _context.Products
+            return( await _context.Products
                 .AsNoTracking()
                 .Include(p => p.country)
                 .Include(p => p.tariffCategories)

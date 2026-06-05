@@ -12,13 +12,8 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ContextImportCost))]
-<<<<<<<< HEAD:Persistence/Migrations/20260603215311_FixCurrencyRelations.Designer.cs
-    [Migration("20260603215311_FixCurrencyRelations")]
-    partial class FixCurrencyRelations
-========
-    [Migration("20260604223424_InitialCreate")]
+    [Migration("20260604234003_InitialCreate")]
     partial class InitialCreate
->>>>>>>> origin/feature/ImportationOrderAndLandCost:Persistence/Migrations/20260604223424_InitialCreate.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
