@@ -1,0 +1,203 @@
+﻿﻿@{
+ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid p-4">
+    <div class="mb-5">
+        <div class="d-flex align-items-center gap-3 mb-2">
+            <i class="bi bi-graph-up" style="font-size: 2rem; color: #0d6efd;"></i>
+            <h1 class="h2 mb-0 fw-bold text-dark">Dashboard</h1>
+        </div>
+        <p class="text-muted mb-0">Bienvenido a ImportCost Pro - Sistema de Gestión de Importaciones</p>
+    </div>
+
+   
+ 
+    <div class="row g-4 mb-5">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100 transition-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="bg-light p-3 rounded" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-box-seam" style="font-size: 1.5rem; color: #198754;"></i>
+                        </div>
+                        <span class="badge bg-success-light text-success small">Activo</span>
+                    </div>
+                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Productos</h6>
+                    <p class="h3 mb-2 fw-bold">-</p>
+                    <p class="text-muted small mb-0">Gestiona tu catálogo de productos</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 p-4 pt-0">
+                    <a href="@Url.Action("Index", "Products")" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
+                        Ver detalles
+                        <i class="bi bi-arrow-right" style="font-size: 0.875rem;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100 transition-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="bg-light p-3 rounded" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-box-sea," style="font-size: 1.5rem; color: #0d6efd;"></i>
+                        </div>
+                        <span class="badge bg-primary-light text-primary small">Activo</span>
+                    </div>
+                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Ordenes de importación</h6>
+                    <p class="h3 mb-2 fw-bold">-</p>
+                    <p class="text-muted small mb-0">Gestiona tus ordenes de importación</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 p-4 pt-0">
+                    <a href="@Url.Action("Index", " ImportationOrders")" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
+                        Ver detalles
+                        <i class="bi bi-box-seam" style="font-size: 0.875rem;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100 transition-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="bg-light p-3 rounded" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-tag" style="font-size: 1.5rem; color: #dc3545;"></i>
+                        </div>
+                        <span class="badge bg-danger-light text-danger small">Activo</span>
+                    </div>
+                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Configuración Categorías</h6>
+                    <p class="h3 mb-2 fw-bold">-</p>
+                    <p class="text-muted small mb-0">Administra configuraciones</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 p-4 pt-0">
+                    <a href="@Url.Action("Index", "TaxConfigurations")" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
+                        Ver detalles
+                        <i class="bi bi-tag" style="font-size: 0.875rem;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100 transition-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="bg-light p-3 rounded" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-cash" style="font-size: 1.5rem; color: #ffc107;"></i>
+                        </div>
+                        <span class="badge bg-warning-light text-warning small">Activo</span>
+                    </div>
+                    <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Landed Costs</h6>
+                    <p class="h3 mb-2 fw-bold">-</p>
+                    <p class="text-muted small mb-0">Gestiona tus calculos</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 p-4 pt-0">
+                    <a href="@Url.Action("Index", "LandedCosts")" class="text-decoration-none fw-500 text-primary small d-flex align-items-center gap-1">
+                        Ver detalles
+                        <i class="bi bi-cash" style="font-size: 0.875rem;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom p-4">
+                    <h5 class="mb-0 fw-bold d-flex align-items-center gap-2">
+                        <i class="bi bi-lightning" style="color: #0d6efd;"></i>
+                        Puntos de Consulta
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-flex mb-3 gap-3">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-light p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="mb-1 fw-bold">Catálogo de Productos</h6>
+                            <p class="text-muted small mb-0">Organiza y gestiona tu inventario de productos con categorías arancelarias</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3 gap-3">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-light p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="mb-1 fw-bold">Gestión de Importación de Ordenes</h6>
+                            <p class="text-muted small mb-0">Administra la información de tus ordenes y sus datos</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-light p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="mb-1 fw-bold">Base de Monedas</h6>
+                            <p class="text-muted small mb-0">Configura los diversos tipos de monedas del sistema.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-light p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="mb-1 fw-bold">Calculo de LandedCosts</h6>
+                            <p class="text-muted small mb-0">Realiza los calculos de los diversos productos hacer importados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom p-4">
+                    <h5 class="mb-0 fw-bold d-flex align-items-center gap-2">
+                        <i class="bi bi-rocket-takeoff" style="color: #0d6efd;"></i>
+                        Acceso Rápido
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <a href="@Url.Action("Index", "Products")" class="btn btn-outline-primary w-100 small d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-box-seam"></i>
+                                Productos
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="@Url.Action("Index", "TaxConfigurations")" class="btn btn-outline-primary w-100 small d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-tags"></i>
+                                Configuración de Categorías
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="@Url.Action("Index", "LandedCosts")" class="btn btn-outline-primary w-100 small d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-cash"></i>
+                                LandedCosts
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="@Url.Action("Index", "Currencies")" class="btn btn-outline-primary w-100 small d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-cash-coin"></i>
+                                Monedas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

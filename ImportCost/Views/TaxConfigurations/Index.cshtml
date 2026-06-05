@@ -1,0 +1,92 @@
+@using Application.ViewModel.TaxConfigurations
+@model List<ViewModelTaxConfiguration>
+
+@{
+    ViewData["Title"] = "Configuración de Impuestos";
+}
+
+<div class="container-fluid py-4">
+
+    @* Mensaje de alerta *@
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["TypeAlert"] w-auto alert-dismissible fade show shadow-sm border-0" role="alert">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-light">
+        <div class="row g-0 align-items-center">
+            <div class="col-md-8 p-4 p-md-5">
+                <h2 class="h4 fw-bold text-dark mb-2">Configuración General de Impuestos</h2>
+                <p class="text-secondary mb-3 text-wrap">
+                    Defina los porcentajes globales de ITBIS y Tasa Aduanal que se aplicarán en todos los cálculos de Landed Cost.
+                </p>
+            </div>
+            @if (Model == null || !Model.Any())
+            {
+                <div class="col-md-4 text-center p-4">
+                    <a asp-controller="TaxConfigurations" asp-action="Create"
+                       class="btn btn-primary px-4 py-2 fw-semibold rounded-3 shadow-sm">
+                        <i class="bi bi-plus-circle me-2"></i>Crear Configuración Inicial
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light text-secondary text-uppercase" style="font-size: 0.70rem;">
+                            <tr>
+                                <th class="py-3 ps-4 fw-semibold">Descripción</th>
+                                <th class="py-3 fw-semibold">% ITBIS</th>
+                                <th class="py-3 fw-semibold">% Tasa Aduanal</th>
+                                <th class="py-3 fw-semibold text-center">Estado</th>
+                                <th class="py-3 text-end pe-4 fw-semibold">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="border-top-0">
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="ps-4 fw-semibold text-dark">Configuración Global</td>
+                                        <td class="text-primary fw-bold">@item.GeneralItbisPercentage.ToString("N2")%</td>
+                                        <td class="text-primary fw-bold">@item.CustomsServiceRatePercentage.ToString("N2")%</td>
+                                        <td class="text-center">
+                                            <span class="badge @(item.State ? "bg-primary" : "bg-danger") bg-opacity-10 text-@(item.State ? "primary" : "danger") border border-opacity-25 px-2 py-1 rounded-2 fw-normal">
+                                                @(item.State ? "Activa" : "Inactiva")
+                                            </span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <div class="btn-group shadow-sm rounded-3">
+                                                <a asp-controller="TaxConfigurations" asp-action="Edit" asp-route-id="@item.key" class="btn btn-sm btn-light text-success border-end" title="Editar">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center py-5 text-muted">
+                                        <i class="bi bi-calculator fs-2 d-block mb-2 opacity-50"></i>
+                                        No se ha definido ninguna configuración de impuestos.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,127 @@
+﻿@model ImportCost.ViewModels.ImportationOrders.ImportationOrderEditViewModel
+@{
+    ViewData["Title"] = "Editar Orden";
+    var isReadOnly = Model.OrderState.ToString() == "Cerrada" || Model.OrderState.ToString() == "Cancelada" || Model.IsCalculated;
+}
+
+@if (TempData["Message"] != null)
+{
+    var alertType = TempData["TypeAlert"]?.ToString() == "error" ? "danger" : TempData["TypeAlert"];
+    <div class="alert alert-@alertType alert-dismissible fade show shadow-sm rounded-3 mx-auto d-flex align-items-center mb-4" style="max-width: 900px;" role="alert">
+        <i class="bi bi-info-circle-fill fs-5 me-3"></i>
+        <div>@TempData["Message"]</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm rounded-4 p-4 mx-auto" style="max-width: 900px;">
+    <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+        <div class="bg-success bg-opacity-10 p-3 rounded-3 me-3">
+            <i class="bi bi-pencil-square text-success fs-4"></i>
+        </div>
+        <div>
+            <h4 class="mb-0 fw-bold text-dark">Editar Orden: @Model.OriginalOrderId</h4>
+            <small class="text-muted">Actualice los datos de la orden seleccionada.</small>
+        </div>
+    </div>
+
+    @if (isReadOnly)
+    {
+        <div class="alert alert-warning border-0 shadow-sm rounded-3 d-flex align-items-center mb-4">
+            <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-warning"></i>
+            <div>
+                <strong>Aviso:</strong> Esta orden está en estado <strong>@Model.OrderState</strong> o ya fue calculada. Los campos críticos no pueden ser modificados para proteger la integridad histórica.
+            </div>
+        </div>
+    }
+
+    <form asp-action="Edit" method="POST">
+        <input type="hidden" asp-for="OriginalOrderId" />
+        <input type="hidden" asp-for="OrderState" />
+        <input type="hidden" asp-for="IsCalculated" />
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <label asp-for="OrderId" class="form-label fw-semibold small text-muted"></label>
+                <input asp-for="OrderId" class="form-control rounded-3 py-2" readonly="@(isReadOnly ? "readonly" : null)" />
+                <span asp-validation-for="OrderId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="OrderDate" class="form-label fw-semibold small text-muted"></label>
+                <input asp-for="OrderDate" class="form-control rounded-3 py-2" readonly="@(isReadOnly ? "readonly" : null)" />
+                <span asp-validation-for="OrderDate" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="ImporterId" class="form-label fw-semibold small text-muted"></label>
+                @if (isReadOnly)
+                {
+                    <input type="hidden" asp-for="ImporterId" />
+                }
+                <select asp-for="ImporterId" asp-items="@(new SelectList(Model.ImportersList, "ImporterId", "ImporterName"))" class="form-select rounded-3 py-2" disabled="@(isReadOnly ? "disabled" : null)">
+                    <option value="">Seleccione...</option>
+                </select>
+                <span asp-validation-for="ImporterId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="SupplierId" class="form-label fw-semibold small text-muted"></label>
+                @if (isReadOnly)
+                {
+                    <input type="hidden" asp-for="SupplierId" />
+                }
+                <select asp-for="SupplierId" asp-items="@(new SelectList(Model.SuppliersList, "SupplierId", "SupplierName"))" class="form-select rounded-3 py-2" disabled="@(isReadOnly ? "disabled" : null)">
+                    <option value="">Seleccione...</option>
+                </select>
+                <span asp-validation-for="SupplierId" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="OriginCountryId" class="form-label fw-semibold small text-muted"></label>
+                @if (isReadOnly)
+                {
+                    <input type="hidden" asp-for="OriginCountryId" />
+                }
+                <select asp-for="OriginCountryId" asp-items="@(new SelectList(Model.CountriesList, "CountryId", "CountryName"))" class="form-select rounded-3 py-2" disabled="@(isReadOnly ? "disabled" : null)">
+                    <option value="">Seleccione...</option>
+                </select>
+                <span asp-validation-for="OriginCountryId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="CurrencyId" class="form-label fw-semibold small text-muted"></label>
+                @if (isReadOnly)
+                {
+                    <input type="hidden" asp-for="CurrencyId" />
+                }
+                <select asp-for="CurrencyId" asp-items="@(new SelectList(Model.CurrenciesList, "Id", "NameCurrency"))" class="form-select rounded-3 py-2" disabled="@(isReadOnly ? "disabled" : null)">
+                    <option value="">Seleccione...</option>
+                </select>
+                <span asp-validation-for="CurrencyId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="TransportMode" class="form-label fw-semibold small text-muted"></label>
+                @if (isReadOnly)
+                {
+                    <input type="hidden" asp-for="TransportMode" />
+                }
+                <select asp-for="TransportMode" asp-items="@Html.GetEnumSelectList<Persistence.Entities.Enums.TransportMode>()" class="form-select rounded-3 py-2" disabled="@(isReadOnly ? "disabled" : null)">
+                    <option value="">Modalidad...</option>
+                </select>
+                <span asp-validation-for="TransportMode" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-top text-end">
+            <a asp-action="Index" class="btn btn-light rounded-3 px-4 shadow-sm me-2 fw-semibold">Volver</a>
+            @if (!isReadOnly)
+            {
+                <button type="submit" class="btn btn-success rounded-3 px-4 shadow-sm fw-semibold">Guardar Cambios</button>
+            }
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
